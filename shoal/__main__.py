@@ -57,6 +57,8 @@ def _summary_lines(s):
         lines.append(f"Hypothesis {h['id']}: {h['verdict']} ({report._fmt_metric(h['metric'], h['predicted']['p50'])} predicted; holds in {100 * h['holds_share']:.0f}% of runs)")
     for v in s.get("variants") or []:
         lines.append(f"Variant {v['name']}: {v['verdict']} ({100 * v['diff']['adoption_rate']['p50']:+.1f} pts adoption, beats base in {100 * v['wins_share']:.0f}% of runs)")
+    for v in s.get("scenarios") or []:
+        lines.append(f"Scenario {v['name']}: {100 * v['value']['adoption_rate']['p50']:.1f}% adoption ({100 * v['diff']['adoption_rate']['p50']:+.1f} pts, {v['verdict']})")
     ec = s["edge_cases"]
     lines.append(f"Edge cases: {sum(c['status'] == 'gap' for c in ec)} gaps, {sum(c['status'] == 'open' for c in ec)} open, {sum(c['status'] in ('handled', 'not_applicable') for c in ec)} handled")
     return lines

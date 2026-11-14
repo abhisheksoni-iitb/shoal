@@ -55,11 +55,55 @@ def metrics(res: dict, segment: str = "all") -> dict:
     return out
 
 
+def step_counts(res: dict, sid: str, segment: str = "all") -> tuple:
+    """(entered, continued) for a step, for everyone or for one segment."""
+    if segment == "all":
+        st = res["steps"].get(sid)
+        return (st["entered"], st["continued"]) if st else (0, 0)
+    ent, con = res["segments"][segment]["steps"].get(sid, (0, 0))
+    return ent, con
+
+
 def metric_value(res: dict, metric: str, segment: str = "all") -> float:
+    """A named metric from one simulation result.
+    step_continue:<id> = carried on ÷ reached; step_reach:<id> = reached ÷ started."""
     if metric.startswith("step_continue:"):
-        st = res["steps"][metric.split(":", 1)[1]]
-        return _div(st["continued"], st["entered"])
+        ent, con = step_counts(res, metric.split(":", 1)[1], segment)
+        return _div(con, ent)
+    if metric.startswith("step_reach:"):
+        ent, _ = step_counts(res, metric.split(":", 1)[1], segment)
+        return _div(ent, metrics(res, segment)["entered"])
     return metrics(res, segment).get(metric, 0.0)
+
+
+def success_steps(m: dict) -> list:
+    """Success steps in the order users meet them."""
+    idx = step_index(m)
+    return [sid for sid in step_order(m) if idx[sid]["type"] == "success"]
+
+
+def outcome_split(m: dict, res: dict, rep: dict) -> list:
+    """When a flow can end well in more than one way: how finishers divide between the endings."""
+    idx = step_index(m)
+    starters = res["users"] - res["outcomes"]["never_saw"]
+    rows = []
+    for sid in success_steps(m):
+        n = res["steps"][sid]["entered"]
+        rows.append({"step": sid, "name": idx[sid]["name"], "users": n,
+                     "share_of_starters": _div(n, starters), "share_of_eligible": _div(n, res["users"]),
+                     "share_of_finishers": _div(n, res["outcomes"]["success"]),
+                     "range": rep.get("reach", {}).get(sid),
+                     "segments": {g["id"]: _div(res["segments"][g["id"]]["steps"][sid][0], res["segments"][g["id"]]["entered"])
+                                  for g in m["segments"]}})
+    return rows
+
+
+def volume(m: dict):
+    """feature.volume = {"eligible": 700, "per": "week", "unit": "searches"} turns shares into counts."""
+    v = m["feature"].get("volume")
+    if not isinstance(v, dict) or not v.get("eligible"):
+        return None
+    return {"eligible": float(v["eligible"]), "per": str(v.get("per", "week")), "unit": str(v.get("unit", "users"))}
 
 
 def funnel(m: dict, res: dict) -> list:
@@ -110,6 +154,8 @@ def replicate(m: dict, users: int = 1500, seed: int = 7, reps: int = 24, jitter:
     overall = {k: [] for k in names}
     by_seg = {g["id"]: {k: [] for k in names} for g in m["segments"]}
     by_step = {s["id"]: [] for s in m["steps"]}
+    by_reach = {s["id"]: [] for s in m["steps"]}
+    by_entry = {e["id"]: [] for e in m["entry_points"]}
     raw = []
     for i in range(reps):
         rng = random.Random(seed * 7919 + i)
@@ -128,11 +174,17 @@ def replicate(m: dict, users: int = 1500, seed: int = 7, reps: int = 24, jitter:
         for sid, st in res["steps"].items():
             if st["entered"]:
                 by_step[sid].append(_div(st["continued"], st["entered"]))
+            by_reach[sid].append(_div(st["entered"], mo["entered"]))
+        for eid, en in res["entries"].items():
+            if en["exposed"]:
+                by_entry[eid].append(_div(en["entered"], en["exposed"]))
     return {
         "reps": reps, "users": users, "jitter": jitter,
         "overall": {k: interval(v) for k, v in overall.items() if v},
         "segments": {g: {k: interval(v) for k, v in d.items() if v} for g, d in by_seg.items()},
         "steps": {s: interval(v) for s, v in by_step.items() if v},
+        "reach": {s: interval(v) for s, v in by_reach.items() if v},
+        "entries": {x: interval(v) for x, v in by_entry.items() if v},
         "_raw": raw,
     }
 
@@ -219,28 +271,42 @@ def _disc(mm, eid):
     e["discovery"] = min(1.0, e["discovery"] + 0.15)
 
 
-def compare_variants(m: dict, users: int = 1500, seed: int = 7, reps: int = 24, jitter: float = 0.1) -> list:
-    """Paired comparison: each replication runs base and variant on the same nudged model and seed."""
+def compare_variants(m: dict, users: int = 1500, seed: int = 7, reps: int = 24, jitter: float = 0.1, key: str = "variants") -> list:
+    """Paired comparison: each replication runs base and patched model on the same nudged inputs and seed.
+    key="variants" compares alternative designs; key="scenarios" compares other assumptions about the world."""
     names = ("adoption_rate", "completion_rate", "discovery_rate", "error_rate", "median_time_s")
+    words = ("better", "worse", "no clear difference") if key == "variants" else ("higher", "lower", "about the same")
+    base_ends = success_steps(m)
     out = []
-    for var in m["variants"]:
+    for var in m.get(key, []):
+        ends = base_ends + [s for s in success_steps(apply_variant(m, var)) if s not in base_ends]
         diffs = {k: [] for k in names}
         vals = {k: [] for k in names}
+        end_diff = {s: [] for s in ends}
+        end_val = {s: [] for s in ends}
         for i in range(reps):
             rng = random.Random(seed * 7919 + i)
             jm = jittered(m, rng, jitter) if jitter > 0 else m
             vm = apply_variant(jm, var)
             s = seed * 104729 + i
-            mb = metrics(simulate(jm, users=users, seed=s, keep_sessions=0))
-            mv = metrics(simulate(vm, users=users, seed=s, keep_sessions=0))
+            rb = simulate(jm, users=users, seed=s, keep_sessions=0)
+            rv = simulate(vm, users=users, seed=s, keep_sessions=0)
+            mb, mv = metrics(rb), metrics(rv)
             for k in names:
                 diffs[k].append(mv[k] - mb[k])
                 vals[k].append(mv[k])
+            for sid in ends:
+                # share of everyone eligible who ends at this success step
+                b = _div(rb["steps"][sid]["entered"], rb["users"]) if sid in rb["steps"] else 0.0
+                v = _div(rv["steps"][sid]["entered"], rv["users"]) if sid in rv["steps"] else 0.0
+                end_diff[sid].append(v - b)
+                end_val[sid].append(v)
         wins = sum(1 for d in diffs["adoption_rate"] if d > 0) / reps
         out.append({"id": var.get("id"), "name": var.get("name", var.get("id")), "note": var.get("note", ""),
                     "wins_share": wins, "diff": {k: interval(v) for k, v in diffs.items()},
                     "value": {k: interval(v) for k, v in vals.items()},
-                    "verdict": "better" if wins >= 0.9 else "worse" if wins <= 0.1 else "no clear difference"})
+                    "ends": {sid: {"diff": interval(end_diff[sid]), "value": interval(end_val[sid])} for sid in ends},
+                    "verdict": words[0] if wins >= 0.9 else words[1] if wins <= 0.1 else words[2]})
     return out
 
 
@@ -305,13 +371,20 @@ def calibrate(m: dict, obs: dict) -> tuple:
 
 
 def score(summary: dict, obs: dict) -> dict:
-    """Compare what a run predicted with what really happened."""
+    """Compare what a run predicted with what really happened.
+    Rows: a step id (carry-on rate), 'reach:<step id>' (share of starters who got there),
+    or 'entry:<entry id>' (share of exposed users who started)."""
     rows, errs, inside = [], [], 0
-    pred_steps = summary["replication"]["steps"]
+    rep = summary["replication"]
     for key, o in obs.items():
-        if key not in pred_steps:
+        if key.startswith("reach:"):
+            iv = rep.get("reach", {}).get(key[6:])
+        elif key.startswith("entry:"):
+            iv = rep.get("entries", {}).get(key[6:])
+        else:
+            iv = rep["steps"].get(key)
+        if iv is None:
             continue
-        iv = pred_steps[key]
         err = abs(iv["p50"] - o["rate"])
         hit = iv["p5"] <= o["rate"] <= iv["p95"]
         errs.append(err)

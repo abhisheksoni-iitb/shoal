@@ -2,7 +2,7 @@
 
 Rehearse a feature with a shoal of synthetic users before real ones see it. Shoal expands the idea behind [MiroFish](https://github.com/666ghj/MiroFish), an open-source swarm simulator, from "what will people say about it" to "what will people do with it": predicted funnel and adoption with ranges, where and why people drop, the fix worth building first, verdicts on your hypotheses, edge cases the spec forgot, a tracking plan, and a way to score the prediction after launch.
 
-Created 12 Nov 2026 by Claude (Fable 5.2) for Abhishek Soni. Version 0.1.0.
+Created 12 Nov 2026 by Claude (Fable 5.2) for Abhishek Soni. Version 0.2.0 (14 Nov 2026); changes in [CHANGELOG.md](CHANGELOG.md).
 
 ## Start here
 
@@ -30,6 +30,7 @@ bin/shoal init my-feature                       # writes my-feature/feature.json
 bin/shoal lint my-feature/feature.json          # model errors + design gaps
 bin/shoal run my-feature/feature.json           # report in my-feature/runs/<time>/report.html
 bin/shoal run my-feature/feature.json --quick   # faster while iterating
+bin/shoal run my-feature/feature.json --variant <id>   # a variant as the design under test
 bin/shoal report <run folder>                   # rebuild after adding sessions.json / edge_review.json
 bin/shoal edges my-feature/feature.json         # edge-case list only
 bin/shoal calibrate my-feature/feature.json observed.csv   # pin steps to real numbers
@@ -49,18 +50,18 @@ Python 3.9 or newer, standard library only. No install, no network, no API key. 
 | `tools/install_skill.sh` | Copies the skill and engine to `~/.claude/skills/shoal` (add `--all` for other agents' skill folders). Re-run after any change |
 | `examples/one-tap-reorder/` | Made-up sample: spec, model, invented real-data CSV and a full sample run |
 | `examples/jobpilot-daily-apply/`, `examples/jobpilot-onboarding/`, `examples/shadowmux-co-browsing/` | Runs on the specs of two hackathon product concepts, JobPilot and ShadowMux (13 Nov 2026), each with walkthroughs and an edge-case review |
-| `tests/test_shoal.py` | 16 tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python3 -m unittest discover -s tests` |
+| `tests/test_shoal.py` | 28 tests: `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python3 -m unittest discover -s tests` |
 | `bin/shoal` | Launcher |
 
 ## Status
 
-Built and tested: flow checks, simulation, ranges, hypotheses, levers, variants, edge cases and combinations, HTML/Markdown/JSON reports, calibration, scoring, local web app, Claude skill with persona sessions and edge-case review.
+Built and tested: flow checks, simulation, ranges, hypotheses, levers, variants, scenarios (the same design under other assumptions), flows with several good endings, counts from a real volume, measured rates per segment, edge cases and combinations, HTML/Markdown/JSON reports, calibration, scoring, local web app, Claude skill with persona sessions and edge-case review.
 
 Not built: analytics connectors, base-rate library, MCP server, agents that drive a real prototype, headless language-model mode, hosted platform. See the roadmap in the concept document.
 
-Used on one real work feature so far (12 Nov 2026). Its files are kept with that feature's own documents, outside this repository; work content does not belong in `examples/`. That run found one engine fault (the funnel's main reason ignored blocked users), now fixed and covered by a test. No prediction has been scored against a real launch yet.
+Used on two real work features so far (12 and 14 Nov 2026). Their files are kept with those features' own documents, outside this repository; work content does not belong in `examples/`. The first run found one engine fault (the funnel's main reason ignored blocked users). The second was the first to pin today's flow to measured numbers and compare designs against it; it showed that steps scored from the guide flatter a new design next to measured steps, which led to most of version 0.2.0. No prediction has been scored against a real launch yet.
 
-Last full check, 14 Nov 2026: 16 tests pass; every example model lints clean of errors; the same seed gives the same numbers; `score`, `calibrate`, `init`, the web app (including path-traversal and bad-model refusals) and the installed skill all work.
+Last full check, 14 Nov 2026: 28 tests pass; every example model lints clean of errors; the same seed gives the same numbers; `score`, `calibrate`, `init`, the web app (including path-traversal and bad-model refusals) and the installed skill all work.
 
 The behaviour weights are hand-set defaults that have not yet been fitted to real launches. Treat uncalibrated numbers as hypotheses; trust the ranking of problems more than the levels.
 

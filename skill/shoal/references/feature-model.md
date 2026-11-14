@@ -4,15 +4,16 @@ A feature model is one JSON file. `shoal init <folder>` writes a working starter
 
 ```json
 {
-  "feature":      { "id", "name", "summary", "session_budget_s", "repeat", "handles" },
+  "feature":      { "id", "name", "summary", "session_budget_s", "repeat", "handles", "volume" },
   "segments":     [ { "id", "name", "share", "traits", "context", "capabilities", "exposure", "entry" } ],
   "entry_points": [ { "id", "name", "to", "discovery" } ],
   "steps":        [ { "id", "name", "type", "effort", "clarity", "value", "time_s", "error_rate", "on_error",
                       "requires", "fallback", "grants", "sensitive", "optional", "next", "events", "handles",
                       "observed_continue" } ],
   "dimensions":   { "name": ["value", "value"] },
-  "hypotheses":   [ { "id", "text", "metric", "op", "value", "segment" } ],
-  "variants":     [ { "id", "name", "note", "patch" } ]
+  "hypotheses":   [ { "id", "text", "metric", "op", "value", "segment", "on" } ],
+  "variants":     [ { "id", "name", "note", "patch" } ],
+  "scenarios":    [ { "id", "name", "note", "patch", "on" } ]
 }
 ```
 
@@ -24,6 +25,7 @@ A feature model is one JSON file. `shoal init <folder>` writes a working starter
 | `session_budget_s` | How long a typical user will give this flow in one sitting, in seconds (default 300). Patient users get more, impatient less. |
 | `repeat` | Optional. Share of an average successful user who comes back: `{"d1": 0.4, "d7": 0.25, "d30": 0.12}`. Scaled per user by motivation, errors met and friction felt. |
 | `handles` | Edge-case keys the spec covers for the whole flow (see "Edge-case keys"). |
+| `volume` | Optional. `{"eligible": 700, "per": "week", "unit": "brand searches"}`. The report then gives counts beside the shares ("about 260 a week"). Use a measured figure. |
 
 ## segments
 
@@ -86,7 +88,7 @@ Discovery base rates when there is no data (be conservative; this number dominat
 | `next` | Where to go: `["step"]`, or weighted and conditional: `[{"to": "a", "weight": 0.3}, {"to": "b", "weight": 0.7, "when": {"device": "mobile"}}]`. `when` can test any context key, `segment`, `has` or `lacks` (capabilities). |
 | `events` | Analytics events fired at this step. Missing events are reported as blind spots. |
 | `handles` | Edge-case keys the spec explicitly covers at this step. |
-| `observed_continue` | A real carry-on rate (0 to 1, exclusive) from analytics. When set, the step reproduces it and ignores effort/clarity/value. |
+| `observed_continue` | A real carry-on rate (0 to 1, exclusive) from analytics. When set, the step reproduces it and ignores effort/clarity/value. One number, or one per segment: `{"regular": 0.55, "new": 0.2, "default": 0.4}`. A drop at such a step is reported as "measured", with no invented cause. |
 
 Scoring guide (score from the least-prepared realistic user's side; when torn, pick the less favourable):
 
@@ -98,6 +100,16 @@ Scoring guide (score from the least-prepared realistic user's side; when torn, p
 
 Error-rate base rates: plain form step 0.03 to 0.10; format-sensitive input (dates, IDs, addresses) 0.10 to 0.25; file upload 0.10 to 0.20; payment 0.03 to 0.08; third-party API 0.01 to 0.05; email or SMS code delivery 0.05 to 0.12.
 
+A flow may have **more than one success step** (for example "looked at a supplier" and "posted a project"). Adoption counts any of them; the report shows how finishers divide, and `step_reach:<success step>` tests one of them.
+
+### New steps next to measured ones
+
+A step scored from the guide is usually more optimistic than a step pinned to real data: a clean list page scores about 0.9, a real list page may carry on at 0.45. If a model mixes both, the design with more unmeasured steps wins for the wrong reason. So when a new step has a measured relative in today's product (a new results list and today's results list, a short form and today's long form):
+
+- pin the new step to the relative's rate with `observed_continue`, and say in the step's note or the README that it is borrowed;
+- put your belief about the improvement in a scenario ("the new list is acted on 25% more"), not in the base;
+- score from the guide only steps that have no relative (a wait, a confirmation, a new kind of question).
+
 ## dimensions
 
 Conditions worth combining, e.g. `{"basket": ["all in stock", "some out of stock"], "card": ["valid", "expired", "none"]}`. Shoal produces the smallest set of combinations in which every pair of values appears together once, as a test list. A dimension whose name matches a segment `context` key also gets a rough "share of users" figure.
@@ -106,7 +118,9 @@ Conditions worth combining, e.g. `{"basket": ["all in stock", "some out of stock
 
 `{"id": "H1", "text": "…", "metric": "completion_rate", "op": ">=", "value": 0.6, "segment": "new_customer"}`
 
-Metrics: `discovery_rate` (started ÷ eligible), `completion_rate` (finished ÷ started), `adoption_rate` (finished ÷ eligible), `error_rate` (met an error ÷ started), `blocked_rate`, `median_time_s`, `repeat_d1` / `repeat_d7` / `repeat_d30`, `step_continue:<step id>`. `segment` is optional. Verdict: supported if it holds in at least 90% of replications, contradicted at 10% or fewer, otherwise uncertain.
+Metrics: `discovery_rate` (started ÷ eligible), `completion_rate` (finished ÷ started), `adoption_rate` (finished ÷ eligible), `error_rate` (met an error ÷ started), `blocked_rate`, `median_time_s`, `repeat_d1` / `repeat_d7` / `repeat_d30`, `step_continue:<step id>` (carried on ÷ reached), `step_reach:<step id>` (reached ÷ started). `segment` is optional and works with every metric. Verdict: supported if it holds in at least 90% of replications, contradicted at 10% or fewer, otherwise uncertain.
+
+`"on": "<variant id>"` (or a list) ties a hypothesis to one design: it is tested only when that variant is run with `--variant`, and may name steps that exist only there.
 
 ## variants
 
@@ -119,11 +133,24 @@ Alternative designs, run against the base on the same synthetic users.
    "add_steps": [{"id": "add_card", "type": "input", "grants": ["saved_card"], "next": ["confirm_pay"]}],
    "remove_steps": ["pick_slot"],
    "segments": {"new_customer": {"exposure": 0.5}},
-   "entry_points": {"home_banner": {"discovery": 0.5}}
+   "add_entry_points": [{"id": "email", "to": "open_sheet", "discovery": 0.1}],
+   "entry_points": {"home_banner": {"discovery": 0.5}},
+   "feature": {"session_budget_s": 420}
  }}
 ```
 
-Removing a step reconnects whatever pointed at it to its first `next`.
+Removing a step reconnects whatever pointed at it to its first `next`. A patch may add or remove success steps. To see a variant's own funnel, edge cases and hypotheses, run it as the design under test: `shoal run feature.json --variant inline-card`.
+
+## scenarios
+
+Other assumptions about users and the world, with the design unchanged. Same patch format as variants. Use them for every input you guessed and could be wrong about: the report then shows whether the answer survives.
+
+```json
+{"id": "fewer-saved-cards", "name": "Fewer customers have a saved card", "note": "why this might be true",
+ "patch": {"segments": {"occasional": {"capabilities": {"saved_card": 0.4}}}}}
+```
+
+A scenario with no `on` applies to the base design. `"on": "<variant id>"` ties it to a variant: it runs when that variant is the design under test, and its patch may name steps the variant adds. Rule of thumb: a design choice is a variant; something you do not control is a scenario.
 
 ## Edge-case keys (for `handles`)
 
@@ -148,7 +175,7 @@ open_sheet,3000,2400
 review_items,2400,2150
 ```
 
-A step row: users who reached the step, users who went on. An `entry:` row: users exposed, users who started.
+A step row: users who reached the step, users who went on. An `entry:` row: users exposed, users who started. A `reach:<step id>` row (for `score` only): users who started, users who got as far as that step; use it for a success step or for any step whose share of starters you can count.
 
 ## How the simulation decides (summary)
 
@@ -156,6 +183,6 @@ For each user at each step, in order: lacks a requirement → fallback or blocke
 
 `sigmoid(6 × (pull − 0.75 × (effort cost + confusion cost + trust cost) − fatigue) + 1.2)`
 
-where pull = 0.55·motivation + 0.25·value + 0.20·trust − 0.05 per error met; effort cost = effort × (1 − 0.6·skill); confusion cost = (1 − clarity) × (0.9 − 0.5·skill); trust cost = (1 − trust) × 0.5 on sensitive steps; fatigue = 0.04 per step done, plus a penalty past 60% of the time budget. A user who quits is tagged with the largest of those costs. The code is `shoal/sim.py`.
+where pull = 0.55·motivation + 0.25·value + 0.20·trust − 0.05 per error met; effort cost = effort × (1 − 0.6·skill); confusion cost = (1 − clarity) × (0.9 − 0.5·skill); trust cost = (1 − trust) × 0.5 on sensitive steps; waiting cost (inside the same bracket, `wait` and `external` steps only) = 0.25 × (seconds ÷ 10 − patience), never below 0 or above 0.6, so a wait under a few seconds is free and one of 20 seconds loses many; fatigue = 0.04 per step taken, repeats included, plus a penalty past 60% of the time budget. A user who quits is tagged with the largest of those costs. The code is `shoal/sim.py`.
 
 The reported ranges come from 24 replications; in each, effort, clarity and value move by up to ±0.1 and error and discovery rates by up to ±20%, to show how much the answer depends on the guesses.

@@ -51,7 +51,9 @@ Rules that matter most:
 - **Discovery is usually the largest lever and the most overrated.** Use the guide's base rates unless there is data.
 - **Turn every belief in the spec into a hypothesis** with a metric, operator and number. If the spec has none, write 2 to 4 that the team would care about and mark them as yours.
 - **If the user is choosing between designs**, add them as `variants` in the same model so they run on the same synthetic users.
-- **Use real numbers where they exist**: set `observed_continue` on steps and `discovery` on entry points, or run `calibrate` with a CSV.
+- **Use real numbers where they exist**: set `observed_continue` on steps and `discovery` on entry points, or run `calibrate` with a CSV. If the feature changes an existing flow, model today's flow first, pin it to the measured numbers, check that the simulation reproduces them, and add the new design as a variant: a predicted change from a measured base is worth far more than a level.
+- **Do not let unmeasured steps flatter the new design.** A new step with a measured relative borrows that rate; your belief that it will do better goes in a scenario. See "New steps next to measured ones" in the reference.
+- **Every guessed input that could change the answer gets a scenario** (`scenarios`, same patch format as variants), and a measured `feature.volume` turns shares into counts.
 
 Then run `lint`. Fix every error. Do **not** "fix" design findings (blocked users, no recovery, not tracked) by editing the model: those are results to report.
 
@@ -59,6 +61,7 @@ Then run `lint`. Fix every error. Do **not** "fix" design findings (blocked user
 
 ```bash
 "$SHOAL" run <feature.json> --out <project>/shoal/<feature-id>/runs/<YYYY-MM-DD-label>
+"$SHOAL" run <feature.json> --variant <id> --out <...>   # a variant as the design under test: its own funnel, edge cases, scenarios and hypotheses
 ```
 
 Read the printed summary. Sanity-check before going further: do the step scores you gave explain the biggest drop? If a number looks absurd, the cause is nearly always a mis-scored step or a wrong share; correct the model and say what you changed.
@@ -79,7 +82,7 @@ Open `edge_cases.json` in the run folder. For every **high** severity open case,
 
 Then tell the user, briefly and in this order:
 
-1. The one-line answer: predicted adoption with its range, and whether their hypotheses held.
+1. The one-line answer: predicted adoption with its range (and the count, if the model has a volume), whether their hypotheses held, and whether the answer survives the scenarios.
 2. The biggest loss and why; the single best fix and what it is worth.
 3. Confirmed gaps in the spec (count, and the 3 most serious).
 4. Where numbers and voices agree (fix first) and where they disagree (check the model).

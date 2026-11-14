@@ -7,11 +7,13 @@ import json
 
 from .analyze import METRIC_LABELS
 
-REASON_LABEL = {"effort": "Too much effort", "confusion": "Confusing", "trust": "Did not trust it", "fatigue": "Ran out of steam",
-                "low_motivation": "Did not care enough", "out_of_time": "Ran out of time", "blocked": "Blocked", "error": "Error"}
+REASON_LABEL = {"effort": "Too much effort", "confusion": "Confusing", "trust": "Did not trust it", "waiting": "The wait was too long",
+                "fatigue": "Ran out of steam", "low_motivation": "Did not care enough", "out_of_time": "Ran out of time",
+                "observed": "Measured drop, cause not modelled", "blocked": "Blocked", "error": "Error"}
 REASON_PHRASE = {"effort": "it asks for too much effort", "confusion": "it is confusing", "trust": "they did not trust it",
-                 "fatigue": "they ran out of steam", "low_motivation": "they did not care enough", "out_of_time": "they ran out of time"}
-REASON_ORDER = ["effort", "confusion", "trust", "fatigue", "low_motivation", "out_of_time", "blocked", "error"]
+                 "waiting": "the wait was too long", "fatigue": "they ran out of steam", "low_motivation": "they did not care enough",
+                 "out_of_time": "they ran out of time", "observed": "that is the measured rate (the model does not say why)"}
+REASON_ORDER = ["effort", "confusion", "trust", "waiting", "fatigue", "low_motivation", "out_of_time", "observed", "blocked", "error"]
 OUTCOME_LABEL = {"success": "Finished", "abandoned": "Gave up", "blocked": "Blocked", "error_exit": "Stopped by an error",
                  "stuck": "Stuck in a loop", "never_saw": "Never started"}
 LIMITS = [
@@ -23,7 +25,7 @@ LIMITS = [
 
 CSS = """
 :root{--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;
---s1:#2a78d6;--s1soft:#cde2fb;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#6250d6;--s8:#e34948;
+--s1:#2a78d6;--s1soft:#cde2fb;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#6250d6;--s8:#e34948;--s9:#0e8f9b;
 --good:#0ca30c;--warn:#fab219;--serious:#ec835a;--crit:#d03b3b;--goodtx:#006300}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--grid:#2c2c2a;--axis:#383835;
 --s1:#3987e5;--s1soft:#184f95;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s7:#9085e9;--s8:#e66767;--goodtx:#0ca30c}}
@@ -56,7 +58,7 @@ summary{cursor:pointer}code{font-size:13px;background:var(--page);padding:1px 5p
 GAP_PILL = "<span class='pill bad'>gap</span>"
 OPEN_PILL = "<span class='pill mid'>open</span>"
 RCOL = {"effort": "var(--s1)", "confusion": "var(--s2)", "trust": "var(--s3)", "fatigue": "var(--s4)", "low_motivation": "var(--s5)",
-        "out_of_time": "var(--s6)", "blocked": "var(--s7)", "error": "var(--s8)"}
+        "out_of_time": "var(--s6)", "blocked": "var(--s7)", "error": "var(--s8)", "waiting": "var(--s9)", "observed": "var(--muted)"}
 
 
 def e(x) -> str:
@@ -93,7 +95,7 @@ def _diverge(v, scale, title="") -> str:
 
 
 def _verdict_pill(v) -> str:
-    cls = {"supported": "good", "better": "good", "contradicted": "bad", "worse": "bad"}.get(v, "mid")
+    cls = {"supported": "good", "better": "good", "higher": "good", "contradicted": "bad", "worse": "bad", "lower": "bad"}.get(v, "mid")
     return f'<span class="pill {cls}">{e(v)}</span>'
 
 
@@ -102,12 +104,46 @@ def _sev_pill(s) -> str:
     return f'<span class="pill {cls}">{e(s)}</span>'
 
 
+def count_txt(vol, share) -> str:
+    """A share of the eligible population as a count per period, e.g. 'about 24 a week'."""
+    n = vol["eligible"] * share
+    num = f"{n:,.0f}" if n >= 10 else f"{n:.1f}"
+    return f"about {num} a {vol['per']}"
+
+
+def _ends_table(rows, ends, names, vol) -> list:
+    """Per-outcome effect of each variant or scenario, in points of the eligible population."""
+    P = ["<h3>Effect on each way of finishing</h3><p class='sub'>Change in the share of everyone eligible who ends at each outcome.</p>"
+         "<div class='scroll'><table><tr><th></th>" + "".join(f"<th class='n'>{e(names.get(s, s))}</th>" for s in ends) + "</tr>"]
+    for v in rows:
+        cells = []
+        for s in ends:
+            x = (v.get("ends") or {}).get(s)
+            if not x:
+                cells.append("<td class='n'>—</td>")
+                continue
+            extra = f"<div class='muted'>{e(count_txt(vol, x['value']['p50']))}</div>" if vol else ""
+            cells.append(f"<td class='n'>{100 * x['diff']['p50']:+.1f} pts<div class='muted'>now {pct(x['value']['p50'], 1)}</div>{extra}</td>")
+        P.append(f"<tr><td><b>{e(v['name'])}</b></td>{''.join(cells)}</tr>")
+    P.append("</table></div>")
+    return P
+
+
 def headline(summary: dict) -> list:
     """Plain-language findings, most important first. Shared by HTML and Markdown."""
     out = []
     ov = summary["replication"]["overall"]
-    out.append(f"Out of 100 eligible users, about {100 * ov['adoption_rate']['p50']:.0f} are predicted to finish "
+    vol = summary.get("volume")
+    who = vol["unit"] if vol else "eligible users"
+    out.append(f"Out of 100 {who}, about {100 * ov['adoption_rate']['p50']:.0f} are predicted to finish "
                f"(range {rng_txt(ov['adoption_rate'])}).")
+    if vol:
+        out.append(f"At {vol['eligible']:,.0f} {vol['unit']} a {vol['per']}, that is {count_txt(vol, ov['adoption_rate']['p50'])} "
+                   f"(range {vol['eligible'] * ov['adoption_rate']['p5']:,.0f} to {vol['eligible'] * ov['adoption_rate']['p95']:,.0f}).")
+    split = summary.get("outcome_split") or []
+    if len(split) > 1 and summary["outcomes"]["success"]:
+        parts = [f"{pct(r['share_of_finishers'])} at “{r['name']}”" for r in sorted(split, key=lambda r: -r["users"]) if r["users"]]
+        out.append("Finishers end in different places: " + ", ".join(parts) + ".")
     fun = [r for r in summary["funnel"] if r["type"] != "success" and r["lost"] > 0]
     if fun:
         worst = max(fun, key=lambda r: r["lost"])
@@ -183,7 +219,20 @@ def write_html(summary: dict, path) -> None:
         P.append(f"<tr><td>{e(r['name'])}<div class='muted'>{e(r['type'])}</div></td><td>{_bar(r['share_of_starters'], f'{r_entered(r)} users')}</td>"
                  f"<td class='n'>{pct(r['share_of_starters'])}</td><td class='n'>{'—' if r['type'] == 'success' else pct(r['continue_rate'])}</td>"
                  f"<td class='n'>{pct(r['lost'] / starters, 1) if r['lost'] else '—'}</td><td>{e(reason)}</td><td class='n'>{r['median_time_s']:.0f}s</td></tr>")
-    P.append("</table></div></section>")
+    P.append("</table></div>")
+    split = summary.get("outcome_split") or []
+    vol = summary.get("volume")
+    if len(split) > 1:
+        P.append("<h3>How finishers end</h3><p class='sub'>This flow can end well in more than one way. Shares are of everyone who started.</p><div class='scroll'><table>"
+                 "<tr><th>Outcome</th><th style='width:28%'>Share of starters</th><th class='n'>Share</th><th class='n'>Range</th>"
+                 + (f"<th class='n'>Per {e(vol['per'])}</th>" if vol else "") + "".join(f"<th class='n'>{e(g['name'])}</th>" for g in summary["segments"]) + "</tr>")
+        for r in split:
+            P.append(f"<tr><td>{e(r['name'])}</td><td>{_bar(r['share_of_starters'])}</td><td class='n'>{pct(r['share_of_starters'], 1)}</td>"
+                     f"<td class='n'>{rng_txt(r['range']) if r.get('range') else '—'}</td>"
+                     + (f"<td class='n'>{vol['eligible'] * r['share_of_eligible']:,.0f}</td>" if vol else "")
+                     + "".join(f"<td class='n'>{pct(r['segments'].get(g['id'], 0))}</td>" for g in summary["segments"]) + "</tr>")
+        P.append("</table></div><p class='muted'>Segment columns: share of that segment's starters who end at the outcome.</p>")
+    P.append("</section>")
 
     # Why people leave
     lossy = [r for r in summary["funnel"] if r["lost"] > 0]
@@ -234,14 +283,39 @@ def write_html(summary: dict, path) -> None:
 
     # Variants
     if summary.get("variants"):
-        P.append("<section><h2>Variants against the base design</h2><div class='scroll'><table><tr><th>Variant</th><th class='n'>Adoption change</th><th class='n'>Range</th>"
+        P.append("<section><h2>Variants against the base design</h2><div class='scroll'><table><tr><th style='width:38%'>Variant</th><th class='n'>Adoption change</th><th class='n'>Range</th>"
                  "<th class='n'>Completion change</th><th class='n'>Time change</th><th class='n'>Beats base in</th><th>Verdict</th></tr>")
         for v in summary["variants"]:
             d = v["diff"]
             P.append(f"<tr><td><b>{e(v['name'])}</b><div class='muted'>{e(v['note'])}</div></td><td class='n'>{100 * d['adoption_rate']['p50']:+.1f} pts</td>"
                      f"<td class='n'>{100 * d['adoption_rate']['p5']:+.1f} to {100 * d['adoption_rate']['p95']:+.1f}</td><td class='n'>{100 * d['completion_rate']['p50']:+.1f} pts</td>"
                      f"<td class='n'>{d['median_time_s']['p50']:+.0f}s</td><td class='n'>{pct(v['wins_share'])} of runs</td><td>{_verdict_pill(v['verdict'])}</td></tr>")
-        P.append("</table></div></section>")
+        P.append("</table></div>")
+        names = {r["step"]: r["name"] for r in summary["funnel"]}
+        ends = [s for v in summary["variants"] for s in (v.get("ends") or {})]
+        ends = list(dict.fromkeys(ends))
+        if len(ends) > 1:
+            P += _ends_table(summary["variants"], ends, names, vol)
+        P.append("</section>")
+
+    if summary.get("scenarios"):
+        P.append("<section><h2>If the guesses are wrong</h2><p class='sub'>The same design under other assumptions about users and the world. "
+                 "A design decision should hold across these rows.</p><div class='scroll'><table><tr><th style='width:38%'>Scenario</th><th class='n'>Adoption</th><th class='n'>Range</th>"
+                 + (f"<th class='n'>Per {e(vol['per'])}</th>" if vol else "") + "<th class='n'>Change from base</th><th class='n'>Completion</th><th>Against base</th></tr>")
+        P.append(f"<tr><td><b>As modelled</b></td><td class='n'>{pct(ov['adoption_rate']['p50'], 1)}</td><td class='n'>{rng_txt(ov['adoption_rate'])}</td>"
+                 + (f"<td class='n'>{vol['eligible'] * ov['adoption_rate']['p50']:,.0f}</td>" if vol else "")
+                 + f"<td class='n'>—</td><td class='n'>{pct(ov['completion_rate']['p50'])}</td><td></td></tr>")
+        for v in summary["scenarios"]:
+            a, d = v["value"]["adoption_rate"], v["diff"]["adoption_rate"]
+            P.append(f"<tr><td><b>{e(v['name'])}</b><div class='muted'>{e(v['note'])}</div></td><td class='n'>{pct(a['p50'], 1)}</td><td class='n'>{rng_txt(a)}</td>"
+                     + (f"<td class='n'>{vol['eligible'] * a['p50']:,.0f}</td>" if vol else "")
+                     + f"<td class='n'>{100 * d['p50']:+.1f} pts</td><td class='n'>{pct(v['value']['completion_rate']['p50'])}</td><td>{_verdict_pill(v['verdict'])}</td></tr>")
+        P.append("</table></div>")
+        names = {r["step"]: r["name"] for r in summary["funnel"]}
+        ends = list(dict.fromkeys(s for v in summary["scenarios"] for s in (v.get("ends") or {})))
+        if len(ends) > 1:
+            P += _ends_table(summary["scenarios"], ends, names, vol)
+        P.append("</section>")
 
     # Qualitative
     q = summary.get("qualitative")
@@ -368,6 +442,15 @@ def write_md(summary: dict, path) -> None:
     if summary.get("variants"):
         L += ["", "## Variants", "", "| Variant | Adoption change | Beats base in | Verdict |", "|---|---:|---:|---|"]
         L += [f"| {v['name']} | {100 * v['diff']['adoption_rate']['p50']:+.1f} pts | {pct(v['wins_share'])} | {v['verdict']} |" for v in summary["variants"]]
+    split = summary.get("outcome_split") or []
+    if len(split) > 1:
+        L += ["", "## How finishers end", "", "| Outcome | Share of starters | Range |", "|---|---:|---:|"]
+        L += [f"| {r['name']} | {pct(r['share_of_starters'], 1)} | {rng_txt(r['range']) if r.get('range') else '—'} |" for r in split]
+    if summary.get("scenarios"):
+        L += ["", "## If the guesses are wrong", "", "| Scenario | Adoption | Range | Change from base |", "|---|---:|---:|---:|",
+              f"| As modelled | {pct(ov['adoption_rate']['p50'], 1)} | {rng_txt(ov['adoption_rate'])} | — |"]
+        L += [f"| {v['name']} | {pct(v['value']['adoption_rate']['p50'], 1)} | {rng_txt(v['value']['adoption_rate'])} | {100 * v['diff']['adoption_rate']['p50']:+.1f} pts |"
+              for v in summary["scenarios"]]
     design = [x for x in summary["lint"] if x["kind"] == "design" and x["level"] == "warn"]
     if design:
         L += ["", "## Design gaps", ""] + [f"- {x['message']}" + (f" Fix: {x['fix']}" if x.get("fix") else "") for x in design]

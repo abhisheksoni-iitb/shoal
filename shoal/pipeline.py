@@ -39,6 +39,8 @@ def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitt
             raise model_mod.ModelError(f"no variant '{variant}' in the model")
         m = model_mod.apply_variant(m, var)
         findings = model_mod.lint(m)
+    scen = {**m, "scenarios": model_mod.scenarios_for(base, variant)}
+    hyp = {**m, "hypotheses": model_mod.hypotheses_for(m, variant)}
     if quick:
         users, reps = min(users, 1500), min(reps, 8)
 
@@ -58,9 +60,12 @@ def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitt
         "contexts": res["contexts"],
         "entries": res["entries"],
         "events": dict(sorted(res["events"].items(), key=lambda kv: -kv[1])),
-        "hypotheses": analyze.test_hypotheses(m, rep),
+        "hypotheses": analyze.test_hypotheses(hyp, rep),
         "levers": analyze.sensitivity(m, users=1500 if quick else 4000, seed=seed, seeds=1 if quick else 2),
         "variants": analyze.compare_variants(base, users=min(users, 1500), seed=seed, reps=reps, jitter=jitter) if not variant and base["variants"] else [],
+        "scenarios": analyze.compare_variants(scen, users=min(users, 1500), seed=seed, reps=reps, jitter=jitter, key="scenarios") if scen["scenarios"] else [],
+        "outcome_split": analyze.outcome_split(m, res, rep),
+        "volume": analyze.volume(m),
         "watchlist": analyze.watchlist(m, rep, fun),
         "instrumentation": analyze.instrumentation(m),
         "lint": findings,

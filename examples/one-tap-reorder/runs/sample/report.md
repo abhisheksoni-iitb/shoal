@@ -1,11 +1,12 @@
 # Shoal rehearsal: One-tap reorder
 
-5,000 synthetic users, seed 7, 24 replications, 2026-11-14 12:14.
+5,000 synthetic users, seed 7, 24 replications, 2026-11-14 20:32.
 
 ## What it says
 
-- Out of 100 eligible users, about 10 are predicted to finish (range 9–12%).
-- The biggest loss is at “Opens the reorder sheet”: 23% of everyone who started leaves there, mostly because they could not proceed (blocked).
+- Out of 100 active customers, about 10 are predicted to finish (range 9–12%).
+- At 40,000 active customers a week, that is about 4,000 a week (range 3,411 to 4,605).
+- The biggest loss is at “Opens the reorder sheet”: 22% of everyone who started leaves there, mostly because they could not proceed (blocked).
 - 71% of eligible users never start: they do not see the entry point, or see it and pass. Discovery, not the flow, caps adoption.
 - Best single fix: Give users without saved_card a way through 'Confirms payment with the saved card' (+3.3 points of adoption).
 - 9 high-severity edge cases are not covered by the spec (9 confirmed in review).
@@ -21,8 +22,8 @@
 | Adoption (of everyone eligible) | 10% | 9–12% |
 | Discovery (saw it and started) | 28% | 25–32% |
 | Completion (of those who started) | 35% | 32–39% |
-| Hit at least one error | 7% | 5–10% |
-| Blocked (could not proceed) | 38% | 35–41% |
+| Hit at least one error | 8% | 5–10% |
+| Blocked (could not proceed) | 38% | 35–42% |
 | Median time to finish | 68s | 64–72s |
 
 ## Hypotheses
@@ -38,12 +39,12 @@
 
 | Step | Reached | Carried on | Left here | Main reason |
 |---|---:|---:|---:|---|
-| Opens the reorder sheet | 100% | 77% | 22.6% | Blocked |
-| Reviews the items and prices | 77% | 95% | 3.7% | Too much effort |
-| Replaces or removes out-of-stock items | 28% | 74% | 7.2% | Too much effort |
-| Picks a delivery slot | 67% | 89% | 7.2% | Too much effort |
-| Confirms payment with the saved card | 59% | 69% | 18.3% | Blocked |
-| Order is placed | 41% | 91% | 3.8% | Error |
+| Opens the reorder sheet | 100% | 78% | 22.3% | Blocked |
+| Reviews the items and prices | 78% | 95% | 3.8% | Too much effort |
+| Replaces or removes out-of-stock items | 28% | 75% | 7.0% | Too much effort |
+| Picks a delivery slot | 67% | 89% | 7.4% | Too much effort |
+| Confirms payment with the saved card | 60% | 69% | 18.2% | Blocked |
+| Order is placed | 41% | 90% | 4.2% | Error |
 | Sees the confirmation | 37% | — | — |  |
 
 ## Biggest levers
@@ -51,10 +52,10 @@
 | Change | Adoption |
 |---|---:|
 | Give users without saved_card a way through 'Confirms payment with the saved card' | +3.3 pts |
-| Make the 'Home banner' entry point easier to find | +3.2 pts |
+| Make the 'Home banner' entry point easier to find | +3.1 pts |
 | Make the 'Sunday push notification' entry point easier to find | +1.4 pts |
 | Give users without past_order a way through 'Opens the reorder sheet' | +0.7 pts (within noise) |
-| Make the 'Reorder button in order history' entry point easier to find | +0.6 pts (within noise) |
+| Make the 'Reorder button in order history' entry point easier to find | +0.7 pts (within noise) |
 | Cut the effort of 'Confirms payment with the saved card' | +0.5 pts (within noise) |
 | Make 'Confirms payment with the saved card' clearer | +0.5 pts (within noise) |
 | Make 'Replaces or removes out-of-stock items' clearer | +0.4 pts (within noise) |
@@ -63,8 +64,16 @@
 
 | Variant | Adoption change | Beats base in | Verdict |
 |---|---:|---:|---|
-| Usual slot pre-selected | +0.8 pts | 83% | no clear difference |
-| Add a card inline | +1.7 pts | 96% | better |
+| Usual slot pre-selected | +0.9 pts | 88% | no clear difference |
+| Add a card inline | +1.9 pts | 100% | better |
+
+## If the guesses are wrong
+
+| Scenario | Adoption | Range | Change from base |
+|---|---:|---:|---:|
+| As modelled | 10.0% | 9–12% | — |
+| Fewer customers have a saved card than we think | 7.6% | 6–9% | -2.4 pts |
+| The home banner is noticed twice as often | 16.7% | 15–19% | +7.0 pts |
 
 ## Design gaps
 

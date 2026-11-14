@@ -12,7 +12,12 @@
     },
     "handles": [
       "back_button"
-    ]
+    ],
+    "volume": {
+      "eligible": 40000,
+      "per": "week",
+      "unit": "active customers"
+    }
   },
   "segments": [
     {
@@ -430,6 +435,44 @@
         "steps": {
           "confirm_pay": {
             "fallback": "add_card"
+          }
+        }
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "fewer-saved-cards",
+      "name": "Fewer customers have a saved card than we think",
+      "note": "The saved-card shares are guesses from the payments team, not a query.",
+      "patch": {
+        "segments": {
+          "weekly_regular": {
+            "capabilities": {
+              "saved_card": 0.7
+            }
+          },
+          "occasional": {
+            "capabilities": {
+              "saved_card": 0.4
+            }
+          },
+          "new_customer": {
+            "capabilities": {
+              "saved_card": 0.1
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "banner-noticed",
+      "name": "The home banner is noticed twice as often",
+      "note": "If the banner gets the top slot for launch week.",
+      "patch": {
+        "entry_points": {
+          "home_banner": {
+            "discovery": 0.7
           }
         }
       }

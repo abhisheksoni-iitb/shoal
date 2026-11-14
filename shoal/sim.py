@@ -14,7 +14,7 @@ from .model import step_index, TRAITS
 
 MAX_STEPS = 60
 MAX_RETRIES = 3
-REASONS = ("effort", "confusion", "trust", "fatigue", "low_motivation", "out_of_time")
+REASONS = ("effort", "confusion", "trust", "waiting", "fatigue", "low_motivation", "out_of_time", "observed")
 
 
 def _clamp(x, lo=0.0, hi=1.0):
@@ -73,24 +73,45 @@ def _when_ok(when, agent) -> bool:
     return True
 
 
-def continue_parts(step, agent, steps_done, elapsed, budget, errors):
+def wait_cost(step, agent, seconds):
+    """People tolerate a wait of a few seconds; past about ten they start to leave (Nielsen's response-time limits).
+    Zero up to 10 s × patience, then rising with every further ten seconds, capped."""
+    if step["type"] not in ("wait", "external") or seconds is None:
+        return 0.0
+    return min(0.6, 0.25 * max(0.0, seconds / 10.0 - agent["patience"]))
+
+
+def continue_parts(step, agent, steps_done, elapsed, budget, errors, seconds=None):
     """The pieces that decide whether an agent carries on past a step.
-    Returned separately so an abandonment can be attributed to its largest cause."""
+    Returned separately so an abandonment can be attributed to its largest cause.
+    steps_done counts every step taken so far, repeats included: going round a loop tires people."""
     skill, mot, trust = agent["skill"], agent["motivation"], agent["trust"]
     effort = step["effort"] * (1 - 0.6 * skill)
     confusion = (1 - step["clarity"]) * (0.9 - 0.5 * skill)
     trust_cost = (1 - trust) * 0.5 if step.get("sensitive") else 0.0
+    waiting = wait_cost(step, agent, seconds)
     fatigue = 0.04 * steps_done + 0.25 * max(0.0, elapsed / budget - 0.6)
     pull = 0.55 * mot + 0.25 * step["value"] + 0.20 * trust - 0.05 * min(errors, 4)
-    return {"effort": effort, "confusion": confusion, "trust": trust_cost, "fatigue": fatigue, "pull": pull}
+    return {"effort": effort, "confusion": confusion, "trust": trust_cost, "waiting": waiting, "fatigue": fatigue, "pull": pull}
 
 
-def p_continue(step, agent, parts, mean_z=0.0):
+def _z(motivation, skill):
+    return (motivation - 0.5) + 0.5 * (skill - 0.5)
+
+
+def p_continue(step, agent, parts, mean_z=0.0, seg_z=None):
+    """Chance of carrying on. A step pinned to a real rate (observed_continue) reproduces that rate on average,
+    with keener and more skilled users above it and the rest below. The rate can be one number for everyone
+    or one per segment: {"regular": 0.6, "new": 0.2, "default": 0.4}."""
     obs = step.get("observed_continue")
+    if isinstance(obs, dict):
+        centre = (seg_z or {}).get(agent["segment"], mean_z)
+        obs = obs.get(agent["segment"], obs.get("default"))
+    else:
+        centre = mean_z
     if obs is not None:
-        z = (agent["motivation"] - 0.5) + 0.5 * (agent["skill"] - 0.5)
-        return _sig(_logit(obs) + 2.0 * (z - mean_z))
-    cost = 0.75 * (parts["effort"] + parts["confusion"] + parts["trust"]) + parts["fatigue"]
+        return _sig(_logit(obs) + 2.0 * (_z(agent["motivation"], agent["skill"]) - centre))
+    cost = 0.75 * (parts["effort"] + parts["confusion"] + parts["trust"] + parts.get("waiting", 0.0)) + parts["fatigue"]
     return _sig(6.0 * (parts["pull"] - cost) + 1.2)
 
 
@@ -99,6 +120,7 @@ def _reason(parts):
         "effort": parts["effort"],
         "confusion": parts["confusion"],
         "trust": parts["trust"],
+        "waiting": parts.get("waiting", 0.0),
         "fatigue": parts["fatigue"] / 0.75,
         "low_motivation": max(0.0, 0.55 - parts["pull"]),
     }
@@ -117,16 +139,17 @@ def _new_agent(rng, seg, uid):
 def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200) -> dict:
     rng = random.Random(seed)
     idx = step_index(m)
-    success = set(m["success"])
     entries = {e["id"]: e for e in m["entry_points"]}
     budget_base = float(m["feature"].get("session_budget_s", 300))
     repeat = m["feature"].get("repeat") or {}
-    mean_z = sum(g["share"] * ((g["traits"]["motivation"] - 0.5) + 0.5 * (g["traits"]["skill"] - 0.5)) for g in m["segments"])
+    seg_z = {g["id"]: _z(g["traits"]["motivation"], g["traits"]["skill"]) for g in m["segments"]}
+    mean_z = sum(g["share"] * seg_z[g["id"]] for g in m["segments"])
 
     steps = {sid: {"entered": 0, "continued": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "skipped": 0,
                    "errors": 0, "retries": 0, "fallbacks": 0, "reasons": {}, "times": []} for sid in idx}
     segs = {g["id"]: {"n": 0, "entered": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0,
-                      "users_with_error": 0, "times": [], "repeat": {k: 0 for k in repeat}} for g in m["segments"]}
+                      "users_with_error": 0, "times": [], "repeat": {k: 0 for k in repeat},
+                      "steps": {sid: [0, 0] for sid in idx}} for g in m["segments"]}
     ctx = {}
     ents = {eid: {"exposed": 0, "entered": 0, "success": 0} for eid in entries}
     outcomes = {"never_saw": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0}
@@ -159,7 +182,7 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
         ents[eid]["entered"] += 1
         budget = budget_base * (0.4 + 1.2 * a["patience"]) * rng.lognormvariate(0, 0.25)
         sid, visited, moved_on = entries[eid]["to"], set(), set()
-        elapsed, errors, hops, friction_sum = 0.0, 0, 0, 0.0
+        elapsed, errors, hops, friction_sum, taken = 0.0, 0, 0, 0.0, 0
         outcome, where, why = None, None, None
         network = a["context"].get("network")
         device = a["context"].get("device")
@@ -172,6 +195,7 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
             if first:
                 visited.add(sid)
                 st["entered"] += 1
+                sg["steps"][sid][0] += 1
             if hops > MAX_STEPS:
                 outcome, where, why = "stuck", sid, "loop"
                 break
@@ -185,6 +209,7 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
                     if sid not in moved_on:
                         moved_on.add(sid)
                         st["continued"] += 1
+                        sg["steps"][sid][1] += 1
                     sid = s["fallback"]
                     continue
                 st["blocked"] += 1
@@ -239,20 +264,23 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
                 if sid not in moved_on:
                     moved_on.add(sid)
                     st["continued"] += 1
+                    sg["steps"][sid][1] += 1
                 sid = jump
                 continue
 
             # Carry on, skip, or quit.
-            parts = continue_parts(s, a, len(visited) - 1, elapsed, budget, errors)
+            parts = continue_parts(s, a, taken, elapsed, budget, errors, t)
+            taken += 1
             friction_sum += parts["effort"] + parts["confusion"]
-            stays = rng.random() < p_continue(s, a, parts, mean_z)
+            stays = rng.random() < p_continue(s, a, parts, mean_z, seg_z)
             note = None
             if not stays:
                 if s["optional"]:
                     st["skipped"] += 1
                     note = "skipped"
                 else:
-                    why = _reason(parts)
+                    # a step pinned to a real rate reproduces the drop without knowing its cause
+                    why = "observed" if s.get("observed_continue") is not None else _reason(parts)
                     st["abandoned"] += 1
                     st["reasons"][why] = st["reasons"].get(why, 0) + 1
                     outcome, where = "abandoned", sid
@@ -274,6 +302,7 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
             if sid not in moved_on:
                 moved_on.add(sid)
                 st["continued"] += 1
+                sg["steps"][sid][1] += 1
             for cap in s.get("grants", []):
                 a["caps"].add(cap)
             sid = s["next"][choice]["to"]

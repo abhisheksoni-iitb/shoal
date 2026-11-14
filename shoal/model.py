@@ -134,6 +134,11 @@ def normalise(raw: dict) -> dict:
     m.setdefault("dimensions", {})
     m.setdefault("hypotheses", [])
     m.setdefault("variants", [])
+    m.setdefault("scenarios", [])
+    vol = feat.get("volume")
+    if vol is not None:
+        if not isinstance(vol, dict) or not isinstance(vol.get("eligible"), (int, float)) or vol["eligible"] <= 0:
+            raise ModelError("feature.volume must look like {\"eligible\": 700, \"per\": \"week\", \"unit\": \"searches\"}")
     return m
 
 
@@ -202,22 +207,63 @@ def lint(m: dict) -> list:
             if not 0 <= s[f] <= 1:
                 out.append(_finding("error", "range", f"Step '{s['id']}': '{f}' must be between 0 and 1.", s["id"], "model"))
         oc = s.get("observed_continue")
-        if oc is not None and not 0 < oc < 1:
+        rates = list(oc.values()) if isinstance(oc, dict) else [] if oc is None else [oc]
+        if any(not isinstance(r, (int, float)) or not 0 < r < 1 for r in rates):
             out.append(_finding("error", "range", f"Step '{s['id']}': observed_continue must be strictly between 0 and 1.", s["id"], "model"))
+        if isinstance(oc, dict):
+            for k in oc:
+                if k != "default" and k not in seg_ids:
+                    out.append(_finding("error", "bad-ref", f"Step '{s['id']}': observed_continue names unknown segment '{k}'.", s["id"], "model"))
     for sid in m["success"]:
         if sid not in idx:
             out.append(_finding("error", "bad-ref", f"Success step '{sid}' does not exist.", kind="model"))
     if not m["success"]:
         out.append(_finding("error", "no-success", "No success step: mark at least one step with type 'success'.", kind="model"))
+    all_variants = {v.get("id"): v for v in m.get("variants", [])}
     for h in m["hypotheses"]:
         metric = str(h.get("metric", ""))
-        ok = metric in METRICS or (metric.startswith("step_continue:") and metric.split(":", 1)[1] in idx)
+        tied = scenario_designs(h)
+        missing = [d for d in tied if d not in all_variants]
+        if missing:
+            out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': 'on' names unknown variant {', '.join(map(str, missing))}.", kind="model"))
+            continue
+        ok = metric in METRICS
+        if metric.startswith(("step_continue:", "step_reach:")):
+            sid = metric.split(":", 1)[1]
+            try:
+                ok = all(sid in step_index(apply_variant(m, all_variants[d])) for d in tied) if tied else sid in idx
+            except (ModelError, KeyError, TypeError, AttributeError):
+                ok = True  # the broken patch is reported with the variants below
         if not ok:
             out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': unknown metric '{metric}'.", kind="model"))
         if h.get("segment", "all") not in seg_ids | {"all"}:
             out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': unknown segment '{h.get('segment')}'.", kind="model"))
         if h.get("op") not in (">=", "<=", ">", "<"):
             out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': op must be one of >= <= > <.", kind="model"))
+    var_ids = {v.get("id") for v in m.get("variants", [])}
+    for kind in ("variants", "scenarios"):
+        for var in m.get(kind, []):
+            label = f"{kind[:-1].capitalize()} '{var.get('id')}'"
+            if not var.get("id"):
+                out.append(_finding("error", "bad-patch", f"Every entry in '{kind}' needs an 'id'.", kind="model"))
+                continue
+            designs = [None]
+            if kind == "scenarios" and var.get("on"):
+                designs = scenario_designs(var)
+                unknown = [d for d in designs if d not in var_ids]
+                if unknown:
+                    out.append(_finding("error", "bad-patch", f"{label}: 'on' names unknown variant {', '.join(map(str, unknown))}.", kind="model"))
+                    continue
+            for design in designs:
+                try:
+                    target = m if design is None else apply_variant(m, next(v for v in m["variants"] if v.get("id") == design))
+                    patched = apply_variant(target, var)
+                except (ModelError, KeyError, TypeError, AttributeError) as exc:
+                    out.append(_finding("error", "bad-patch", f"{label} cannot be applied: {exc}", kind="model"))
+                    continue
+                for f in lint(patched):
+                    if f["level"] == "error":
+                        out.append(_finding("error", "bad-patch", f"{label}: {f['message']}", f.get("step"), "model"))
     if any(f["level"] == "error" for f in out):
         return out
 
@@ -312,6 +358,23 @@ def _cycles(m: dict, idx: dict) -> list:
     return found[:5]
 
 
+def scenario_designs(scenario: dict) -> list:
+    """Variant ids a scenario is tied to (its 'on' field); empty means it applies to every design."""
+    on = scenario.get("on")
+    return [on] if isinstance(on, str) else list(on or [])
+
+
+def scenarios_for(m: dict, variant=None) -> list:
+    """Scenarios that apply to the design under test: untied ones for the base design,
+    and the ones tied to a variant when that variant is being run."""
+    return [s for s in m.get("scenarios", []) if (variant in scenario_designs(s)) or (not scenario_designs(s) and variant is None)]
+
+
+def hypotheses_for(m: dict, variant=None) -> list:
+    """Hypotheses to test on the design under test: untied ones always, tied ones only on their variant."""
+    return [h for h in m.get("hypotheses", []) if not scenario_designs(h) or variant in scenario_designs(h)]
+
+
 def apply_variant(m: dict, variant: dict) -> dict:
     """Return a copy of the model with a variant patch applied."""
     v = copy.deepcopy(m)
@@ -356,6 +419,8 @@ def apply_variant(m: dict, variant: dict) -> dict:
                 target[k].update(val)
             else:
                 target[k] = val
+    for ep in patch.get("add_entry_points", []):
+        v["entry_points"].append(copy.deepcopy(ep))
     for eid, changes in patch.get("entry_points", {}).items():
         target = next((e for e in v["entry_points"] if e["id"] == eid), None)
         if target is None:
@@ -368,6 +433,15 @@ def apply_variant(m: dict, variant: dict) -> dict:
             v["feature"][k] = copy.deepcopy(val)
     v.pop("_share_total", None)
     v["variants"] = []
+    v["scenarios"] = []
+    # keep the hypotheses that still make sense on the patched design
+    v["hypotheses"] = [{k: val for k, val in h.items() if k != "on"} for h in v.get("hypotheses", [])
+                       if not scenario_designs(h) or variant.get("id") in scenario_designs(h)]
+    # A patch may add or remove ways to finish: follow the step types unless the model named its own list.
+    if set(m.get("success", [])) == {s["id"] for s in m["steps"] if s["type"] == "success"}:
+        v.pop("success", None)
+    else:
+        v["success"] = [sid for sid in v["success"] if any(s["id"] == sid for s in v["steps"])]
     return normalise(v)
 
 

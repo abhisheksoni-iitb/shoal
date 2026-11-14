@@ -1,6 +1,6 @@
 {
-  "shoal": "0.1.0",
-  "generated": "2026-11-14 12:14",
+  "shoal": "0.2.0",
+  "generated": "2026-11-14 20:32",
   "feature": {
     "id": "one-tap-reorder",
     "name": "One-tap reorder",
@@ -19,23 +19,23 @@
   },
   "metrics": {
     "n": 5000,
-    "entered": 1436,
-    "success": 533,
-    "discovery_rate": 0.2872,
-    "completion_rate": 0.3711699164345404,
-    "adoption_rate": 0.1066,
-    "error_rate": 0.07311977715877438,
-    "blocked_rate": 0.366991643454039,
-    "median_time_s": 68.61622110794707,
-    "repeat_d1": 0.06378986866791744,
-    "repeat_d7": 0.5947467166979362,
-    "repeat_d30": 0.8424015009380863
+    "entered": 1438,
+    "success": 534,
+    "discovery_rate": 0.2876,
+    "completion_rate": 0.3713490959666203,
+    "adoption_rate": 0.1068,
+    "error_rate": 0.07232267037552156,
+    "blocked_rate": 0.3616133518776078,
+    "median_time_s": 68.77032380230571,
+    "repeat_d1": 0.06554307116104868,
+    "repeat_d7": 0.6048689138576779,
+    "repeat_d30": 0.850187265917603
   },
   "outcomes": {
-    "never_saw": 3564,
-    "success": 533,
-    "abandoned": 308,
-    "blocked": 527,
+    "never_saw": 3562,
+    "success": 534,
+    "abandoned": 316,
+    "blocked": 520,
     "error_exit": 68,
     "stuck": 0
   },
@@ -44,13 +44,13 @@
       "step": "open_sheet",
       "name": "Opens the reorder sheet",
       "type": "view",
-      "entered": 1436,
+      "entered": 1438,
       "share_of_starters": 1.0,
-      "continued": 1112,
-      "continue_rate": 0.7743732590529248,
-      "lost": 324,
+      "continued": 1117,
+      "continue_rate": 0.7767732962447844,
+      "lost": 321,
       "abandoned": 18,
-      "blocked": 306,
+      "blocked": 303,
       "error_exit": 0,
       "skipped": 0,
       "errors": 0,
@@ -60,18 +60,18 @@
         "confusion": 18
       },
       "top_reason": "blocked",
-      "median_time_s": 5.843099951293938
+      "median_time_s": 5.843218846150453
     },
     {
       "step": "review_items",
       "name": "Reviews the items and prices",
       "type": "view",
-      "entered": 1112,
-      "share_of_starters": 0.7743732590529248,
-      "continued": 1059,
-      "continue_rate": 0.9523381294964028,
-      "lost": 53,
-      "abandoned": 53,
+      "entered": 1117,
+      "share_of_starters": 0.7767732962447844,
+      "continued": 1063,
+      "continue_rate": 0.9516562220232766,
+      "lost": 54,
+      "abandoned": 54,
       "blocked": 0,
       "error_exit": 0,
       "skipped": 0,
@@ -79,21 +79,21 @@
       "retries": 0,
       "fallbacks": 0,
       "reasons": {
-        "effort": 53
+        "effort": 54
       },
       "top_reason": "effort",
-      "median_time_s": 19.422920576736114
+      "median_time_s": 19.385266445536868
     },
     {
       "step": "fix_stock",
       "name": "Replaces or removes out-of-stock items",
       "type": "decision",
-      "entered": 405,
-      "share_of_starters": 0.282033426183844,
-      "continued": 301,
-      "continue_rate": 0.7432098765432099,
-      "lost": 104,
-      "abandoned": 104,
+      "entered": 406,
+      "share_of_starters": 0.282336578581363,
+      "continued": 305,
+      "continue_rate": 0.7512315270935961,
+      "lost": 101,
+      "abandoned": 101,
       "blocked": 0,
       "error_exit": 0,
       "skipped": 0,
@@ -101,67 +101,67 @@
       "retries": 0,
       "fallbacks": 0,
       "reasons": {
-        "effort": 104
+        "effort": 101
       },
       "top_reason": "effort",
-      "median_time_s": 29.595414481743838
+      "median_time_s": 29.527817596120457
     },
     {
       "step": "pick_slot",
       "name": "Picks a delivery slot",
       "type": "input",
-      "entered": 955,
-      "share_of_starters": 0.665041782729805,
-      "continued": 851,
-      "continue_rate": 0.8910994764397906,
-      "lost": 104,
-      "abandoned": 82,
+      "entered": 962,
+      "share_of_starters": 0.6689847009735744,
+      "continued": 856,
+      "continue_rate": 0.8898128898128899,
+      "lost": 106,
+      "abandoned": 84,
       "blocked": 0,
       "error_exit": 22,
       "skipped": 0,
-      "errors": 61,
-      "retries": 39,
+      "errors": 60,
+      "retries": 38,
       "fallbacks": 0,
       "reasons": {
-        "effort": 81,
+        "effort": 83,
         "low_motivation": 1
       },
       "top_reason": "effort",
-      "median_time_s": 17.58116746875484
+      "median_time_s": 17.582862773294593
     },
     {
       "step": "confirm_pay",
       "name": "Confirms payment with the saved card",
       "type": "input",
-      "entered": 851,
-      "share_of_starters": 0.5926183844011143,
-      "continued": 588,
-      "continue_rate": 0.690951821386604,
-      "lost": 263,
-      "abandoned": 42,
-      "blocked": 221,
+      "entered": 856,
+      "share_of_starters": 0.5952712100139083,
+      "continued": 594,
+      "continue_rate": 0.6939252336448598,
+      "lost": 262,
+      "abandoned": 45,
+      "blocked": 217,
       "error_exit": 0,
       "skipped": 0,
       "errors": 0,
       "retries": 0,
       "fallbacks": 0,
       "reasons": {
-        "trust": 29,
-        "fatigue": 13
+        "trust": 30,
+        "fatigue": 15
       },
       "top_reason": "blocked",
-      "median_time_s": 7.62217778578426
+      "median_time_s": 7.623179340263083
     },
     {
       "step": "place_order",
       "name": "Order is placed",
       "type": "external",
-      "entered": 588,
-      "share_of_starters": 0.40947075208913647,
-      "continued": 533,
-      "continue_rate": 0.9064625850340136,
-      "lost": 55,
-      "abandoned": 9,
+      "entered": 594,
+      "share_of_starters": 0.41307371349095967,
+      "continued": 534,
+      "continue_rate": 0.898989898989899,
+      "lost": 60,
+      "abandoned": 14,
       "blocked": 0,
       "error_exit": 46,
       "skipped": 0,
@@ -169,17 +169,18 @@
       "retries": 0,
       "fallbacks": 0,
       "reasons": {
-        "fatigue": 9
+        "fatigue": 12,
+        "waiting": 2
       },
       "top_reason": "error",
-      "median_time_s": 4.298555167274304
+      "median_time_s": 4.274241132805294
     },
     {
       "step": "confirmed",
       "name": "Sees the confirmation",
       "type": "success",
-      "entered": 533,
-      "share_of_starters": 0.3711699164345404,
+      "entered": 534,
+      "share_of_starters": 0.3713490959666203,
       "continued": 0,
       "continue_rate": 1.0,
       "lost": 0,
@@ -192,7 +193,7 @@
       "fallbacks": 0,
       "reasons": {},
       "top_reason": null,
-      "median_time_s": 2.7935392042466414
+      "median_time_s": 2.783341195450947
     }
   ],
   "segments": [
@@ -201,18 +202,18 @@
       "name": "Weekly regular",
       "share": 0.3,
       "metrics": {
-        "n": 1529,
-        "entered": 523,
-        "success": 364,
-        "discovery_rate": 0.342053629823414,
-        "completion_rate": 0.6959847036328872,
-        "adoption_rate": 0.2380640941792021,
-        "error_rate": 0.10133843212237094,
-        "blocked_rate": 0.10707456978967496,
-        "median_time_s": 66.96280967879724,
-        "repeat_d1": 0.06868131868131869,
-        "repeat_d7": 0.6098901098901099,
-        "repeat_d30": 0.9038461538461539
+        "n": 1530,
+        "entered": 526,
+        "success": 367,
+        "discovery_rate": 0.3437908496732026,
+        "completion_rate": 0.6977186311787072,
+        "adoption_rate": 0.23986928104575164,
+        "error_rate": 0.10266159695817491,
+        "blocked_rate": 0.10646387832699619,
+        "median_time_s": 67.11855403381645,
+        "repeat_d1": 0.0681198910081744,
+        "repeat_d7": 0.6239782016348774,
+        "repeat_d30": 0.9019073569482289
       }
     },
     {
@@ -220,18 +221,18 @@
       "name": "Occasional shopper",
       "share": 0.45,
       "metrics": {
-        "n": 2191,
-        "entered": 537,
-        "success": 164,
-        "discovery_rate": 0.24509356458238246,
-        "completion_rate": 0.3054003724394786,
-        "adoption_rate": 0.07485166590597901,
-        "error_rate": 0.08193668528864059,
-        "blocked_rate": 0.2532588454376164,
-        "median_time_s": 70.50649634182045,
-        "repeat_d1": 0.054878048780487805,
-        "repeat_d7": 0.5609756097560976,
-        "repeat_d30": 0.7073170731707317
+        "n": 2203,
+        "entered": 540,
+        "success": 162,
+        "discovery_rate": 0.2451202905129369,
+        "completion_rate": 0.3,
+        "adoption_rate": 0.07353608715388107,
+        "error_rate": 0.07777777777777778,
+        "blocked_rate": 0.2462962962962963,
+        "median_time_s": 70.7876838142675,
+        "repeat_d1": 0.06172839506172839,
+        "repeat_d7": 0.5617283950617284,
+        "repeat_d30": 0.7345679012345679
       }
     },
     {
@@ -239,14 +240,14 @@
       "name": "New customer",
       "share": 0.25,
       "metrics": {
-        "n": 1280,
-        "entered": 376,
+        "n": 1267,
+        "entered": 372,
         "success": 5,
-        "discovery_rate": 0.29375,
-        "completion_rate": 0.013297872340425532,
-        "adoption_rate": 0.00390625,
-        "error_rate": 0.02127659574468085,
-        "blocked_rate": 0.8909574468085106,
+        "discovery_rate": 0.2936069455406472,
+        "completion_rate": 0.013440860215053764,
+        "adoption_rate": 0.003946329913180742,
+        "error_rate": 0.021505376344086023,
+        "blocked_rate": 0.8897849462365591,
         "median_time_s": 83.15186931576407,
         "repeat_d1": 0.0,
         "repeat_d7": 0.6,
@@ -257,59 +258,59 @@
   "contexts": {
     "device": {
       "mobile": {
-        "n": 4218,
-        "entered": 1199,
-        "success": 438
+        "n": 4214,
+        "entered": 1203,
+        "success": 440
       },
       "desktop": {
-        "n": 782,
-        "entered": 237,
-        "success": 95
+        "n": 786,
+        "entered": 235,
+        "success": 94
       }
     },
     "network": {
       "good": {
-        "n": 4077,
-        "entered": 1174,
-        "success": 472
+        "n": 4091,
+        "entered": 1177,
+        "success": 476
       },
       "offline": {
-        "n": 139,
-        "entered": 43,
+        "n": 137,
+        "entered": 42,
         "success": 0
       },
       "flaky": {
-        "n": 784,
+        "n": 772,
         "entered": 219,
-        "success": 61
+        "success": 58
       }
     }
   },
   "entries": {
     "home_banner": {
-      "exposed": 3569,
-      "entered": 1020,
-      "success": 313
+      "exposed": 3573,
+      "entered": 1021,
+      "success": 314
     },
     "order_history": {
-      "exposed": 524,
-      "entered": 276,
-      "success": 153
+      "exposed": 520,
+      "entered": 277,
+      "success": 152
     },
     "sunday_push": {
       "exposed": 907,
       "entered": 140,
-      "success": 67
+      "success": 68
     }
   },
   "events": {
-    "reorder_opened": 1130,
-    "reorder_items_viewed": 1112,
-    "reorder_slot_picked": 955,
-    "reorder_submitted": 588,
-    "reorder_completed": 533,
-    "reorder_stock_resolved": 405,
-    "pick_slot.error": 61,
+    "reorder_opened": 1135,
+    "reorder_items_viewed": 1117,
+    "reorder_slot_picked": 962,
+    "reorder_submitted": 594,
+    "reorder_completed": 534,
+    "reorder_stock_resolved": 406,
+    "pick_slot.error": 60,
     "place_order.error": 46
   },
   "hypotheses": [
@@ -323,8 +324,8 @@
       "holds_share": 0.0,
       "verdict": "contradicted",
       "predicted": {
-        "p5": 0.32434943224416907,
-        "p50": 0.35439955285851166,
+        "p5": 0.31751201040423066,
+        "p50": 0.35414349276974416,
         "p95": 0.38848649640515787
       }
     },
@@ -338,8 +339,8 @@
       "holds_share": 0.0,
       "verdict": "contradicted",
       "predicted": {
-        "p5": 0.08583333333333333,
-        "p50": 0.10033333333333333,
+        "p5": 0.08526666666666667,
+        "p50": 0.1,
         "p95": 0.11513333333333332
       }
     },
@@ -355,7 +356,7 @@
       "predicted": {
         "p5": 63.933493212407,
         "p50": 68.26024230930035,
-        "p95": 72.24590835180294
+        "p95": 72.37386648094393
       }
     },
     {
@@ -379,56 +380,56 @@
       "lever": "Give users without saved_card a way through 'Confirms payment with the saved card'",
       "step": "confirm_pay",
       "kind": "blocked",
-      "adoption_delta": 0.032875000000000015,
-      "completion_delta": 0.11047044499241354,
+      "adoption_delta": 0.03287500000000003,
+      "completion_delta": 0.10972122708751303,
       "within_noise": false
     },
     {
       "lever": "Make the 'Home banner' entry point easier to find",
       "step": null,
       "kind": "discovery",
-      "adoption_delta": 0.031625000000000014,
-      "completion_delta": -0.0035097784353373407,
+      "adoption_delta": 0.030625,
+      "completion_delta": -0.007022384536483517,
       "within_noise": false
     },
     {
       "lever": "Make the 'Sunday push notification' entry point easier to find",
       "step": null,
       "kind": "discovery",
-      "adoption_delta": 0.013999999999999999,
-      "completion_delta": 0.010600149325615482,
+      "adoption_delta": 0.014374999999999999,
+      "completion_delta": 0.011156410228340574,
       "within_noise": false
     },
     {
       "lever": "Give users without past_order a way through 'Opens the reorder sheet'",
       "step": "open_sheet",
       "kind": "blocked",
-      "adoption_delta": 0.007000000000000006,
-      "completion_delta": 0.01831046137684922,
+      "adoption_delta": 0.006875000000000006,
+      "completion_delta": 0.019330623021114324,
       "within_noise": true
     },
     {
       "lever": "Make the 'Reorder button in order history' entry point easier to find",
       "step": null,
       "kind": "discovery",
-      "adoption_delta": 0.005875000000000005,
-      "completion_delta": 0.0023428994340620735,
+      "adoption_delta": 0.006500000000000006,
+      "completion_delta": 0.003989384421358544,
       "within_noise": true
     },
     {
       "lever": "Cut the effort of 'Confirms payment with the saved card'",
       "step": "confirm_pay",
       "kind": "effort",
-      "adoption_delta": 0.004750000000000004,
-      "completion_delta": 0.015796059611272062,
+      "adoption_delta": 0.004625000000000004,
+      "completion_delta": 0.01625142235699706,
       "within_noise": true
     },
     {
       "lever": "Make 'Confirms payment with the saved card' clearer",
       "step": "confirm_pay",
       "kind": "clarity",
-      "adoption_delta": 0.004500000000000004,
-      "completion_delta": 0.01527145212334935,
+      "adoption_delta": 0.004625000000000004,
+      "completion_delta": 0.0164221858495599,
       "within_noise": true
     },
     {
@@ -436,15 +437,23 @@
       "step": "fix_stock",
       "kind": "clarity",
       "adoption_delta": 0.004125000000000004,
-      "completion_delta": 0.0057500341288566625,
+      "completion_delta": 0.005724590532631912,
       "within_noise": true
     },
     {
       "lever": "Cut the effort of 'Replaces or removes out-of-stock items'",
       "step": "fix_stock",
       "kind": "effort",
-      "adoption_delta": 0.0037500000000000033,
-      "completion_delta": 0.004631307785066707,
+      "adoption_delta": 0.0036250000000000032,
+      "completion_delta": 0.0043467813145876555,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Reviews the items and prices'",
+      "step": "review_items",
+      "kind": "effort",
+      "adoption_delta": 0.003375000000000003,
+      "completion_delta": 0.012488969401445893,
       "within_noise": true
     },
     {
@@ -452,31 +461,23 @@
       "step": "pick_slot",
       "kind": "effort",
       "adoption_delta": 0.003375000000000003,
-      "completion_delta": 0.008527272750069259,
-      "within_noise": true
-    },
-    {
-      "lever": "Cut the effort of 'Reviews the items and prices'",
-      "step": "review_items",
-      "kind": "effort",
-      "adoption_delta": 0.0031250000000000028,
-      "completion_delta": 0.01135599400853926,
+      "completion_delta": 0.009122819651505576,
       "within_noise": true
     },
     {
       "lever": "Make 'Reviews the items and prices' clearer",
       "step": "review_items",
       "kind": "clarity",
-      "adoption_delta": 0.0031250000000000028,
-      "completion_delta": 0.011524772731890787,
+      "adoption_delta": 0.003250000000000003,
+      "completion_delta": 0.012386604896395537,
       "within_noise": true
     },
     {
       "lever": "Make 'Picks a delivery slot' clearer",
       "step": "pick_slot",
       "kind": "clarity",
-      "adoption_delta": 0.0026250000000000023,
-      "completion_delta": 0.006252176059858172,
+      "adoption_delta": 0.0025000000000000022,
+      "completion_delta": 0.006421085212032385,
       "within_noise": true
     },
     {
@@ -484,23 +485,23 @@
       "step": "place_order",
       "kind": "errors",
       "adoption_delta": 0.002125000000000002,
-      "completion_delta": 0.006575471595789473,
+      "completion_delta": 0.006557524731743314,
       "within_noise": true
     },
     {
       "lever": "Halve the errors at 'Picks a delivery slot'",
       "step": "pick_slot",
       "kind": "errors",
-      "adoption_delta": 0.0010000000000000009,
-      "completion_delta": 0.00025337523482260593,
+      "adoption_delta": 0.001125000000000001,
+      "completion_delta": 0.0008604816484047983,
       "within_noise": true
     },
     {
       "lever": "Make 'Opens the reorder sheet' clearer",
       "step": "open_sheet",
       "kind": "clarity",
-      "adoption_delta": 0.0001250000000000001,
-      "completion_delta": -0.00024472232441474784,
+      "adoption_delta": 0.0006250000000000006,
+      "completion_delta": 0.0010067072321406356,
       "within_noise": true
     }
   ],
@@ -509,59 +510,73 @@
       "id": "usual-slot",
       "name": "Usual slot pre-selected",
       "note": "The slot step shows the customer's usual slot already chosen.",
-      "wins_share": 0.8333333333333334,
+      "wins_share": 0.875,
       "diff": {
         "adoption_rate": {
-          "p5": -0.002366666666666664,
-          "p50": 0.008,
-          "p95": 0.017900000000000003
+          "p5": -0.002933333333333339,
+          "p50": 0.008666666666666663,
+          "p95": 0.015899999999999997
         },
         "completion_rate": {
-          "p5": -0.005645560188326596,
-          "p50": 0.020941745353372287,
-          "p95": 0.051834132422081326
+          "p5": -0.004959351975663503,
+          "p50": 0.0215496867789689,
+          "p95": 0.053786316824622496
         },
         "discovery_rate": {
-          "p5": -0.010466666666666687,
-          "p50": 0.004333333333333356,
-          "p95": 0.01749999999999996
+          "p5": -0.01036666666666668,
+          "p50": 0.004666666666666652,
+          "p95": 0.014566666666666658
         },
         "error_rate": {
-          "p5": -0.046605853616457506,
-          "p50": -0.030787581868062353,
+          "p5": -0.05018417914202982,
+          "p50": -0.03142608762060354,
           "p95": -0.007695872179441714
         },
         "median_time_s": {
-          "p5": -17.112456913206422,
-          "p50": -15.090085206248052,
-          "p95": -10.947146101347464
+          "p5": -17.20751928368831,
+          "p50": -14.282134360211685,
+          "p95": -11.060802304580644
         }
       },
       "value": {
         "adoption_rate": {
-          "p5": 0.09086666666666668,
-          "p50": 0.10633333333333334,
-          "p95": 0.12456666666666666
+          "p5": 0.0881,
+          "p50": 0.10733333333333334,
+          "p95": 0.12446666666666666
         },
         "completion_rate": {
-          "p5": 0.34447229184071293,
-          "p50": 0.3801335809272792,
-          "p95": 0.4041774434262329
+          "p5": 0.3400658635347884,
+          "p50": 0.37689211376516074,
+          "p95": 0.40662956778584214
         },
         "discovery_rate": {
-          "p5": 0.2506666666666667,
+          "p5": 0.2502666666666667,
           "p50": 0.2833333333333333,
-          "p95": 0.3341333333333333
+          "p95": 0.33526666666666666
         },
         "error_rate": {
-          "p5": 0.030643089037784073,
-          "p50": 0.04608580274214949,
-          "p95": 0.061289186223408225
+          "p5": 0.03124956660425768,
+          "p50": 0.04668507730452136,
+          "p95": 0.06194328774973936
         },
         "median_time_s": {
-          "p5": 51.36668770924031,
-          "p50": 53.94879957473712,
-          "p95": 55.962304114344754
+          "p5": 51.31272843401528,
+          "p50": 53.79715528255214,
+          "p95": 55.96658965759732
+        }
+      },
+      "ends": {
+        "confirmed": {
+          "diff": {
+            "p5": -0.002933333333333339,
+            "p50": 0.008666666666666663,
+            "p95": 0.015899999999999997
+          },
+          "value": {
+            "p5": 0.0881,
+            "p50": 0.10733333333333334,
+            "p95": 0.12446666666666666
+          }
         }
       },
       "verdict": "no clear difference"
@@ -570,73 +585,264 @@
       "id": "add-card",
       "name": "Add a card inline",
       "note": "Customers without a saved card can add one without leaving the flow.",
-      "wins_share": 0.9583333333333334,
+      "wins_share": 1.0,
       "diff": {
         "adoption_rate": {
-          "p5": 0.004600000000000004,
-          "p50": 0.017,
-          "p95": 0.03843333333333333
+          "p5": 0.009333333333333332,
+          "p50": 0.019000000000000003,
+          "p95": 0.040533333333333324
         },
         "completion_rate": {
-          "p5": 0.017681548244583765,
-          "p50": 0.05937194273398466,
-          "p95": 0.11917559053967874
+          "p5": 0.027074972481664315,
+          "p50": 0.06809451221015708,
+          "p95": 0.13130636797832365
         },
         "discovery_rate": {
-          "p5": -0.01636666666666666,
-          "p50": 0.003333333333333327,
-          "p95": 0.030166666666666665
+          "p5": -0.015333333333333357,
+          "p50": 0.0030000000000000027,
+          "p95": 0.028733333333333312
         },
         "error_rate": {
-          "p5": -0.0021260458615280625,
-          "p50": 0.014294139430826143,
-          "p95": 0.03373450257326773
+          "p5": -0.0013888707309641923,
+          "p50": 0.016349027349295803,
+          "p95": 0.03360480042185305
         },
         "median_time_s": {
-          "p5": -0.2393578931148035,
-          "p50": 3.129104880696822,
-          "p95": 7.956396552776979
+          "p5": 0.3385787035267492,
+          "p50": 3.329541214244834,
+          "p95": 8.725187184009224
         }
       },
       "value": {
         "adoption_rate": {
-          "p5": 0.10276666666666667,
-          "p50": 0.11933333333333333,
-          "p95": 0.13313333333333333
+          "p5": 0.09783333333333333,
+          "p50": 0.12033333333333333,
+          "p95": 0.13703333333333334
         },
         "completion_rate": {
-          "p5": 0.3672038813899279,
-          "p50": 0.41531399058495877,
-          "p95": 0.46787636669470145
+          "p5": 0.37078541374474056,
+          "p50": 0.4122384957370234,
+          "p95": 0.4763303851114796
         },
         "discovery_rate": {
-          "p5": 0.2521,
-          "p50": 0.2906666666666667,
-          "p95": 0.3273
+          "p5": 0.25,
+          "p50": 0.29033333333333333,
+          "p95": 0.3263333333333333
         },
         "error_rate": {
-          "p5": 0.062055225190095535,
-          "p50": 0.08997683248600297,
-          "p95": 0.11264032577591898
+          "p5": 0.06870602939101336,
+          "p50": 0.08849151391717583,
+          "p95": 0.1120028848135174
         },
         "median_time_s": {
-          "p5": 67.23042347253433,
-          "p50": 72.15486361561005,
-          "p95": 74.68574029164957
+          "p5": 67.84832792580092,
+          "p50": 72.56096773964916,
+          "p95": 75.55777328058565
+        }
+      },
+      "ends": {
+        "confirmed": {
+          "diff": {
+            "p5": 0.009333333333333332,
+            "p50": 0.019000000000000003,
+            "p95": 0.040533333333333324
+          },
+          "value": {
+            "p5": 0.09783333333333333,
+            "p50": 0.12033333333333333,
+            "p95": 0.13703333333333334
+          }
         }
       },
       "verdict": "better"
     }
   ],
+  "scenarios": [
+    {
+      "id": "fewer-saved-cards",
+      "name": "Fewer customers have a saved card than we think",
+      "note": "The saved-card shares are guesses from the payments team, not a query.",
+      "wins_share": 0.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": -0.03789999999999999,
+          "p50": -0.023666666666666666,
+          "p95": -0.014200000000000003
+        },
+        "completion_rate": {
+          "p5": -0.12701456453472706,
+          "p50": -0.08453791937963462,
+          "p95": -0.043877715206981006
+        },
+        "discovery_rate": {
+          "p5": -0.018999999999999972,
+          "p50": -0.0016666666666666774,
+          "p95": 0.01266666666666666
+        },
+        "error_rate": {
+          "p5": -0.025857519688863004,
+          "p50": -0.008150654543825256,
+          "p95": 0.00046970532874484645
+        },
+        "median_time_s": {
+          "p5": -4.896687328965965,
+          "p50": 0.34426652385345236,
+          "p95": 2.7283432018109575
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.06146666666666667,
+          "p50": 0.07566666666666666,
+          "p95": 0.09016666666666666
+        },
+        "completion_rate": {
+          "p5": 0.23452525252525253,
+          "p50": 0.2690598847118755,
+          "p95": 0.3020694802973284
+        },
+        "discovery_rate": {
+          "p5": 0.24710000000000001,
+          "p50": 0.2763333333333333,
+          "p95": 0.3288
+        },
+        "error_rate": {
+          "p5": 0.03877735022781794,
+          "p50": 0.06796102448276362,
+          "p95": 0.08207316759647273
+        },
+        "median_time_s": {
+          "p5": 63.91775441099435,
+          "p50": 66.3951592991255,
+          "p95": 73.11041394461279
+        }
+      },
+      "ends": {
+        "confirmed": {
+          "diff": {
+            "p5": -0.03789999999999999,
+            "p50": -0.023666666666666666,
+            "p95": -0.014200000000000003
+          },
+          "value": {
+            "p5": 0.06146666666666667,
+            "p50": 0.07566666666666666,
+            "p95": 0.09016666666666666
+          }
+        }
+      },
+      "verdict": "lower"
+    },
+    {
+      "id": "banner-noticed",
+      "name": "The home banner is noticed twice as often",
+      "note": "If the banner gets the top slot for launch week.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.05133333333333333,
+          "p50": 0.07033333333333333,
+          "p95": 0.08903333333333333
+        },
+        "completion_rate": {
+          "p5": -0.04903526768957521,
+          "p50": -0.018395844657631527,
+          "p95": 0.023077867562634864
+        },
+        "discovery_rate": {
+          "p5": 0.17573333333333335,
+          "p50": 0.20966666666666667,
+          "p95": 0.26093333333333335
+        },
+        "error_rate": {
+          "p5": -0.03730655227601449,
+          "p50": -0.013761076552945055,
+          "p95": 0.022464748741789876
+        },
+        "median_time_s": {
+          "p5": -2.804210008671318,
+          "p50": -0.006833155541769997,
+          "p95": 4.557017615109048
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.15363333333333332,
+          "p50": 0.16733333333333333,
+          "p95": 0.18626666666666666
+        },
+        "completion_rate": {
+          "p5": 0.3072232687103747,
+          "p50": 0.336203406393969,
+          "p95": 0.3613659621802002
+        },
+        "discovery_rate": {
+          "p5": 0.4784,
+          "p50": 0.4996666666666667,
+          "p95": 0.5201666666666667
+        },
+        "error_rate": {
+          "p5": 0.05178130051624341,
+          "p50": 0.06471822291533227,
+          "p95": 0.08225599851487445
+        },
+        "median_time_s": {
+          "p5": 66.6190896449844,
+          "p50": 68.46204413274995,
+          "p95": 70.26410223434378
+        }
+      },
+      "ends": {
+        "confirmed": {
+          "diff": {
+            "p5": 0.05133333333333333,
+            "p50": 0.07033333333333333,
+            "p95": 0.08903333333333333
+          },
+          "value": {
+            "p5": 0.15363333333333332,
+            "p50": 0.16733333333333333,
+            "p95": 0.18626666666666666
+          }
+        }
+      },
+      "verdict": "higher"
+    }
+  ],
+  "outcome_split": [
+    {
+      "step": "confirmed",
+      "name": "Sees the confirmation",
+      "users": 534,
+      "share_of_starters": 0.3713490959666203,
+      "share_of_eligible": 0.1068,
+      "share_of_finishers": 1.0,
+      "range": {
+        "p5": 0.31751201040423066,
+        "p50": 0.35414349276974416,
+        "p95": 0.38848649640515787
+      },
+      "segments": {
+        "weekly_regular": 0.6977186311787072,
+        "occasional": 0.3,
+        "new_customer": 0.013440860215053764
+      }
+    }
+  ],
+  "volume": {
+    "eligible": 40000.0,
+    "per": "week",
+    "unit": "active customers"
+  },
   "watchlist": [
     {
       "step": "open_sheet",
       "name": "Opens the reorder sheet",
       "event": "reorder_opened",
       "expected": {
-        "p5": 0.7187423564803657,
-        "p50": 0.7495915452727792,
-        "p95": 0.8012579015051349
+        "p5": 0.718782554893666,
+        "p50": 0.7479782359679267,
+        "p95": 0.8008929380014852
       },
       "calibrated": false
     },
@@ -645,9 +851,9 @@
       "name": "Reviews the items and prices",
       "event": "reorder_items_viewed",
       "expected": {
-        "p5": 0.9219375853735421,
-        "p50": 0.9476210064445358,
-        "p95": 0.9723329393481734
+        "p5": 0.9228921785240831,
+        "p50": 0.9477632296781233,
+        "p95": 0.9721712251779693
       },
       "calibrated": false
     },
@@ -656,9 +862,9 @@
       "name": "Replaces or removes out-of-stock items",
       "event": "reorder_stock_resolved",
       "expected": {
-        "p5": 0.6546276132404182,
-        "p50": 0.75514233997038,
-        "p95": 0.8218575718575718
+        "p5": 0.6697401908801697,
+        "p50": 0.7615642655367232,
+        "p95": 0.8225550435227854
       },
       "calibrated": false
     },
@@ -667,9 +873,9 @@
       "name": "Picks a delivery slot",
       "event": "reorder_slot_picked",
       "expected": {
-        "p5": 0.8288418988232928,
-        "p50": 0.872395161785473,
-        "p95": 0.9095528041897596
+        "p5": 0.8256651884700665,
+        "p50": 0.8717600515911402,
+        "p95": 0.9100575994807935
       },
       "calibrated": false
     },
@@ -678,8 +884,8 @@
       "name": "Confirms payment with the saved card",
       "event": null,
       "expected": {
-        "p5": 0.6468270088519865,
-        "p50": 0.6946873343932167,
+        "p5": 0.6481668537224092,
+        "p50": 0.6924350821409645,
         "p95": 0.7301846831582514
       },
       "calibrated": false
@@ -689,9 +895,9 @@
       "name": "Order is placed",
       "event": "reorder_submitted",
       "expected": {
-        "p5": 0.869072986881206,
-        "p50": 0.9064625850340136,
-        "p95": 0.9396285140562249
+        "p5": 0.868045589620932,
+        "p50": 0.9008394758394759,
+        "p95": 0.9381157965194109
       },
       "calibrated": false
     }
@@ -806,155 +1012,155 @@
     "jitter": 0.1,
     "overall": {
       "discovery_rate": {
-        "p5": 0.2495,
-        "p50": 0.2823333333333333,
-        "p95": 0.3235
+        "p5": 0.2507333333333333,
+        "p50": 0.281,
+        "p95": 0.3237
       },
       "completion_rate": {
-        "p5": 0.32434943224416907,
-        "p50": 0.35439955285851166,
+        "p5": 0.31751201040423066,
+        "p50": 0.35414349276974416,
         "p95": 0.38848649640515787
       },
       "adoption_rate": {
-        "p5": 0.08583333333333333,
-        "p50": 0.10033333333333333,
+        "p5": 0.08526666666666667,
+        "p50": 0.1,
         "p95": 0.11513333333333332
       },
       "error_rate": {
-        "p5": 0.04581196581196581,
-        "p50": 0.07475255427841634,
-        "p95": 0.09884713446402836
+        "p5": 0.046484157435484875,
+        "p50": 0.07582110412299092,
+        "p95": 0.10027771652241027
       },
       "blocked_rate": {
-        "p5": 0.35388968699664797,
-        "p50": 0.38332705433915437,
-        "p95": 0.40615617715617713
+        "p5": 0.3535154637673418,
+        "p50": 0.38233412290016067,
+        "p95": 0.41566200466200465
       },
       "repeat_d1": {
-        "p5": 0.028710434302539566,
-        "p50": 0.05242566510172143,
-        "p95": 0.08379032258064517
+        "p5": 0.029219924812030076,
+        "p50": 0.05275832960921595,
+        "p95": 0.09579742837807351
       },
       "repeat_d7": {
-        "p5": 0.5573964497041419,
+        "p5": 0.5550448558885284,
         "p50": 0.6156191369606003,
-        "p95": 0.6774906015037594
+        "p95": 0.6792419549130959
       },
       "repeat_d30": {
         "p5": 0.7871290295070783,
-        "p50": 0.8524565479263466,
-        "p95": 0.8928007889546351
+        "p50": 0.8519809482571985,
+        "p95": 0.8929157314833708
       },
       "median_time_s": {
         "p5": 63.933493212407,
         "p50": 68.26024230930035,
-        "p95": 72.24590835180294
+        "p95": 72.37386648094393
       }
     },
     "segments": {
       "weekly_regular": {
         "discovery_rate": {
-          "p5": 0.28105479384249865,
-          "p50": 0.33751222201418796,
-          "p95": 0.37562261529778934
+          "p5": 0.2794454606246558,
+          "p50": 0.34016126025354215,
+          "p95": 0.3748830561330561
         },
         "completion_rate": {
           "p5": 0.6423541165436529,
-          "p50": 0.6820715382927365,
-          "p95": 0.7221866096866096
+          "p50": 0.6793954996186118,
+          "p95": 0.7217396109637488
         },
         "adoption_rate": {
-          "p5": 0.19176483690541007,
-          "p50": 0.232128563512099,
-          "p95": 0.26493061349352015
+          "p5": 0.1932951774053969,
+          "p50": 0.22850228831278968,
+          "p95": 0.26244658119658115
         },
         "error_rate": {
-          "p5": 0.06836121067303863,
+          "p5": 0.06768379579176796,
           "p50": 0.10237694179300019,
           "p95": 0.14755852998787425
         },
         "blocked_rate": {
-          "p5": 0.06503405448717949,
-          "p50": 0.09403868930122385,
-          "p95": 0.12323027473788933
+          "p5": 0.065117100747022,
+          "p50": 0.09333748166585182,
+          "p95": 0.12283662068179227
         },
         "repeat_d1": {
-          "p5": 0.018785714285714288,
-          "p50": 0.053342412892974686,
+          "p5": 0.018831168831168834,
+          "p50": 0.054450757575757576,
           "p95": 0.08215666421207658
         },
         "repeat_d7": {
-          "p5": 0.5909957983193277,
-          "p50": 0.6576086956521738,
-          "p95": 0.7259634684865516
+          "p5": 0.5851698544105053,
+          "p50": 0.6666666666666666,
+          "p95": 0.7229444644789037
         },
         "repeat_d30": {
-          "p5": 0.8546508563899868,
-          "p50": 0.9108083921646615,
+          "p5": 0.8535486443381181,
+          "p50": 0.9127414597012085,
           "p95": 0.9494108983799705
         },
         "median_time_s": {
-          "p5": 62.299683263054746,
-          "p50": 67.04679969546928,
-          "p95": 72.42196096760124
+          "p5": 62.274802170786685,
+          "p50": 66.98640942146129,
+          "p95": 72.3721893173971
         }
       },
       "occasional": {
         "discovery_rate": {
-          "p5": 0.19654551661063235,
+          "p5": 0.20153958944281525,
           "p50": 0.22927504771885177,
-          "p95": 0.2817125483692648
+          "p95": 0.28045328911000555
         },
         "completion_rate": {
-          "p5": 0.24833872126436782,
-          "p50": 0.2926864801864802,
+          "p5": 0.23489334233150436,
+          "p50": 0.2853488372093024,
           "p95": 0.3287514934289128
         },
         "adoption_rate": {
-          "p5": 0.05787714263711054,
-          "p50": 0.06657620985979196,
+          "p5": 0.05523813721539391,
+          "p50": 0.06666798356510746,
           "p95": 0.08759126445693607
         },
         "error_rate": {
-          "p5": 0.05664328852522891,
-          "p50": 0.09036366209141078,
-          "p95": 0.11442617991125453
+          "p5": 0.05728110599078341,
+          "p50": 0.09014916971573318,
+          "p95": 0.12072697606961566
         },
         "blocked_rate": {
-          "p5": 0.18675258468721712,
-          "p50": 0.255497022446175,
-          "p95": 0.31108108108108107
+          "p5": 0.18805067664843075,
+          "p50": 0.2568506006006006,
+          "p95": 0.3173218673218673
         },
         "repeat_d1": {
           "p5": 0.0028301886792452854,
-          "p50": 0.046536796536796536,
-          "p95": 0.13809523809523802
+          "p50": 0.04819976771196283,
+          "p95": 0.16178861788617874
         },
         "repeat_d7": {
-          "p5": 0.43815406976744187,
-          "p50": 0.5,
-          "p95": 0.6103664192949907
+          "p5": 0.42991071428571426,
+          "p50": 0.5169191919191919,
+          "p95": 0.627660753880266
         },
         "repeat_d30": {
           "p5": 0.6078203639179248,
-          "p50": 0.7154761904761905,
-          "p95": 0.7953985367731998
+          "p50": 0.7229166666666667,
+          "p95": 0.7905849056603774
         },
         "median_time_s": {
-          "p5": 64.12314048159881,
-          "p50": 70.54828369080371,
-          "p95": 76.52936783946868
+          "p5": 63.69300770840672,
+          "p50": 70.20164193917563,
+          "p95": 78.15245064580795
         }
       },
       "new_customer": {
         "discovery_rate": {
           "p5": 0.2531716417910448,
-          "p50": 0.3185585637260525,
-          "p95": 0.37540282087024296
+          "p50": 0.3228318978318978,
+          "p95": 0.3742837602212602
         },
         "completion_rate": {
           "p5": 0.0,
-          "p50": 0.018967997123336928,
+          "p50": 0.018883049790683174,
           "p95": 0.03616803278688524
         },
         "adoption_rate": {
@@ -965,11 +1171,11 @@
         "error_rate": {
           "p5": 0.0,
           "p50": 0.007752403846153846,
-          "p95": 0.026736111111111096
+          "p95": 0.026519495412844023
         },
         "blocked_rate": {
-          "p5": 0.8965488614800758,
-          "p50": 0.9250801282051282,
+          "p5": 0.896539270687237,
+          "p50": 0.9227035100821509,
           "p95": 0.9533748645720477
         },
         "repeat_d1": {
@@ -979,7 +1185,7 @@
         },
         "repeat_d7": {
           "p5": 0.0,
-          "p50": 0.41666666666666663,
+          "p50": 0.3333333333333333,
           "p95": 1.0
         },
         "repeat_d30": {
@@ -989,46 +1195,100 @@
         },
         "median_time_s": {
           "p5": 0.0,
-          "p50": 73.59367748139323,
-          "p95": 90.1521719001488
+          "p50": 69.015101198586,
+          "p95": 86.91358531415585
         }
       }
     },
     "steps": {
       "open_sheet": {
-        "p5": 0.7187423564803657,
-        "p50": 0.7495915452727792,
-        "p95": 0.8012579015051349
+        "p5": 0.718782554893666,
+        "p50": 0.7479782359679267,
+        "p95": 0.8008929380014852
       },
       "review_items": {
-        "p5": 0.9219375853735421,
-        "p50": 0.9476210064445358,
-        "p95": 0.9723329393481734
+        "p5": 0.9228921785240831,
+        "p50": 0.9477632296781233,
+        "p95": 0.9721712251779693
       },
       "fix_stock": {
-        "p5": 0.6546276132404182,
-        "p50": 0.75514233997038,
-        "p95": 0.8218575718575718
+        "p5": 0.6697401908801697,
+        "p50": 0.7615642655367232,
+        "p95": 0.8225550435227854
       },
       "pick_slot": {
-        "p5": 0.8288418988232928,
-        "p50": 0.872395161785473,
-        "p95": 0.9095528041897596
+        "p5": 0.8256651884700665,
+        "p50": 0.8717600515911402,
+        "p95": 0.9100575994807935
       },
       "confirm_pay": {
-        "p5": 0.6468270088519865,
-        "p50": 0.6946873343932167,
+        "p5": 0.6481668537224092,
+        "p50": 0.6924350821409645,
         "p95": 0.7301846831582514
       },
       "place_order": {
-        "p5": 0.869072986881206,
-        "p50": 0.9064625850340136,
-        "p95": 0.9396285140562249
+        "p5": 0.868045589620932,
+        "p50": 0.9008394758394759,
+        "p95": 0.9381157965194109
       },
       "confirmed": {
         "p5": 0.0,
         "p50": 0.0,
         "p95": 0.0
+      }
+    },
+    "reach": {
+      "open_sheet": {
+        "p5": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "review_items": {
+        "p5": 0.718782554893666,
+        "p50": 0.7479782359679267,
+        "p95": 0.8008929380014852
+      },
+      "fix_stock": {
+        "p5": 0.21198307885208056,
+        "p50": 0.24779220779220779,
+        "p95": 0.27638150815784274
+      },
+      "pick_slot": {
+        "p5": 0.6030802530802531,
+        "p50": 0.6474147671320916,
+        "p95": 0.695880211477599
+      },
+      "confirm_pay": {
+        "p5": 0.5180749248017501,
+        "p50": 0.5647682119205298,
+        "p95": 0.6147760706113109
+      },
+      "place_order": {
+        "p5": 0.35938922155688624,
+        "p50": 0.39183902987628966,
+        "p95": 0.41807384497656475
+      },
+      "confirmed": {
+        "p5": 0.31751201040423066,
+        "p50": 0.35414349276974416,
+        "p95": 0.38848649640515787
+      }
+    },
+    "entries": {
+      "home_banner": {
+        "p5": 0.24022704022704022,
+        "p50": 0.28653732290878997,
+        "p95": 0.3452122020450737
+      },
+      "order_history": {
+        "p5": 0.4157406152595203,
+        "p50": 0.4818198769345515,
+        "p95": 0.5951353393484154
+      },
+      "sunday_push": {
+        "p5": 0.09297918393663074,
+        "p50": 0.13784132534132532,
+        "p95": 0.17866235153488136
       }
     }
   },
@@ -2170,7 +2430,7 @@
     {
       "step": "review_items",
       "name": "Reviews the items and prices",
-      "loss_share": 0.03690807799442897,
+      "loss_share": 0.037552155771905425,
       "mentions": 3,
       "sessions": 6,
       "read": "Voices only: the model may be underrating this step."
@@ -2178,7 +2438,7 @@
     {
       "step": "confirm_pay",
       "name": "Confirms payment with the saved card",
-      "loss_share": 0.18314763231197773,
+      "loss_share": 0.18219749652294853,
       "mentions": 2,
       "sessions": 6,
       "read": "Both agree: fix this first."
@@ -2186,7 +2446,7 @@
     {
       "step": "fix_stock",
       "name": "Replaces or removes out-of-stock items",
-      "loss_share": 0.07242339832869081,
+      "loss_share": 0.0702364394993046,
       "mentions": 2,
       "sessions": 6,
       "read": "Both agree: fix this first."
@@ -2194,7 +2454,7 @@
     {
       "step": "open_sheet",
       "name": "Opens the reorder sheet",
-      "loss_share": 0.22562674094707522,
+      "loss_share": 0.22322670375521558,
       "mentions": 1,
       "sessions": 6,
       "read": "Numbers only: check this step's effort and clarity scores."
@@ -2202,7 +2462,7 @@
     {
       "step": "place_order",
       "name": "Order is placed",
-      "loss_share": 0.0383008356545961,
+      "loss_share": 0.04172461752433936,
       "mentions": 2,
       "sessions": 6,
       "read": "Voices only: the model may be underrating this step."
@@ -2210,7 +2470,7 @@
     {
       "step": "pick_slot",
       "name": "Picks a delivery slot",
-      "loss_share": 0.07242339832869081,
+      "loss_share": 0.0737134909596662,
       "mentions": 1,
       "sessions": 6,
       "read": "Numbers only: check this step's effort and clarity scores."

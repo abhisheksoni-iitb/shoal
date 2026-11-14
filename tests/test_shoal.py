@@ -104,6 +104,199 @@ class SimTests(unittest.TestCase):
         self.assertAlmostEqual(st["continued"] / st["entered"], 0.62, delta=0.05)
 
 
+def two_endings():
+    """A small flow that can end well in two ways, with one guessed input worth varying."""
+    return model.normalise({
+        "feature": {"id": "two-endings", "name": "Two endings", "volume": {"eligible": 1000, "per": "week", "unit": "searches"}},
+        "segments": [
+            {"id": "keen", "share": 0.5, "traits": {"motivation": 0.8, "skill": 0.7}, "capabilities": {"account": 0.9}},
+            {"id": "casual", "share": 0.5, "traits": {"motivation": 0.35, "skill": 0.4}, "capabilities": {"account": 0.4}},
+        ],
+        "entry_points": [{"id": "box", "to": "ask", "discovery": 0.8}],
+        "steps": [
+            {"id": "ask", "type": "input", "effort": 0.2, "clarity": 0.8, "value": 0.5,
+             "next": [{"to": "look", "weight": 0.7}, {"to": "act", "weight": 0.3}], "events": ["asked"]},
+            {"id": "look", "type": "success", "events": ["looked"]},
+            {"id": "act", "type": "input", "effort": 0.4, "requires": ["account"], "next": ["acted"], "events": ["act_started"]},
+            {"id": "acted", "type": "success", "events": ["acted"]},
+        ],
+        "hypotheses": [
+            {"id": "H1", "text": "At least 10% of starters act", "metric": "step_reach:acted", "op": ">=", "value": 0.10},
+            {"id": "H2", "text": "Keen users carry on from ask", "metric": "step_continue:ask", "op": ">=", "value": 0.5, "segment": "keen"},
+        ],
+        "variants": [{"id": "third-ending", "name": "Add a third ending", "patch": {
+            "steps": {"ask": {"next": [{"to": "look", "weight": 0.5}, {"to": "act", "weight": 0.3}, {"to": "saved", "weight": 0.2}]}},
+            "add_steps": [{"id": "saved", "type": "success", "events": ["saved"]}]}}],
+        "scenarios": [{"id": "few-accounts", "name": "Few users have an account",
+                       "patch": {"segments": {"keen": {"capabilities": {"account": 0.2}}, "casual": {"capabilities": {"account": 0.1}}}}}],
+    })
+
+
+class OutcomeTests(unittest.TestCase):
+    def setUp(self):
+        self.m = two_endings()
+
+    def test_step_reach_and_segment_step_metrics(self):
+        res = simulate(self.m, users=6000, seed=3, keep_sessions=0)
+        started = analyze.metrics(res)["entered"]
+        self.assertAlmostEqual(analyze.metric_value(res, "step_reach:look"), res["steps"]["look"]["entered"] / started)
+        self.assertAlmostEqual(analyze.metric_value(res, "step_reach:ask"), 1.0)
+        # per-segment counts add up to the whole, and segments differ as their traits say
+        for sid in ("ask", "look", "act", "acted"):
+            self.assertEqual(sum(res["segments"][g]["steps"][sid][0] for g in ("keen", "casual")), res["steps"][sid]["entered"])
+            self.assertEqual(sum(res["segments"][g]["steps"][sid][1] for g in ("keen", "casual")), res["steps"][sid]["continued"])
+        self.assertGreater(analyze.metric_value(res, "step_continue:ask", "keen"), analyze.metric_value(res, "step_continue:ask", "casual"))
+        self.assertGreater(analyze.metric_value(res, "step_reach:acted", "keen"), analyze.metric_value(res, "step_reach:acted", "casual"))
+
+    def test_outcome_split_adds_up(self):
+        res = simulate(self.m, users=6000, seed=3, keep_sessions=0)
+        rep = analyze.replicate(self.m, users=800, seed=3, reps=4)
+        split = analyze.outcome_split(self.m, res, rep)
+        self.assertEqual([r["step"] for r in split], ["look", "acted"])
+        self.assertEqual(sum(r["users"] for r in split), res["outcomes"]["success"])
+        self.assertAlmostEqual(sum(r["share_of_finishers"] for r in split), 1.0)
+        for r in split:
+            self.assertLessEqual(r["range"]["p5"], r["range"]["p95"])
+
+    def test_bad_metric_and_bad_patch_are_model_errors(self):
+        raw = copy.deepcopy(self.m)
+        raw["hypotheses"][0]["metric"] = "step_reach:nowhere"
+        self.assertTrue(any(f["code"] == "bad-hypothesis" for f in model.lint(model.normalise(raw))))
+        raw = copy.deepcopy(self.m)
+        raw["scenarios"][0]["patch"] = {"steps": {"nowhere": {"effort": 0.1}}}
+        self.assertTrue(any(f["code"] == "bad-patch" for f in model.lint(model.normalise(raw))))
+        raw = copy.deepcopy(self.m)
+        raw["variants"][0]["patch"]["steps"]["ask"]["next"] = ["nowhere"]
+        self.assertTrue(any(f["code"] == "bad-patch" for f in model.lint(model.normalise(raw))))
+        raw = copy.deepcopy(self.m)
+        raw["feature"]["volume"] = {"eligible": 0}
+        with self.assertRaises(model.ModelError):
+            model.normalise(raw)
+
+    def test_variant_can_add_and_remove_ways_to_finish(self):
+        v = model.apply_variant(self.m, self.m["variants"][0])
+        self.assertEqual(sorted(v["success"]), ["acted", "look", "saved"])
+        res = simulate(v, users=3000, seed=5, keep_sessions=0)
+        self.assertEqual(sum(res["steps"][s]["entered"] for s in v["success"]), res["outcomes"]["success"])
+        gone = model.apply_variant(self.m, {"id": "no-look", "patch": {"steps": {"ask": {"next": ["act"]}}, "remove_steps": ["look"]}})
+        self.assertEqual(gone["success"], ["acted"])
+        self.assertFalse([f for f in model.lint(gone) if f["level"] == "error"])
+
+    def test_scenarios_volume_and_ends_reach_the_report(self):
+        with tempfile.TemporaryDirectory() as d:
+            s = pipeline.run(self.m, d, users=1500, seed=7, reps=6, quick=True)
+            self.assertEqual(s["volume"], {"eligible": 1000.0, "per": "week", "unit": "searches"})
+            sc = s["scenarios"][0]
+            self.assertEqual(sc["verdict"], "lower")
+            self.assertLess(sc["ends"]["acted"]["diff"]["p50"], 0)
+            self.assertAlmostEqual(sc["ends"]["look"]["diff"]["p50"], 0, delta=0.03)
+            var = s["variants"][0]
+            self.assertGreater(var["ends"]["saved"]["value"]["p50"], 0.05)
+            self.assertEqual(var["ends"]["saved"]["diff"]["p50"], var["ends"]["saved"]["value"]["p50"])
+            self.assertEqual({h["id"]: h["verdict"] for h in s["hypotheses"]}["H2"], "supported")
+            html = (Path(d) / "report.html").read_text()
+            for text in ("How finishers end", "If the guesses are wrong", "Few users have an account", "Effect on each way of finishing", "a week"):
+                self.assertIn(text, html)
+            md = (Path(d) / "report.md").read_text()
+            self.assertIn("## If the guesses are wrong", md)
+            again = pipeline.rerun(d)
+            self.assertEqual(again["scenarios"][0]["value"], sc["value"])
+
+    def test_scenario_tied_to_a_variant_and_new_entry_point(self):
+        raw = copy.deepcopy(self.m)
+        raw["variants"].append({"id": "second-door", "name": "A second way in", "patch": {
+            "add_entry_points": [{"id": "email", "to": "nudge", "discovery": 0.3}],
+            "add_steps": [{"id": "nudge", "type": "view", "effort": 0.1, "next": ["ask"], "events": ["nudge_opened"]}],
+            "segments": {"casual": {"entry": {"box": 0.5, "email": 0.5}}}}})
+        raw["scenarios"].append({"id": "email-ignored", "name": "The email is ignored", "on": "second-door",
+                                 "patch": {"entry_points": {"email": {"discovery": 0.02}}}})
+        m = model.normalise(raw)
+        self.assertFalse([f for f in model.lint(m) if f["level"] == "error"])
+        self.assertEqual([s["id"] for s in model.scenarios_for(m)], ["few-accounts"])
+        self.assertEqual([s["id"] for s in model.scenarios_for(m, "second-door")], ["email-ignored"])
+        with tempfile.TemporaryDirectory() as d:
+            s = pipeline.run(m, d, users=1500, seed=7, reps=6, quick=True, variant="second-door")
+            self.assertEqual([x["id"] for x in s["scenarios"]], ["email-ignored"])
+            self.assertEqual(s["scenarios"][0]["verdict"], "lower")
+            self.assertGreater(s["entries"]["email"]["exposed"], 0)
+            saved = model.load(Path(d) / "model.json")
+            self.assertEqual(len(saved["scenarios"]), 2)  # the full model is kept, so a rerun sees every scenario
+            self.assertEqual(pipeline.rerun(d)["scenarios"][0]["value"], s["scenarios"][0]["value"])
+        raw["scenarios"][-1]["on"] = "no-such-variant"
+        self.assertTrue(any(f["code"] == "bad-patch" for f in model.lint(model.normalise(raw))))
+        raw["scenarios"][-1]["on"] = None  # untied: the patch names an entry point the base does not have
+        self.assertTrue(any(f["code"] == "bad-patch" for f in model.lint(model.normalise(raw))))
+
+    def test_going_round_a_loop_tires_users(self):
+        loop = model.normalise({
+            "feature": {"id": "loop"}, "segments": [{"id": "all", "traits": {"motivation": 0.6, "patience": 0.9}}],
+            "steps": [{"id": "try", "type": "input", "effort": 0.3, "next": [{"to": "try_again", "weight": 0.9}, {"to": "done", "weight": 0.1}]},
+                      {"id": "try_again", "type": "view", "effort": 0.3, "next": ["try"]},
+                      {"id": "done", "type": "success"}]})
+        res = simulate(loop, users=3000, seed=11, keep_sessions=0)
+        self.assertEqual(res["outcomes"]["stuck"], 0)
+        self.assertGreater(res["steps"]["try"]["reasons"].get("fatigue", 0) + res["steps"]["try_again"]["reasons"].get("fatigue", 0), 0)
+
+    def test_long_waits_lose_people_and_say_why(self):
+        def flow(seconds):
+            return model.normalise({"feature": {"id": "wait"}, "segments": [{"id": "all"}],
+                                    "steps": [{"id": "ask", "type": "input", "next": ["answer"]},
+                                              {"id": "answer", "type": "wait", "time_s": seconds, "effort": 0.05, "next": ["done"]},
+                                              {"id": "done", "type": "success"}]})
+        quick = simulate(flow(3), users=4000, seed=2, keep_sessions=0)["steps"]["answer"]
+        slow = simulate(flow(40), users=4000, seed=2, keep_sessions=0)["steps"]["answer"]
+        self.assertGreater(quick["continued"] / quick["entered"], slow["continued"] / slow["entered"] + 0.15)
+        self.assertLess(quick["reasons"].get("waiting", 0), 0.05 * quick["abandoned"])  # only the least patient, on a slow day
+        self.assertEqual(max(slow["reasons"], key=slow["reasons"].get), "waiting")
+
+    def test_measured_drop_is_not_given_an_invented_cause(self):
+        m = copy.deepcopy(self.m)
+        next(s for s in m["steps"] if s["id"] == "ask")["observed_continue"] = 0.5
+        res = simulate(m, users=4000, seed=2, keep_sessions=0)
+        self.assertEqual(set(res["steps"]["ask"]["reasons"]), {"observed"})
+        self.assertEqual(analyze.funnel(m, res)[0]["top_reason"], "observed")
+
+    def test_measured_rate_per_segment(self):
+        m = copy.deepcopy(self.m)
+        next(s for s in m["steps"] if s["id"] == "ask")["observed_continue"] = {"keen": 0.8, "casual": 0.2}
+        self.assertFalse([f for f in model.lint(m) if f["level"] == "error"])
+        res = simulate(m, users=20000, seed=4, keep_sessions=0)
+        self.assertAlmostEqual(analyze.metric_value(res, "step_continue:ask", "keen"), 0.8, delta=0.04)
+        self.assertAlmostEqual(analyze.metric_value(res, "step_continue:ask", "casual"), 0.2, delta=0.04)
+        m["steps"][0]["observed_continue"] = {"keen": 0.8, "nobody": 0.5}
+        self.assertTrue(any(f["code"] == "bad-ref" for f in model.lint(m)))
+        m["steps"][0]["observed_continue"] = {"keen": 1.2}
+        self.assertTrue(any(f["code"] == "range" for f in model.lint(m)))
+
+    def test_hypothesis_tied_to_a_variant(self):
+        raw = copy.deepcopy(self.m)
+        raw["hypotheses"].append({"id": "H3", "text": "A fifth of starters save", "metric": "step_reach:saved", "op": ">=", "value": 0.1, "on": "third-ending"})
+        m = model.normalise(raw)
+        self.assertFalse([f for f in model.lint(m) if f["level"] == "error"])
+        self.assertEqual([h["id"] for h in model.hypotheses_for(m)], ["H1", "H2"])
+        with tempfile.TemporaryDirectory() as d:
+            base = pipeline.run(m, d, users=1500, seed=7, reps=4, quick=True)
+            self.assertEqual([h["id"] for h in base["hypotheses"]], ["H1", "H2"])
+        with tempfile.TemporaryDirectory() as d:
+            var = pipeline.run(m, d, users=1500, seed=7, reps=4, quick=True, variant="third-ending")
+            self.assertEqual({h["id"]: h["verdict"] for h in var["hypotheses"]}["H3"], "supported")
+        raw["hypotheses"][-1].pop("on")  # untied: the base has no such step
+        self.assertTrue(any(f["code"] == "bad-hypothesis" for f in model.lint(model.normalise(raw))))
+
+    def test_score_reads_reach_and_entry_rows(self):
+        with tempfile.TemporaryDirectory() as d:
+            s = pipeline.run(self.m, d, users=1500, seed=7, reps=6, quick=True)
+            reach = s["replication"]["reach"]["acted"]["p50"]
+            obs = {"reach:acted": {"entered": 1000, "continued": 1000 * reach, "rate": reach},
+                   "entry:box": {"entered": 1000, "continued": 100, "rate": 0.10},
+                   "reach:nowhere": {"entered": 10, "continued": 1, "rate": 0.1}}
+            sc = analyze.score(json.loads((Path(d) / "summary.json").read_text()), obs)
+            rows = {r["step"]: r for r in sc["rows"]}
+            self.assertEqual(sorted(rows), ["entry:box", "reach:acted"])
+            self.assertTrue(rows["reach:acted"]["inside_range"])
+            self.assertFalse(rows["entry:box"]["inside_range"])
+
+
 class EdgeTests(unittest.TestCase):
     def test_pairwise_covers_every_pair(self):
         dims = {"a": [1, 2, 3], "b": ["x", "y"], "c": ["p", "q", "r", "s"]}
@@ -139,7 +332,8 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(again["metrics"], s["metrics"])
             self.assertTrue(again["args"]["quick"])
             sc = analyze.score(json.loads((Path(d) / "summary.json").read_text()), analyze.read_observed(ROOT / "examples" / "one-tap-reorder" / "observed.sample.csv"))
-            self.assertEqual(sc["steps_compared"], 6)
+            self.assertEqual(sc["steps_compared"], 7)  # six steps and the entry point
+            self.assertIn("entry:home_banner", [r["step"] for r in sc["rows"]])
             self.assertTrue(0 <= sc["fidelity"] <= 1)
 
     def test_server_index_new_and_compare(self):

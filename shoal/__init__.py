@@ -5,4 +5,4 @@ from a seeded simulation over an explicit feature model, so every figure can be
 reproduced and every assumption can be read.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
