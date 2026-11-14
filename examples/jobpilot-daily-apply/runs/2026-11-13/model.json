@@ -1,0 +1,601 @@
+{
+  "shoal_version": "0.1",
+  "feature": {
+    "id": "jobpilot-daily-apply",
+    "name": "JobPilot: Daily 09:00 AM Curation & 1-Tap Apply",
+    "summary": "A job seeker opens the 09:00 AM Telegram job card, optionally previews a zero-hallucination LaTeX resume, and taps 1-Tap Apply for off-screen ShadowMux submission.",
+    "session_budget_s": 120,
+    "repeat": {
+      "d1": 0.72,
+      "d7": 0.55,
+      "d30": 0.35
+    },
+    "handles": [
+      "returning_user"
+    ]
+  },
+  "segments": [
+    {
+      "id": "active_seeker",
+      "name": "Active mid/senior tech seeker",
+      "share": 0.45,
+      "traits": {
+        "motivation": 0.75,
+        "skill": 0.65,
+        "patience": 0.45,
+        "trust": 0.5
+      },
+      "context": {
+        "device": {
+          "mobile": 0.8,
+          "desktop": 0.2
+        },
+        "network": {
+          "good": 0.82,
+          "flaky": 0.16,
+          "offline": 0.02
+        },
+        "ats_portal": {
+          "greenhouse": 0.45,
+          "lever": 0.25,
+          "ashby": 0.15,
+          "workday": 0.15
+        }
+      },
+      "capabilities": {
+        "verified_vault": 0.8,
+        "shadowmux_online": 0.62,
+        "clean_ats_fields": 0.65
+      },
+      "exposure": 0.82,
+      "entry": {
+        "telegram_0900_card": 0.85,
+        "manual_jd_drop": 0.15
+      }
+    },
+    {
+      "id": "passive_staff",
+      "name": "Passive staff / principal engineer",
+      "share": 0.25,
+      "traits": {
+        "motivation": 0.35,
+        "skill": 0.85,
+        "patience": 0.35,
+        "trust": 0.32
+      },
+      "context": {
+        "device": {
+          "mobile": 0.65,
+          "desktop": 0.35
+        },
+        "network": {
+          "good": 0.9,
+          "flaky": 0.09,
+          "offline": 0.01
+        },
+        "ats_portal": {
+          "greenhouse": 0.4,
+          "lever": 0.2,
+          "ashby": 0.3,
+          "workday": 0.1
+        }
+      },
+      "capabilities": {
+        "verified_vault": 0.75,
+        "shadowmux_online": 0.7,
+        "clean_ats_fields": 0.65
+      },
+      "exposure": 0.7,
+      "entry": {
+        "telegram_0900_card": 0.9,
+        "manual_jd_drop": 0.1
+      }
+    },
+    {
+      "id": "career_pivoter",
+      "name": "Strategic career pivoter (Backend to AI)",
+      "share": 0.2,
+      "traits": {
+        "motivation": 0.7,
+        "skill": 0.5,
+        "patience": 0.6,
+        "trust": 0.45
+      },
+      "context": {
+        "device": {
+          "mobile": 0.7,
+          "desktop": 0.3
+        },
+        "network": {
+          "good": 0.85,
+          "flaky": 0.13,
+          "offline": 0.02
+        },
+        "ats_portal": {
+          "greenhouse": 0.35,
+          "lever": 0.25,
+          "ashby": 0.15,
+          "workday": 0.25
+        }
+      },
+      "capabilities": {
+        "verified_vault": 0.65,
+        "shadowmux_online": 0.58,
+        "clean_ats_fields": 0.5
+      },
+      "exposure": 0.78,
+      "entry": {
+        "telegram_0900_card": 0.75,
+        "manual_jd_drop": 0.25
+      }
+    },
+    {
+      "id": "unprepared_newcomer",
+      "name": "Newcomer who has not finished vault or desktop setup",
+      "share": 0.1,
+      "traits": {
+        "motivation": 0.45,
+        "skill": 0.35,
+        "patience": 0.3,
+        "trust": 0.3
+      },
+      "context": {
+        "device": {
+          "mobile": 0.85,
+          "desktop": 0.15
+        },
+        "network": {
+          "good": 0.8,
+          "flaky": 0.17,
+          "offline": 0.03
+        },
+        "ats_portal": {
+          "greenhouse": 0.4,
+          "lever": 0.25,
+          "ashby": 0.15,
+          "workday": 0.2
+        }
+      },
+      "capabilities": {
+        "verified_vault": 0.2,
+        "shadowmux_online": 0.25,
+        "clean_ats_fields": 0.6
+      },
+      "exposure": 0.75,
+      "entry": {
+        "telegram_0900_card": 0.8,
+        "manual_jd_drop": 0.2
+      }
+    }
+  ],
+  "entry_points": [
+    {
+      "id": "telegram_0900_card",
+      "name": "Daily 09:00 AM Telegram role card",
+      "to": "read_job_card",
+      "discovery": 0.52
+    },
+    {
+      "id": "manual_jd_drop",
+      "name": "Paste ATS URL into Telegram chat",
+      "to": "read_job_card",
+      "discovery": 0.15
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_job_card",
+      "name": "Reads daily Telegram match card",
+      "type": "view",
+      "effort": 0.15,
+      "clarity": 0.75,
+      "value": 0.55,
+      "time_s": 12,
+      "requires": [
+        "verified_vault"
+      ],
+      "next": [
+        {
+          "to": "choose_card_action",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "notification_delivered"
+      ],
+      "handles": [
+        "long_text"
+      ],
+      "error_rate": 0.0,
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "choose_card_action",
+      "name": "Picks Preview PDF or direct 1-Tap Apply",
+      "type": "decision",
+      "effort": 0.2,
+      "clarity": 0.7,
+      "value": 0.5,
+      "time_s": 8,
+      "next": [
+        {
+          "to": "preview_pdf",
+          "weight": 0.65
+        },
+        {
+          "to": "confirm_1tap_apply",
+          "weight": 0.35
+        }
+      ],
+      "events": [],
+      "handles": [],
+      "error_rate": 0.0,
+      "requires": [],
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "preview_pdf",
+      "name": "Previews single-page LaTeX PDF in Telegram",
+      "type": "external",
+      "effort": 0.15,
+      "clarity": 0.75,
+      "value": 0.7,
+      "time_s": 4,
+      "error_rate": 0.05,
+      "on_error": {
+        "recoverable": true
+      },
+      "next": [
+        {
+          "to": "confirm_1tap_apply",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "preview_opened"
+      ],
+      "handles": [
+        "timeout"
+      ],
+      "requires": [],
+      "fallback": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "confirm_1tap_apply",
+      "name": "Taps 1-Tap Apply Now",
+      "type": "decision",
+      "effort": 0.25,
+      "clarity": 0.5,
+      "value": 0.55,
+      "time_s": 7,
+      "sensitive": true,
+      "next": [
+        {
+          "to": "acquire_shadowmux",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "apply_confirmed"
+      ],
+      "handles": [],
+      "error_rate": 0.0,
+      "requires": [],
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "grants": []
+    },
+    {
+      "id": "acquire_shadowmux",
+      "name": "Acquires ShadowMux desktop lease & cookies",
+      "type": "external",
+      "effort": 0.05,
+      "clarity": 0.45,
+      "value": 0.35,
+      "time_s": 6,
+      "error_rate": 0.08,
+      "on_error": {
+        "recoverable": true
+      },
+      "requires": [
+        "shadowmux_online"
+      ],
+      "next": [
+        {
+          "to": "autofill_ats_form",
+          "weight": 1.0
+        }
+      ],
+      "events": [],
+      "handles": [],
+      "fallback": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "autofill_ats_form",
+      "name": "Off-screen browser fills ATS form & uploads PDF",
+      "type": "external",
+      "effort": 0.05,
+      "clarity": 0.6,
+      "value": 0.45,
+      "time_s": 14,
+      "error_rate": 0.12,
+      "on_error": {
+        "to": "hitl_escalation"
+      },
+      "requires": [
+        "clean_ats_fields"
+      ],
+      "fallback": "hitl_escalation",
+      "next": [
+        {
+          "to": "submit_and_stamp",
+          "weight": 1.0
+        }
+      ],
+      "events": [],
+      "handles": [],
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "hitl_escalation",
+      "name": "Solves CAPTCHA or custom question via Telegram link",
+      "type": "input",
+      "effort": 0.75,
+      "clarity": 0.4,
+      "value": 0.45,
+      "time_s": 55,
+      "error_rate": 0.1,
+      "grants": [
+        "clean_ats_fields"
+      ],
+      "next": [
+        {
+          "to": "submit_and_stamp",
+          "weight": 1.0
+        }
+      ],
+      "events": [],
+      "handles": [],
+      "requires": [],
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false
+    },
+    {
+      "id": "submit_and_stamp",
+      "name": "Submits form, captures screenshot & stamps SQLite audit",
+      "type": "external",
+      "effort": 0.05,
+      "clarity": 0.75,
+      "value": 0.75,
+      "time_s": 6,
+      "error_rate": 0.04,
+      "next": [
+        {
+          "to": "confirmed",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "submission_verified"
+      ],
+      "handles": [
+        "double_submit"
+      ],
+      "requires": [],
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "confirmed",
+      "name": "Application submitted with confirmation receipt",
+      "type": "success",
+      "events": [
+        "submission_verified"
+      ],
+      "handles": [
+        "no_confirmation"
+      ],
+      "effort": 0.2,
+      "clarity": 0.8,
+      "value": 0.4,
+      "time_s": 10,
+      "error_rate": 0.0,
+      "requires": [],
+      "fallback": null,
+      "next": [],
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    }
+  ],
+  "dimensions": {
+    "device": [
+      "mobile",
+      "desktop"
+    ],
+    "network": [
+      "good",
+      "flaky",
+      "offline"
+    ],
+    "ats_portal": [
+      "greenhouse",
+      "lever",
+      "ashby",
+      "workday"
+    ],
+    "vault_state": [
+      "verified >=15 bullets",
+      "unverified or empty",
+      "tectonic binary missing"
+    ],
+    "desktop_runner": [
+      "ShadowMux online",
+      "laptop asleep/offline",
+      "human active on same domain"
+    ],
+    "form_shape": [
+      "standard fields only",
+      "custom essay question",
+      "Cloudflare Turnstile CAPTCHA"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Daily Engagement: at least 85% of eligible candidates open and review the 09:00 AM Telegram card.",
+      "metric": "discovery_rate",
+      "op": ">=",
+      "value": 0.85
+    },
+    {
+      "id": "H2",
+      "text": "Application Confirmation Rate: at least 40% of candidates who open a card finish applying.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.4
+    },
+    {
+      "id": "H3",
+      "text": "Execution Cycle Time: median time from opening the card to stamped receipt is 45 seconds or less.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 45
+    },
+    {
+      "id": "H4",
+      "text": "Trust threshold: at least half of candidates who reach 1-Tap Apply proceed to submit.",
+      "metric": "step_continue:confirm_1tap_apply",
+      "op": ">=",
+      "value": 0.5
+    }
+  ],
+  "variants": [
+    {
+      "id": "queued-desktop-relay",
+      "name": "Queue application when desktop ShadowMux is asleep",
+      "note": "Instead of blocking mobile commuters whose laptop is closed, queue the 1-tap apply request and run it automatically when ShadowMux reconnects.",
+      "patch": {
+        "steps": {
+          "acquire_shadowmux": {
+            "fallback": "queue_until_online"
+          }
+        },
+        "add_steps": [
+          {
+            "id": "queue_until_online",
+            "name": "Queues apply job until desktop ShadowMux reconnects",
+            "type": "wait",
+            "effort": 0.15,
+            "clarity": 0.7,
+            "value": 0.55,
+            "time_s": 12,
+            "error_rate": 0.05,
+            "on_error": {
+              "recoverable": true
+            },
+            "grants": [
+              "shadowmux_online"
+            ],
+            "next": [
+              "acquire_shadowmux"
+            ],
+            "events": [
+              "apply_queued"
+            ],
+            "handles": [
+              "user_leaves"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "inline-bullet-review",
+      "name": "Show tailored bullets & custom answers before 1-Tap Apply",
+      "note": "Include a compact summary of the 6 selected bullets and pre-filled EEO/custom answers under the card so cautious engineers trust what will be submitted.",
+      "patch": {
+        "steps": {
+          "confirm_1tap_apply": {
+            "clarity": 0.78,
+            "value": 0.72,
+            "effort": 0.25,
+            "time_s": 10
+          }
+        }
+      }
+    },
+    {
+      "id": "vault-grounded-qa",
+      "name": "Pre-draft grounded answers for custom ATS questions",
+      "note": "Auto-answer standard custom ATS fields (sponsorship, notice period, why company) from the verified vault so fewer runs escalate to mobile HITL.",
+      "patch": {
+        "segments": {
+          "active_seeker": {
+            "capabilities": {
+              "verified_vault": 0.8,
+              "shadowmux_online": 0.62,
+              "clean_ats_fields": 0.88
+            }
+          },
+          "passive_staff": {
+            "capabilities": {
+              "verified_vault": 0.75,
+              "shadowmux_online": 0.7,
+              "clean_ats_fields": 0.88
+            }
+          },
+          "career_pivoter": {
+            "capabilities": {
+              "verified_vault": 0.65,
+              "shadowmux_online": 0.58,
+              "clean_ats_fields": 0.8
+            }
+          },
+          "unprepared_newcomer": {
+            "capabilities": {
+              "verified_vault": 0.2,
+              "shadowmux_online": 0.25,
+              "clean_ats_fields": 0.8
+            }
+          }
+        }
+      }
+    }
+  ],
+  "success": [
+    "confirmed"
+  ]
+}

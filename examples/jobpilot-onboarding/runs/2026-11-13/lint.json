@@ -1,0 +1,18 @@
+[
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "upload_resume",
+    "message": "'Uploads master resume (PDF/DOCX)' needs resume_file_ready. About 37% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "parse_bullets",
+    "message": "'Docling parses & calibrates 28 bullets (110-118 chars)' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  }
+]

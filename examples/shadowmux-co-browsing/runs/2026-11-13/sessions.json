@@ -1,0 +1,146 @@
+{
+  "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/03_SHADOWMUX_PRODUCT_PROPOSAL.md and .kiro/specs/shadowmux/.",
+  "sessions": [
+    {
+      "persona": "Aravind, systems engineer running JobPilot + coding in VS Code (User 0)",
+      "segment": "power_developer",
+      "context": "desktop, macos, good network, no_conflict, keychain_cookie_access, chrome_extension_installed",
+      "goal": "Let JobPilot submit a Greenhouse application silently while he stays in his IDE",
+      "outcome": "success",
+      "at": "task_completed",
+      "moments": [
+        {"step": "run_detached_task", "kind": "delight", "thought": "Zero window flicker—VS Code never lost focus while Chrome worked at (-3200,-3200).", "severity": 1},
+        {"step": "task_completed", "kind": "delight", "thought": "Got the confirmation hash in 38s without touching my mouse.", "severity": 1}
+      ],
+      "quote": "Completely invisible—exactly how background browser automation should behave.",
+      "would_use_again": "yes",
+      "unmet_need": "None on happy path."
+    },
+    {
+      "persona": "Meera, Product Manager drafting in Gmail while agent runs (User 2)",
+      "segment": "busy_knowledge_worker",
+      "context": "desktop, linux, good network, same_domain_active, keychain_cookie_access, chrome_extension_installed",
+      "goal": "Reply to an email without the agent overwriting her draft",
+      "outcome": "success",
+      "at": "task_completed",
+      "moments": [
+        {"step": "conflict_sentinel_pause", "kind": "delight", "thought": "A small corner pill said ShadowMux paused while I typed in Gmail. My cursor didn't jump.", "severity": 1},
+        {"step": "arbitrate_handoff", "kind": "hesitation", "thought": "Had to remember to click Resume on the pill after I sent the email.", "severity": 2}
+      ],
+      "quote": "Saved my draft, though I almost forgot to unpause it afterwards.",
+      "would_use_again": "yes",
+      "unmet_need": "Auto-resume once I close the tab or leave the domain."
+    },
+    {
+      "persona": "Kabir, first-time macOS user running JobPilot 1-Tap Apply (User 8)",
+      "segment": "first_time_installer",
+      "context": "desktop, macos, good network, same_domain_active, lacks keychain_cookie_access and extension",
+      "goal": "Run his first background browser task",
+      "outcome": "blocked",
+      "at": "sync_cookies",
+      "moments": [
+        {"step": "sync_cookies", "kind": "confusion", "thought": "macOS popped up a Keychain access prompt for 'Chrome Safe Storage' with no context. I clicked Deny, and ShadowMux stopped cold.", "severity": 3}
+      ],
+      "quote": "Why is a CLI tool suddenly asking for my Chrome Keychain password?",
+      "would_use_again": "no",
+      "unmet_need": "Explain the Keychain prompt beforehand and offer a clean unauthenticated/login fallback if denied."
+    },
+    {
+      "persona": "Riya, knowledge worker who declined Keychain sync (User 47)",
+      "segment": "busy_knowledge_worker",
+      "context": "desktop, macos, good network, same_domain_active, chrome_extension_installed, lacks keychain_cookie_access",
+      "goal": "Apply to a public Greenhouse job board that doesn't even require login",
+      "outcome": "blocked",
+      "at": "sync_cookies",
+      "moments": [
+        {"step": "sync_cookies", "kind": "frustration", "thought": "Public Greenhouse forms don't even need my Gmail cookies, yet ShadowMux blocked the whole run because Keychain access wasn't granted.", "severity": 3}
+      ],
+      "quote": "It forced full Chrome cookie cloning even for a public form.",
+      "would_use_again": "no",
+      "unmet_need": "Only clone cookies when the target domain needs auth, or fall back to an ephemeral profile."
+    },
+    {
+      "persona": "Siddharth, knowledge worker without the optional Chrome Sentinel extension (User 48)",
+      "segment": "busy_knowledge_worker",
+      "context": "desktop, macos, good network, same_domain_active, keychain_cookie_access, lacks chrome_extension_installed",
+      "goal": "Browse Greenhouse while an agent also touches Greenhouse",
+      "outcome": "blocked",
+      "at": "conflict_sentinel_pause",
+      "moments": [
+        {"step": "conflict_sentinel_pause", "kind": "confusion", "thought": "The foreground tab detection needed the Chrome Extension hook, which I hadn't installed, so collision arbitration stalled.", "severity": 3}
+      ],
+      "quote": "Nobody told me Conflict Sentinel stops working unless I install a separate Chrome extension.",
+      "would_use_again": "maybe",
+      "unmet_need": "Fall back to AppleScript/OS window-title inspection or pause cleanly if the extension is missing."
+    },
+    {
+      "persona": "Naina, busy PM interrupted during a meeting (User 50)",
+      "segment": "busy_knowledge_worker",
+      "context": "desktop, macos, good network, same_domain_active, keychain_cookie_access, chrome_extension_installed",
+      "goal": "Finish checking her LinkedIn inbox and let the agent proceed",
+      "outcome": "abandoned",
+      "at": "arbitrate_handoff",
+      "moments": [
+        {"step": "conflict_sentinel_pause", "kind": "question", "thought": "The pause pill appeared while I was on a call, then vanished or got buried behind Zoom.", "severity": 2},
+        {"step": "arbitrate_handoff", "kind": "frustration", "thought": "I stayed on LinkedIn for 5 minutes and never clicked Resume—the agent stayed frozen until the 120s TTL expired.", "severity": 3}
+      ],
+      "quote": "A corner toast isn't enough when you're in a meeting; it just silently timed out.",
+      "would_use_again": "maybe",
+      "unmet_need": "Auto-resume when I leave the tab, or show a clear countdown before TTL expires."
+    },
+    {
+      "persona": "Leo, developer on Linux hitting a SQLite lock error at release (User 9)",
+      "segment": "power_developer",
+      "context": "desktop, linux, good network, no_conflict, keychain_cookie_access, chrome_extension_installed",
+      "goal": "Run back-to-back MiroFish scrape leases",
+      "outcome": "error_exit",
+      "at": "release_lease",
+      "moments": [
+        {"step": "release_lease", "kind": "error", "thought": "Task finished, then lease release failed on a transient SQLite busy error—now the domain stays locked for 120s.", "severity": 3}
+      ],
+      "quote": "The task actually succeeded, then failed to unlock the domain.",
+      "would_use_again": "yes",
+      "unmet_need": "Retry lease release with SQLite busy_timeout and ensure token-verified cleanup."
+    }
+  ],
+  "themes": [
+    {
+      "title": "Mandatory OS Keychain cookie cloning blocks both newcomers and public-site tasks",
+      "evidence": "Kabir (denied scary macOS Keychain prompt) and Riya (public Greenhouse form) both stalled at sync_cookies (36% of starters blocked).",
+      "steps": ["sync_cookies"],
+      "recommendation": "Explain the Keychain prompt before triggering it, and allow ephemeral/unauthenticated shadow profiles when Keychain access is absent or unneeded."
+    },
+    {
+      "title": "Conflict Sentinel depends on an unverified Chrome extension prerequisite",
+      "evidence": "Siddharth had not installed the Chrome extension, stalling conflict_sentinel_pause when he opened the same domain.",
+      "steps": ["conflict_sentinel_pause"],
+      "recommendation": "Check extension presence at setup and fall back to OS window-title / CDP target polling if the extension is missing."
+    },
+    {
+      "title": "Manual 'Resume' pill gets lost during real multitasking",
+      "evidence": "Naina got pulled into a meeting and never clicked Resume before the lease TTL expired; Meera nearly forgot too.",
+      "steps": ["arbitrate_handoff"],
+      "recommendation": "Auto-resume 5–10 seconds after the human switches away from the conflicted domain, and show TTL countdown on the pill."
+    }
+  ],
+  "spec_gaps": [
+    {
+      "title": "Keychain denial / Linux keyring failure fallback is missing",
+      "detail": "Proposal Section 2.4 decrypts Cookies via OS Keychain APIs, but does not define what happens when the user clicks Deny or runs headless Linux.",
+      "severity": "high",
+      "step": "sync_cookies"
+    },
+    {
+      "title": "Paused agent timeout vs resume behavior",
+      "detail": "When Conflict Sentinel sets PAUSED_FOR_HUMAN, the spec says lease TTL is 120s—if the human takes >120s on their tab, does the stale lock scavenger kill the paused checkpoint?",
+      "severity": "high",
+      "step": "arbitrate_handoff"
+    },
+    {
+      "title": "Multi-monitor negative coordinates collision",
+      "detail": "If a user arranges an external monitor to the top-left of their primary display in macOS Displays, (-3200, -3200) can land on a visible monitor or snap back on-screen.",
+      "severity": "high",
+      "step": "run_detached_task"
+    }
+  ]
+}

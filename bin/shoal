@@ -1,0 +1,4 @@
+#!/bin/bash
+# Shoal launcher. Standard library only; writes no bytecode into the synced folder.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$DIR${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m shoal "$@"

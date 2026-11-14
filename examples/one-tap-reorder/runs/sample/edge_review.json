@@ -1,0 +1,20 @@
+{
+  "note": "Review of generated edge cases against spec.md, by Claude. 'gap' = the spec does not say what happens.",
+  "cases": [
+    {"id": "E-place_order-double_submit", "verdict": "gap", "severity": "high", "expected": "A second press must not create a second order or charge. Disable the button on press and make the request idempotent."},
+    {"id": "E-place_order-timeout", "verdict": "gap", "severity": "high", "expected": "After a time limit, show the definite order state (looked up on the server) instead of a generic error."},
+    {"id": "E-place_order-offline", "verdict": "gap", "severity": "high", "expected": "Keep the basket and slot, say the order was not placed, retry when back online."},
+    {"id": "E-place_order-partial_success", "verdict": "gap", "severity": "high", "expected": "If payment succeeds but the order fails (or the reverse), reconcile automatically and tell the customer which state they are in."},
+    {"id": "E-place_order-stale_data", "verdict": "gap", "severity": "high", "expected": "If a price or stock level changed between review and placement, show the change and ask once before charging."},
+    {"id": "E-place_order-server_error", "verdict": "gap", "severity": "high", "expected": "Specific message, safe retry, basket and slot kept."},
+    {"id": "E-flow-session_expired", "verdict": "gap", "severity": "med", "expected": "Sign in again and return to the same step with the basket intact.", "note": "Lower than the default: sessions on a phone app rarely expire inside a one-minute flow."},
+    {"id": "E-pick_slot-progress_lost", "verdict": "gap", "severity": "med", "expected": "A slot error must not reset stock decisions made in the previous step."},
+    {"id": "E-confirm_pay-progress_lost", "verdict": "not_applicable", "note": "Nothing is typed at this step in the base design."},
+    {"id": "E-open_sheet-empty_state", "verdict": "gap", "severity": "high", "expected": "A customer with no past order should not see the entry points, or should see a starter basket.", "note": "The spec lists this as undecided; in the simulation about nine in ten new customers who start are blocked."},
+    {"id": "E-flow-returning_user", "verdict": "gap", "severity": "med", "expected": "On repeat use, remember the usual slot and substitute choices."},
+    {"id": "X-card-expired", "step": "confirm_pay", "step_name": "Confirms payment with the saved card", "title": "Saved card is expired or will be declined", "question": "When is the card checked, and what happens to the basket and slot if it fails?", "verdict": "gap", "severity": "high", "expected": "Check the expiry date when the sheet opens; on decline, stay in the flow, hold the slot, offer another payment method."},
+    {"id": "X-partial-reorder", "step": "review_items", "step_name": "Reviews the items and prices", "title": "Customer wants only some of the items", "question": "Can items be unticked or quantities changed?", "verdict": "gap", "severity": "high", "expected": "Allow untick and quantity change in the sheet; otherwise one-off orders make reorder useless."},
+    {"id": "X-everything-discontinued", "step": "fix_stock", "step_name": "Replaces or removes out-of-stock items", "title": "Most or all items are unavailable", "question": "What does the sheet show when little of the last order can be bought today?", "verdict": "gap", "severity": "med", "expected": "Say so up front and offer the regular shop instead of an empty reorder."},
+    {"id": "X-min-order", "step": "fix_stock", "step_name": "Replaces or removes out-of-stock items", "title": "Removing items drops the basket below the minimum order value", "question": "Is the minimum checked after removals, and what is offered?", "verdict": "gap", "severity": "med", "expected": "Show the shortfall and suggest items to add."}
+  ]
+}

@@ -1,0 +1,2523 @@
+{
+  "shoal": "0.1.0",
+  "generated": "2026-11-13 12:07",
+  "feature": {
+    "id": "shadowmux-co-browsing",
+    "name": "ShadowMux: Off-Screen Lease & Conflict Sentinel",
+    "summary": "An autonomous agent acquires an atomic SQLite domain lease, mirrors Chrome cookies into an off-screen viewport at (-3200,-3200), pauses cleanly if the human touches the same domain, and stamps an audit receipt."
+  },
+  "variant": null,
+  "users": 5000,
+  "seed": 7,
+  "args": {
+    "users": 5000,
+    "seed": 7,
+    "reps": 24,
+    "jitter": 0.1,
+    "variant": null,
+    "quick": false
+  },
+  "metrics": {
+    "n": 5000,
+    "entered": 4317,
+    "success": 1702,
+    "discovery_rate": 0.8634,
+    "completion_rate": 0.39425526986333104,
+    "adoption_rate": 0.3404,
+    "error_rate": 0.1399119759091962,
+    "blocked_rate": 0.3488533703961084,
+    "median_time_s": 46.36848133229708
+  },
+  "outcomes": {
+    "never_saw": 683,
+    "success": 1702,
+    "abandoned": 800,
+    "blocked": 1506,
+    "error_exit": 309,
+    "stuck": 0
+  },
+  "funnel": [
+    {
+      "step": "acquire_lease",
+      "name": "Acquires atomic SQLite domain lease",
+      "type": "external",
+      "entered": 4317,
+      "share_of_starters": 1.0,
+      "continued": 4096,
+      "continue_rate": 0.9488070419272643,
+      "lost": 221,
+      "abandoned": 96,
+      "blocked": 0,
+      "error_exit": 125,
+      "skipped": 0,
+      "errors": 287,
+      "retries": 162,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 76,
+        "low_motivation": 20
+      },
+      "top_reason": "error",
+      "median_time_s": 2.016103263519823
+    },
+    {
+      "step": "sync_cookies",
+      "name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "type": "external",
+      "entered": 4096,
+      "share_of_starters": 0.9488070419272643,
+      "continued": 2145,
+      "continue_rate": 0.523681640625,
+      "lost": 1951,
+      "abandoned": 519,
+      "blocked": 1338,
+      "error_exit": 94,
+      "skipped": 0,
+      "errors": 273,
+      "retries": 179,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 399,
+        "trust": 120
+      },
+      "top_reason": "blocked",
+      "median_time_s": 4.763848358365031
+    },
+    {
+      "step": "run_detached_task",
+      "name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "type": "wait",
+      "entered": 2145,
+      "share_of_starters": 0.49687282835302293,
+      "continued": 2064,
+      "continue_rate": 0.9622377622377623,
+      "lost": 81,
+      "abandoned": 38,
+      "blocked": 0,
+      "error_exit": 43,
+      "skipped": 0,
+      "errors": 131,
+      "retries": 88,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 32,
+        "fatigue": 5,
+        "out_of_time": 1
+      },
+      "top_reason": "error",
+      "median_time_s": 20.567824053741028
+    },
+    {
+      "step": "release_lease",
+      "name": "Releases SQLite lease & writes SHA-256 audit log",
+      "type": "external",
+      "entered": 1783,
+      "share_of_starters": 0.41301829974519344,
+      "continued": 1702,
+      "continue_rate": 0.9545709478407179,
+      "lost": 81,
+      "abandoned": 34,
+      "blocked": 0,
+      "error_exit": 47,
+      "skipped": 0,
+      "errors": 47,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "fatigue": 34
+      },
+      "top_reason": "error",
+      "median_time_s": 1.8599524115502786
+    },
+    {
+      "step": "conflict_sentinel_pause",
+      "name": "Conflict Sentinel freezes agent & shows pause pill",
+      "type": "view",
+      "entered": 838,
+      "share_of_starters": 0.1941162844567987,
+      "continued": 630,
+      "continue_rate": 0.7517899761336515,
+      "lost": 208,
+      "abandoned": 40,
+      "blocked": 168,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 39,
+        "fatigue": 1
+      },
+      "top_reason": "blocked",
+      "median_time_s": 7.273135993184233
+    },
+    {
+      "step": "task_completed",
+      "name": "Background browser task finished with zero clobbering",
+      "type": "success",
+      "entered": 1702,
+      "share_of_starters": 0.39425526986333104,
+      "continued": 0,
+      "continue_rate": 1.0,
+      "lost": 0,
+      "abandoned": 0,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {},
+      "top_reason": null,
+      "median_time_s": 8.625352897724827
+    },
+    {
+      "step": "arbitrate_handoff",
+      "name": "Human finishes active tab & clicks Resume on pill",
+      "type": "decision",
+      "entered": 630,
+      "share_of_starters": 0.1459346768589298,
+      "continued": 557,
+      "continue_rate": 0.8841269841269841,
+      "lost": 73,
+      "abandoned": 73,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 59,
+        "fatigue": 13,
+        "out_of_time": 1
+      },
+      "top_reason": "effort",
+      "median_time_s": 21.742062999959856
+    }
+  ],
+  "segments": [
+    {
+      "id": "power_developer",
+      "name": "Power developer running local AI agents",
+      "share": 0.45,
+      "metrics": {
+        "n": 2235,
+        "entered": 2011,
+        "success": 1290,
+        "discovery_rate": 0.8997762863534675,
+        "completion_rate": 0.6414719045251119,
+        "adoption_rate": 0.5771812080536913,
+        "error_rate": 0.1531576330183988,
+        "blocked_rate": 0.17454002983590253,
+        "median_time_s": 43.70643174152052
+      }
+    },
+    {
+      "id": "busy_knowledge_worker",
+      "name": "Knowledge worker multitasking in Gmail / LinkedIn",
+      "share": 0.35,
+      "metrics": {
+        "n": 1728,
+        "entered": 1480,
+        "success": 364,
+        "discovery_rate": 0.8564814814814815,
+        "completion_rate": 0.24594594594594596,
+        "adoption_rate": 0.21064814814814814,
+        "error_rate": 0.15472972972972973,
+        "blocked_rate": 0.3912162162162162,
+        "median_time_s": 56.334126286324334
+      }
+    },
+    {
+      "id": "first_time_installer",
+      "name": "First-time user without OS Keychain / extension setup",
+      "share": 0.2,
+      "metrics": {
+        "n": 1037,
+        "entered": 826,
+        "success": 48,
+        "discovery_rate": 0.7965284474445516,
+        "completion_rate": 0.05811138014527845,
+        "adoption_rate": 0.04628736740597879,
+        "error_rate": 0.0811138014527845,
+        "blocked_rate": 0.6973365617433414,
+        "median_time_s": 51.826141425392876
+      }
+    }
+  ],
+  "contexts": {
+    "device": {
+      "desktop": {
+        "n": 5000,
+        "entered": 4317,
+        "success": 1702
+      }
+    },
+    "network": {
+      "good": {
+        "n": 4426,
+        "entered": 3826,
+        "success": 1582
+      },
+      "flaky": {
+        "n": 484,
+        "entered": 414,
+        "success": 120
+      },
+      "offline": {
+        "n": 90,
+        "entered": 77,
+        "success": 0
+      }
+    },
+    "human_overlap": {
+      "no_conflict": {
+        "n": 2967,
+        "entered": 2564,
+        "success": 1174
+      },
+      "same_domain_active": {
+        "n": 2033,
+        "entered": 1753,
+        "success": 528
+      }
+    },
+    "os": {
+      "macos": {
+        "n": 3671,
+        "entered": 3153,
+        "success": 1222
+      },
+      "linux": {
+        "n": 1329,
+        "entered": 1164,
+        "success": 480
+      }
+    }
+  },
+  "entries": {
+    "agent_lease_request": {
+      "exposed": 5000,
+      "entered": 4317,
+      "success": 1702
+    }
+  },
+  "events": {
+    "lease_acquired": 4317,
+    "viewport_spawned": 2145,
+    "lease_released": 1783,
+    "shadowmux_task_done": 1702,
+    "conflict_detected": 670,
+    "acquire_lease.error": 287,
+    "sync_cookies.error": 273,
+    "run_detached_task.error": 131,
+    "release_lease.error": 47
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "At least 85% of invoked ShadowMux sessions complete without blocking or error.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.85,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.3695044155498358,
+        "p50": 0.3951597342815403,
+        "p95": 0.425810213254434
+      }
+    },
+    {
+      "id": "H2",
+      "text": "When human conflict occurs, at least 80% of sessions resume cleanly through arbitration.",
+      "metric": "step_continue:arbitrate_handoff",
+      "op": ">=",
+      "value": 0.8,
+      "segment": "all",
+      "holds_share": 1.0,
+      "verdict": "supported",
+      "predicted": {
+        "p5": 0.8058219988172678,
+        "p50": 0.8457083928288116,
+        "p95": 0.90546783625731
+      }
+    },
+    {
+      "id": "H3",
+      "text": "Median session time stays under 60 seconds.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 60,
+      "segment": "all",
+      "holds_share": 1.0,
+      "verdict": "supported",
+      "predicted": {
+        "p5": 45.72749651437041,
+        "p50": 47.54759601637903,
+        "p95": 49.50743330869477
+      }
+    }
+  ],
+  "levers": [
+    {
+      "lever": "Give users without keychain_cookie_access a way through 'Mirrors Chrome profile cookies & storage (OS Keychain)'",
+      "step": "sync_cookies",
+      "kind": "blocked",
+      "adoption_delta": 0.13087499999999996,
+      "completion_delta": 0.15312613028389688,
+      "within_noise": false
+    },
+    {
+      "lever": "Cut the effort of 'Mirrors Chrome profile cookies & storage (OS Keychain)'",
+      "step": "sync_cookies",
+      "kind": "effort",
+      "adoption_delta": 0.028374999999999928,
+      "completion_delta": 0.034907204583827456,
+      "within_noise": false
+    },
+    {
+      "lever": "Make 'Mirrors Chrome profile cookies & storage (OS Keychain)' clearer",
+      "step": "sync_cookies",
+      "kind": "clarity",
+      "adoption_delta": 0.026374999999999982,
+      "completion_delta": 0.0331209183193627,
+      "within_noise": false
+    },
+    {
+      "lever": "Give users without chrome_extension_installed a way through 'Conflict Sentinel freezes agent & shows pause pill'",
+      "step": "conflict_sentinel_pause",
+      "kind": "blocked",
+      "adoption_delta": 0.022499999999999964,
+      "completion_delta": 0.02456030323215025,
+      "within_noise": false
+    },
+    {
+      "lever": "Halve the errors at 'Mirrors Chrome profile cookies & storage (OS Keychain)'",
+      "step": "sync_cookies",
+      "kind": "errors",
+      "adoption_delta": 0.012374999999999914,
+      "completion_delta": 0.014190389354318822,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Spawns Chrome at (-3200,-3200) & runs agent workflow'",
+      "step": "run_detached_task",
+      "kind": "errors",
+      "adoption_delta": 0.006124999999999936,
+      "completion_delta": 0.007281915558398078,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Releases SQLite lease & writes SHA-256 audit log' clearer",
+      "step": "release_lease",
+      "kind": "clarity",
+      "adoption_delta": 0.006124999999999936,
+      "completion_delta": 0.007086031309078478,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Acquires atomic SQLite domain lease'",
+      "step": "acquire_lease",
+      "kind": "errors",
+      "adoption_delta": 0.005124999999999935,
+      "completion_delta": 0.0068306079579638634,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Human finishes active tab & clicks Resume on pill' clearer",
+      "step": "arbitrate_handoff",
+      "kind": "clarity",
+      "adoption_delta": 0.005124999999999935,
+      "completion_delta": 0.006895934108162749,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Human finishes active tab & clicks Resume on pill'",
+      "step": "arbitrate_handoff",
+      "kind": "effort",
+      "adoption_delta": 0.004249999999999976,
+      "completion_delta": 0.006174454144870278,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Releases SQLite lease & writes SHA-256 audit log'",
+      "step": "release_lease",
+      "kind": "errors",
+      "adoption_delta": 0.004124999999999934,
+      "completion_delta": 0.0044011042397518185,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Acquires atomic SQLite domain lease' clearer",
+      "step": "acquire_lease",
+      "kind": "clarity",
+      "adoption_delta": 0.0030000000000000027,
+      "completion_delta": 0.0034613205657549884,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Conflict Sentinel freezes agent & shows pause pill' clearer",
+      "step": "conflict_sentinel_pause",
+      "kind": "clarity",
+      "adoption_delta": 0.0023749999999999605,
+      "completion_delta": 0.0028487731789803017,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Conflict Sentinel freezes agent & shows pause pill'",
+      "step": "conflict_sentinel_pause",
+      "kind": "effort",
+      "adoption_delta": 0.0014999999999999458,
+      "completion_delta": 0.0019583687469201805,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Spawns Chrome at (-3200,-3200) & runs agent workflow' clearer",
+      "step": "run_detached_task",
+      "kind": "clarity",
+      "adoption_delta": -0.000250000000000028,
+      "completion_delta": 4.524196879607256e-05,
+      "within_noise": true
+    }
+  ],
+  "variants": [
+    {
+      "id": "guided-keychain-and-ephemeral",
+      "name": "Guided Keychain grant + unauthenticated fallback",
+      "note": "If OS Keychain cookie decryption is denied or unavailable, explain why once and allow ephemeral login instead of hard-blocking.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.07123333333333336,
+          "p50": 0.1,
+          "p95": 0.11616666666666664
+        },
+        "completion_rate": {
+          "p5": 0.09240164240479591,
+          "p50": 0.11655536578499065,
+          "p95": 0.13913709424639875
+        },
+        "discovery_rate": {
+          "p5": -0.013900000000000006,
+          "p50": 0.0003333333333332966,
+          "p95": 0.015333333333333404
+        },
+        "error_rate": {
+          "p5": 0.01749806916075503,
+          "p50": 0.03337402407166219,
+          "p95": 0.05242164674497513
+        },
+        "median_time_s": {
+          "p5": 2.3261836157168494,
+          "p50": 5.483350399054512,
+          "p95": 7.251788622217365
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.3751333333333334,
+          "p50": 0.44266666666666665,
+          "p95": 0.4785666666666667
+        },
+        "completion_rate": {
+          "p5": 0.4806254098246299,
+          "p50": 0.5126956318287912,
+          "p95": 0.5590231253993164
+        },
+        "discovery_rate": {
+          "p5": 0.7055666666666667,
+          "p50": 0.8853333333333333,
+          "p95": 0.9166666666666666
+        },
+        "error_rate": {
+          "p5": 0.1596803075263016,
+          "p50": 0.17854777810049377,
+          "p95": 0.19940948008628506
+        },
+        "median_time_s": {
+          "p5": 50.5550221002855,
+          "p50": 52.90675599274252,
+          "p95": 54.325998551567785
+        }
+      },
+      "verdict": "better"
+    },
+    {
+      "id": "auto-resume-on-tab-blur",
+      "name": "Auto-resume agent when human closes or leaves conflicted domain",
+      "note": "Instead of requiring the human to click Resume on the notification pill, auto-resume 5s after the human switches away from the conflicted tab.",
+      "wins_share": 0.9583333333333334,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.0021999999999999967,
+          "p50": 0.013000000000000012,
+          "p95": 0.027866666666666658
+        },
+        "completion_rate": {
+          "p5": 0.0025297610222878106,
+          "p50": 0.014193987411688036,
+          "p95": 0.032224961617212736
+        },
+        "discovery_rate": {
+          "p5": -0.004666666666666597,
+          "p50": -0.0003333333333332966,
+          "p95": 0.008566666666666705
+        },
+        "error_rate": {
+          "p5": -0.00808866848176587,
+          "p50": 0.0013185271491483186,
+          "p95": 0.00817999217083875
+        },
+        "median_time_s": {
+          "p5": -3.5688563910924005,
+          "p50": -2.430981573329241,
+          "p95": -0.5921359059280478
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.29513333333333336,
+          "p50": 0.351,
+          "p95": 0.3858333333333333
+        },
+        "completion_rate": {
+          "p5": 0.3860969450881623,
+          "p50": 0.41203268007652927,
+          "p95": 0.43571572001756553
+        },
+        "discovery_rate": {
+          "p5": 0.7041999999999999,
+          "p50": 0.8853333333333333,
+          "p95": 0.9199666666666666
+        },
+        "error_rate": {
+          "p5": 0.11994520904143682,
+          "p50": 0.14370042896282464,
+          "p95": 0.1633709676014252
+        },
+        "median_time_s": {
+          "p5": 43.60194981548353,
+          "p50": 45.16115318987025,
+          "p95": 46.4981795491866
+        }
+      },
+      "verdict": "better"
+    }
+  ],
+  "watchlist": [
+    {
+      "step": "acquire_lease",
+      "name": "Acquires atomic SQLite domain lease",
+      "event": "lease_acquired",
+      "expected": {
+        "p5": 0.9320818112118342,
+        "p50": 0.9527114820663207,
+        "p95": 0.9616523720182256
+      },
+      "calibrated": false
+    },
+    {
+      "step": "sync_cookies",
+      "name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "event": null,
+      "expected": {
+        "p5": 0.5065488306549186,
+        "p50": 0.5332347534264182,
+        "p95": 0.5686748651003988
+      },
+      "calibrated": false
+    },
+    {
+      "step": "run_detached_task",
+      "name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "event": "viewport_spawned",
+      "expected": {
+        "p5": 0.9417684133846421,
+        "p50": 0.9543190315653305,
+        "p95": 0.9697622926897649
+      },
+      "calibrated": false
+    },
+    {
+      "step": "release_lease",
+      "name": "Releases SQLite lease & writes SHA-256 audit log",
+      "event": "lease_released",
+      "expected": {
+        "p5": 0.9482865488743232,
+        "p50": 0.9601136363636363,
+        "p95": 0.9708976209100963
+      },
+      "calibrated": false
+    },
+    {
+      "step": "conflict_sentinel_pause",
+      "name": "Conflict Sentinel freezes agent & shows pause pill",
+      "event": "conflict_detected",
+      "expected": {
+        "p5": 0.6871489688459851,
+        "p50": 0.738249787595582,
+        "p95": 0.784913217623498
+      },
+      "calibrated": false
+    },
+    {
+      "step": "arbitrate_handoff",
+      "name": "Human finishes active tab & clicks Resume on pill",
+      "event": null,
+      "expected": {
+        "p5": 0.8058219988172678,
+        "p50": 0.8457083928288116,
+        "p95": 0.90546783625731
+      },
+      "calibrated": false
+    }
+  ],
+  "instrumentation": [
+    {
+      "step": "acquire_lease",
+      "name": "Acquires atomic SQLite domain lease",
+      "type": "external",
+      "events": [
+        "lease_acquired"
+      ],
+      "error_event": "acquire_lease.error",
+      "missing": false
+    },
+    {
+      "step": "sync_cookies",
+      "name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "type": "external",
+      "events": [],
+      "error_event": "sync_cookies.error",
+      "missing": true
+    },
+    {
+      "step": "run_detached_task",
+      "name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "type": "wait",
+      "events": [
+        "viewport_spawned"
+      ],
+      "error_event": "run_detached_task.error",
+      "missing": false
+    },
+    {
+      "step": "release_lease",
+      "name": "Releases SQLite lease & writes SHA-256 audit log",
+      "type": "external",
+      "events": [
+        "lease_released"
+      ],
+      "error_event": "release_lease.error",
+      "missing": false
+    },
+    {
+      "step": "conflict_sentinel_pause",
+      "name": "Conflict Sentinel freezes agent & shows pause pill",
+      "type": "view",
+      "events": [
+        "conflict_detected"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "task_completed",
+      "name": "Background browser task finished with zero clobbering",
+      "type": "success",
+      "events": [
+        "shadowmux_task_done"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "arbitrate_handoff",
+      "name": "Human finishes active tab & clicks Resume on pill",
+      "type": "decision",
+      "events": [],
+      "error_event": null,
+      "missing": true
+    }
+  ],
+  "lint": [
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "sync_cookies",
+      "message": "'Mirrors Chrome profile cookies & storage (OS Keychain)' needs keychain_cookie_access. About 34% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "sync_cookies",
+      "message": "'Mirrors Chrome profile cookies & storage (OS Keychain)' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "conflict_sentinel_pause",
+      "message": "'Conflict Sentinel freezes agent & shows pause pill' needs chrome_extension_installed. About 30% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "arbitrate_handoff",
+      "message": "'Human finishes active tab & clicks Resume on pill' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "warn",
+      "code": "error-without-recovery",
+      "kind": "design",
+      "step": "release_lease",
+      "message": "'Releases SQLite lease & writes SHA-256 audit log' can fail (2%) but the model says nothing about what happens next.",
+      "fix": "Define on_error: can the user retry, or where do they land?"
+    }
+  ],
+  "replication": {
+    "reps": 24,
+    "users": 1500,
+    "jitter": 0.1,
+    "overall": {
+      "discovery_rate": {
+        "p5": 0.7008,
+        "p50": 0.883,
+        "p95": 0.9172333333333333
+      },
+      "completion_rate": {
+        "p5": 0.3695044155498358,
+        "p50": 0.3951597342815403,
+        "p95": 0.425810213254434
+      },
+      "adoption_rate": {
+        "p5": 0.28376666666666667,
+        "p50": 0.3403333333333333,
+        "p95": 0.36646666666666666
+      },
+      "error_rate": {
+        "p5": 0.12135956761882069,
+        "p50": 0.14587412317410972,
+        "p95": 0.16171931420380933
+      },
+      "blocked_rate": {
+        "p5": 0.32986930232558137,
+        "p50": 0.35516390389271746,
+        "p95": 0.3717472928736692
+      },
+      "median_time_s": {
+        "p5": 45.72749651437041,
+        "p50": 47.54759601637903,
+        "p95": 49.50743330869477
+      }
+    },
+    "segments": {
+      "power_developer": {
+        "discovery_rate": {
+          "p5": 0.7243086789938364,
+          "p50": 0.9151477498261268,
+          "p95": 0.957979099846209
+        },
+        "completion_rate": {
+          "p5": 0.6021636076689268,
+          "p50": 0.631221529152308,
+          "p95": 0.6699278849607102
+        },
+        "adoption_rate": {
+          "p5": 0.48034844054580894,
+          "p50": 0.5759387227421457,
+          "p95": 0.6125290669340128
+        },
+        "error_rate": {
+          "p5": 0.1420532928535757,
+          "p50": 0.169294425087108,
+          "p95": 0.1979383688897431
+        },
+        "blocked_rate": {
+          "p5": 0.1458036569619726,
+          "p50": 0.17620656880346394,
+          "p95": 0.1923920265780731
+        },
+        "median_time_s": {
+          "p5": 42.490210556282435,
+          "p50": 44.82286640126698,
+          "p95": 46.4735077612643
+        }
+      },
+      "busy_knowledge_worker": {
+        "discovery_rate": {
+          "p5": 0.7105224260958206,
+          "p50": 0.8779688241890349,
+          "p95": 0.9161099936584018
+        },
+        "completion_rate": {
+          "p5": 0.2027920410783055,
+          "p50": 0.25816993464052285,
+          "p95": 0.3118346897227222
+        },
+        "adoption_rate": {
+          "p5": 0.1731852453642337,
+          "p50": 0.21802945657694262,
+          "p95": 0.2616341458780613
+        },
+        "error_rate": {
+          "p5": 0.11373474895958836,
+          "p50": 0.1367528006490256,
+          "p95": 0.1699206349206349
+        },
+        "blocked_rate": {
+          "p5": 0.3578141917457361,
+          "p50": 0.3950739457914124,
+          "p95": 0.42552103069344444
+        },
+        "median_time_s": {
+          "p5": 51.64106559853151,
+          "p50": 58.137454945835245,
+          "p95": 64.99259164875382
+        }
+      },
+      "first_time_installer": {
+        "discovery_rate": {
+          "p5": 0.6237468003412969,
+          "p50": 0.8081255155783997,
+          "p95": 0.8896930968527212
+        },
+        "completion_rate": {
+          "p5": 0.032621686746987955,
+          "p50": 0.0606760374832664,
+          "p95": 0.08403593054869006
+        },
+        "adoption_rate": {
+          "p5": 0.026607699485774416,
+          "p50": 0.04714018479678023,
+          "p95": 0.06243872549019608
+        },
+        "error_rate": {
+          "p5": 0.05407181379506103,
+          "p50": 0.08016064257028113,
+          "p95": 0.09809931100023758
+        },
+        "blocked_rate": {
+          "p5": 0.6856643356643356,
+          "p50": 0.7221015208374482,
+          "p95": 0.7512565196775722
+        },
+        "median_time_s": {
+          "p5": 43.032662669113925,
+          "p50": 51.804400692795305,
+          "p95": 62.2202423968341
+        }
+      }
+    },
+    "steps": {
+      "acquire_lease": {
+        "p5": 0.9320818112118342,
+        "p50": 0.9527114820663207,
+        "p95": 0.9616523720182256
+      },
+      "sync_cookies": {
+        "p5": 0.5065488306549186,
+        "p50": 0.5332347534264182,
+        "p95": 0.5686748651003988
+      },
+      "run_detached_task": {
+        "p5": 0.9417684133846421,
+        "p50": 0.9543190315653305,
+        "p95": 0.9697622926897649
+      },
+      "conflict_sentinel_pause": {
+        "p5": 0.6871489688459851,
+        "p50": 0.738249787595582,
+        "p95": 0.784913217623498
+      },
+      "arbitrate_handoff": {
+        "p5": 0.8058219988172678,
+        "p50": 0.8457083928288116,
+        "p95": 0.90546783625731
+      },
+      "release_lease": {
+        "p5": 0.9482865488743232,
+        "p50": 0.9601136363636363,
+        "p95": 0.9708976209100963
+      },
+      "task_completed": {
+        "p5": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      }
+    }
+  },
+  "edge_cases": [
+    {
+      "id": "E-flow-session_expired",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "session_expired",
+      "title": "Signed out while in the flow",
+      "question": "After signing in again, do they return to where they were?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the mirrored ATS/Gmail session cookie expires mid-run, pause, prompt human re-auth in visible Chrome, and re-sync cookies."
+    },
+    {
+      "id": "E-acquire_lease-server_error",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If SQLite WAL is corrupted or read-only, surface a clear diagnostic error instead of bypassing mutual exclusion."
+    },
+    {
+      "id": "E-sync_cookies-timeout",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If macOS Keychain modal hangs waiting for user approval, time out after 30s and offer ephemeral profile fallback."
+    },
+    {
+      "id": "E-sync_cookies-server_error",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If Chrome holds a file lock on Default/Cookies, copy the WAL/DB snapshot or retry instead of failing cookie sync."
+    },
+    {
+      "id": "E-sync_cookies-partial_success",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If cookies copy succeeds but LocalStorage/IndexedDB fails, warn and re-auth cleanly rather than running half-authenticated."
+    },
+    {
+      "id": "E-run_detached_task-offline",
+      "step": "run_detached_task",
+      "step_name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "key": "offline",
+      "title": "Connection drops while waiting",
+      "question": "Does the wait resume, restart or fail silently?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "On network drop, save DOM checkpoint, release domain lease cleanly, and notify caller."
+    },
+    {
+      "id": "E-run_detached_task-never_completes",
+      "step": "run_detached_task",
+      "step_name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "key": "never_completes",
+      "title": "The thing being waited for never arrives",
+      "question": "Is there a time limit and a next step when it runs out?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Enforce per-task max execution deadline distinct from heartbeat renewals so a hung page cannot renew leases forever."
+    },
+    {
+      "id": "E-release_lease-timeout",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Retry release with exponential backoff and verify owner token match before leaving a domain locked."
+    },
+    {
+      "id": "E-release_lease-server_error",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Kill orphaned Chrome CDP PID if release fails, so zombie workers cannot keep mutating the domain after TTL expiry."
+    },
+    {
+      "id": "E-release_lease-partial_success",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Release SQLite lease and write SHA-256 audit row in one atomic transaction."
+    },
+    {
+      "id": "E-release_lease-stale_data",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If TTL expired while paused for human and another owner took the lease, reject release on token mismatch instead of deleting someone else's lock."
+    },
+    {
+      "id": "X-negative-coord-monitor",
+      "step": "run_detached_task",
+      "step_name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "key": "found",
+      "title": "Multi-monitor arrangement overlaps (-3200, -3200)",
+      "question": "What if a user has a 4K external monitor positioned top-left at negative coordinates, or macOS clamps the window back on-screen?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Query display bounds dynamically and place the viewport outside the union bounding box of all active monitors (or hide window level).",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-paused-ttl-expiry",
+      "step": "arbitrate_handoff",
+      "step_name": "Human finishes active tab & clicks Resume on pill",
+      "key": "found",
+      "title": "Lease TTL (120s) expires while PAUSED_FOR_HUMAN",
+      "question": "If a human takes 3 minutes in Gmail while the agent is paused, does the stale lock scavenger expire the lease and discard the checkpoint?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Extend/hold paused leases with a distinct PAUSED state so another agent cannot steal the domain before human handoff finishes.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-sync_cookies-stale_data",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the human refreshes a session in visible Chrome while agent is queued, re-clone cookies after lease acquisition."
+    },
+    {
+      "id": "E-flow-back_button",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "back_button",
+      "title": "Back button mid-flow",
+      "question": "Does Back go one step back with data kept, or drop the user out?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-refresh_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "refresh_midflow",
+      "title": "Page refresh or app restart mid-flow",
+      "question": "Is progress restored or does the user start again?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-deep_link_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "deep_link_midflow",
+      "title": "Link opens the middle of the flow",
+      "question": "What happens if someone lands on step 3 without doing steps 1 and 2?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-two_tabs",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "two_tabs",
+      "title": "Same flow open in two tabs or devices",
+      "question": "Which one wins, and can the two conflict?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-permission_changed",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "permission_changed",
+      "title": "Role or access changes mid-flow",
+      "question": "If access is removed while the user is in the flow, what do they see?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-interrupted_resume",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "interrupted_resume",
+      "title": "Interrupted and resumed days later",
+      "question": "Is a half-done flow kept, expired or cleaned up, and is the user reminded?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-keyboard_only",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "keyboard_only",
+      "title": "Keyboard only",
+      "question": "Can the whole flow be completed without a mouse, in a sensible focus order?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-screen_reader",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "screen_reader",
+      "title": "Screen reader",
+      "question": "Are states, errors and progress announced?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-small_screen",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "small_screen",
+      "title": "Small phone screen",
+      "question": "Is the main button reachable without scrolling past everything?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_lease-slow_response",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-sync_cookies-slow_response",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-run_detached_task-slow_response",
+      "step": "run_detached_task",
+      "step_name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "key": "slow_response",
+      "title": "Wait is much longer than promised",
+      "question": "Is the expected time shown, and updated?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-release_lease-slow_response",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-conflict_sentinel_pause-empty_state",
+      "step": "conflict_sentinel_pause",
+      "step_name": "Conflict Sentinel freezes agent & shows pause pill",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-task_completed-repeat_action",
+      "step": "task_completed",
+      "step_name": "Background browser task finished with zero clobbering",
+      "key": "repeat_action",
+      "title": "Does it again right after",
+      "question": "What happens if the user completes the same thing twice?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-task_completed-undo",
+      "step": "task_completed",
+      "step_name": "Background browser task finished with zero clobbering",
+      "key": "undo",
+      "title": "Wants to undo",
+      "question": "Can it be undone or edited, by whom and until when?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-task_completed-others_not_told",
+      "step": "task_completed",
+      "step_name": "Background browser task finished with zero clobbering",
+      "key": "others_not_told",
+      "title": "Other people affected are not told",
+      "question": "Who else needs to know, and how are they notified?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-arbitrate_handoff-no_option_fits",
+      "step": "arbitrate_handoff",
+      "step_name": "Human finishes active tab & clicks Resume on pill",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-arbitrate_handoff-change_mind",
+      "step": "arbitrate_handoff",
+      "step_name": "Human finishes active tab & clicks Resume on pill",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-arbitrate_handoff-default_bias",
+      "step": "arbitrate_handoff",
+      "step_name": "Human finishes active tab & clicks Resume on pill",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-flag_off",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "flag_off",
+      "title": "Feature switched off while in use",
+      "question": "What happens to users and data mid-flow if the feature is turned off?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-large_text",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "large_text",
+      "title": "Large text or 200% zoom",
+      "question": "Does anything clip, overlap or become unreachable?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-timezone_boundary",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "timezone_boundary",
+      "title": "Time zones and midnight",
+      "question": "Do dates, deadlines and 'today' hold up across time zones?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_lease-rate_limited",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-sync_cookies-rate_limited",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-release_lease-rate_limited",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-conflict_sentinel_pause-huge_list",
+      "step": "conflict_sentinel_pause",
+      "step_name": "Conflict Sentinel freezes agent & shows pause pill",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-conflict_sentinel_pause-long_text",
+      "step": "conflict_sentinel_pause",
+      "step_name": "Conflict Sentinel freezes agent & shows pause pill",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-conflict_sentinel_pause-loading_state",
+      "step": "conflict_sentinel_pause",
+      "step_name": "Conflict Sentinel freezes agent & shows pause pill",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-task_completed-next_step_unclear",
+      "step": "task_completed",
+      "step_name": "Background browser task finished with zero clobbering",
+      "key": "next_step_unclear",
+      "title": "What now?",
+      "question": "Is the next useful action obvious from the success screen?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_lease-timeout",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Proposal Section 2.1 sets PRAGMA busy_timeout=5000 and 120s TTL stale lock scavenger."
+    },
+    {
+      "id": "E-acquire_lease-stale_data",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "CAS WHERE expires_at < now checks lease freshness atomically at write time."
+    },
+    {
+      "id": "E-sync_cookies-double_submit",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Each worker gets a unique ephemeral directory ~/.shadowmux/profiles/shadow_worker_<uuid>."
+    },
+    {
+      "id": "E-release_lease-double_submit",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Lease deletion/release is keyed by signed token."
+    },
+    {
+      "id": "E-acquire_lease-double_submit",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-task_completed-no_confirmation",
+      "step": "task_completed",
+      "step_name": "Background browser task finished with zero clobbering",
+      "key": "no_confirmation",
+      "title": "No proof it worked",
+      "question": "Does the user get clear confirmation and a record they can find later?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-returning_user",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "returning_user",
+      "title": "Second and tenth use",
+      "question": "Is the repeat experience shorter than the first, and are earlier choices remembered?",
+      "severity": "med",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-run_detached_task-user_leaves",
+      "step": "run_detached_task",
+      "step_name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "key": "user_leaves",
+      "title": "User closes the screen while waiting",
+      "question": "Does it carry on in the background, and how do they learn the result?",
+      "severity": "med",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_lease-offline",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "SQLite lease acquisition is strictly local on the host machine."
+    },
+    {
+      "id": "E-acquire_lease-partial_success",
+      "step": "acquire_lease",
+      "step_name": "Acquires atomic SQLite domain lease",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Single atomic SQLite INSERT ... ON CONFLICT DO UPDATE transaction."
+    },
+    {
+      "id": "E-sync_cookies-offline",
+      "step": "sync_cookies",
+      "step_name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Cookie cloning reads local Chrome profile SQLite files."
+    },
+    {
+      "id": "E-release_lease-offline",
+      "step": "release_lease",
+      "step_name": "Releases SQLite lease & writes SHA-256 audit log",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Lease release and audit logging are local SQLite operations."
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C-01",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "linux",
+        "network": "good",
+        "chrome_state": "single monitor normal",
+        "cookie_state": "Keychain approved"
+      },
+      "share": 0.13820000000000002,
+      "title": "human_overlap: no_conflict + os: linux + network: good + chrome_state: single monitor normal + cookie_state: Keychain approved",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-02",
+      "combo": {
+        "human_overlap": "same_domain_active",
+        "os": "linux",
+        "network": "offline",
+        "chrome_state": "extended monitor at negative coords",
+        "cookie_state": "2FA/SSO expired mid-lease"
+      },
+      "share": 0.0015425,
+      "title": "human_overlap: same_domain_active + os: linux + network: offline + chrome_state: extended monitor at negative coords + cookie_state: 2FA/SSO expired mid-lease",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-03",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "macos",
+        "network": "offline",
+        "chrome_state": "Chrome profile locked/updating",
+        "cookie_state": "Keychain denied"
+      },
+      "share": 0.0066675,
+      "title": "human_overlap: no_conflict + os: macos + network: offline + chrome_state: Chrome profile locked/updating + cookie_state: Keychain denied",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-04",
+      "combo": {
+        "human_overlap": "same_domain_active",
+        "os": "macos",
+        "network": "flaky",
+        "chrome_state": "single monitor normal",
+        "cookie_state": "Keychain denied"
+      },
+      "share": 0.028967500000000004,
+      "title": "human_overlap: same_domain_active + os: macos + network: flaky + chrome_state: single monitor normal + cookie_state: Keychain denied",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-05",
+      "combo": {
+        "human_overlap": "same_domain_active",
+        "os": "linux",
+        "network": "flaky",
+        "chrome_state": "Chrome profile locked/updating",
+        "cookie_state": "Keychain approved"
+      },
+      "share": 0.009107500000000001,
+      "title": "human_overlap: same_domain_active + os: linux + network: flaky + chrome_state: Chrome profile locked/updating + cookie_state: Keychain approved",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-06",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "macos",
+        "network": "flaky",
+        "chrome_state": "extended monitor at negative coords",
+        "cookie_state": "2FA/SSO expired mid-lease"
+      },
+      "share": 0.0405825,
+      "title": "human_overlap: no_conflict + os: macos + network: flaky + chrome_state: extended monitor at negative coords + cookie_state: 2FA/SSO expired mid-lease",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-07",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "macos",
+        "network": "good",
+        "chrome_state": "extended monitor at negative coords",
+        "cookie_state": "Keychain denied"
+      },
+      "share": 0.3885,
+      "title": "human_overlap: no_conflict + os: macos + network: good + chrome_state: extended monitor at negative coords + cookie_state: Keychain denied",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-08",
+      "combo": {
+        "human_overlap": "same_domain_active",
+        "os": "linux",
+        "network": "good",
+        "chrome_state": "Chrome profile locked/updating",
+        "cookie_state": "2FA/SSO expired mid-lease"
+      },
+      "share": 0.0901,
+      "title": "human_overlap: same_domain_active + os: linux + network: good + chrome_state: Chrome profile locked/updating + cookie_state: 2FA/SSO expired mid-lease",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-09",
+      "combo": {
+        "human_overlap": "same_domain_active",
+        "os": "macos",
+        "network": "offline",
+        "chrome_state": "extended monitor at negative coords",
+        "cookie_state": "Keychain approved"
+      },
+      "share": 0.005082499999999999,
+      "title": "human_overlap: same_domain_active + os: macos + network: offline + chrome_state: extended monitor at negative coords + cookie_state: Keychain approved",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-10",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "linux",
+        "network": "offline",
+        "chrome_state": "single monitor normal",
+        "cookie_state": "2FA/SSO expired mid-lease"
+      },
+      "share": 0.0022075000000000003,
+      "title": "human_overlap: no_conflict + os: linux + network: offline + chrome_state: single monitor normal + cookie_state: 2FA/SSO expired mid-lease",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-11",
+      "combo": {
+        "human_overlap": "no_conflict",
+        "os": "linux",
+        "network": "flaky",
+        "chrome_state": "Chrome profile locked/updating",
+        "cookie_state": "Keychain denied"
+      },
+      "share": 0.013842500000000002,
+      "title": "human_overlap: no_conflict + os: linux + network: flaky + chrome_state: Chrome profile locked/updating + cookie_state: Keychain denied",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    }
+  ],
+  "qualitative": {
+    "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/03_SHADOWMUX_PRODUCT_PROPOSAL.md and .kiro/specs/shadowmux/.",
+    "sessions": [
+      {
+        "persona": "Aravind, systems engineer running JobPilot + coding in VS Code (User 0)",
+        "segment": "power_developer",
+        "context": "desktop, macos, good network, no_conflict, keychain_cookie_access, chrome_extension_installed",
+        "goal": "Let JobPilot submit a Greenhouse application silently while he stays in his IDE",
+        "outcome": "success",
+        "at": "task_completed",
+        "moments": [
+          {
+            "step": "run_detached_task",
+            "kind": "delight",
+            "thought": "Zero window flicker—VS Code never lost focus while Chrome worked at (-3200,-3200).",
+            "severity": 1
+          },
+          {
+            "step": "task_completed",
+            "kind": "delight",
+            "thought": "Got the confirmation hash in 38s without touching my mouse.",
+            "severity": 1
+          }
+        ],
+        "quote": "Completely invisible—exactly how background browser automation should behave.",
+        "would_use_again": "yes",
+        "unmet_need": "None on happy path."
+      },
+      {
+        "persona": "Meera, Product Manager drafting in Gmail while agent runs (User 2)",
+        "segment": "busy_knowledge_worker",
+        "context": "desktop, linux, good network, same_domain_active, keychain_cookie_access, chrome_extension_installed",
+        "goal": "Reply to an email without the agent overwriting her draft",
+        "outcome": "success",
+        "at": "task_completed",
+        "moments": [
+          {
+            "step": "conflict_sentinel_pause",
+            "kind": "delight",
+            "thought": "A small corner pill said ShadowMux paused while I typed in Gmail. My cursor didn't jump.",
+            "severity": 1
+          },
+          {
+            "step": "arbitrate_handoff",
+            "kind": "hesitation",
+            "thought": "Had to remember to click Resume on the pill after I sent the email.",
+            "severity": 2
+          }
+        ],
+        "quote": "Saved my draft, though I almost forgot to unpause it afterwards.",
+        "would_use_again": "yes",
+        "unmet_need": "Auto-resume once I close the tab or leave the domain."
+      },
+      {
+        "persona": "Kabir, first-time macOS user running JobPilot 1-Tap Apply (User 8)",
+        "segment": "first_time_installer",
+        "context": "desktop, macos, good network, same_domain_active, lacks keychain_cookie_access and extension",
+        "goal": "Run his first background browser task",
+        "outcome": "blocked",
+        "at": "sync_cookies",
+        "moments": [
+          {
+            "step": "sync_cookies",
+            "kind": "confusion",
+            "thought": "macOS popped up a Keychain access prompt for 'Chrome Safe Storage' with no context. I clicked Deny, and ShadowMux stopped cold.",
+            "severity": 3
+          }
+        ],
+        "quote": "Why is a CLI tool suddenly asking for my Chrome Keychain password?",
+        "would_use_again": "no",
+        "unmet_need": "Explain the Keychain prompt beforehand and offer a clean unauthenticated/login fallback if denied."
+      },
+      {
+        "persona": "Riya, knowledge worker who declined Keychain sync (User 47)",
+        "segment": "busy_knowledge_worker",
+        "context": "desktop, macos, good network, same_domain_active, chrome_extension_installed, lacks keychain_cookie_access",
+        "goal": "Apply to a public Greenhouse job board that doesn't even require login",
+        "outcome": "blocked",
+        "at": "sync_cookies",
+        "moments": [
+          {
+            "step": "sync_cookies",
+            "kind": "frustration",
+            "thought": "Public Greenhouse forms don't even need my Gmail cookies, yet ShadowMux blocked the whole run because Keychain access wasn't granted.",
+            "severity": 3
+          }
+        ],
+        "quote": "It forced full Chrome cookie cloning even for a public form.",
+        "would_use_again": "no",
+        "unmet_need": "Only clone cookies when the target domain needs auth, or fall back to an ephemeral profile."
+      },
+      {
+        "persona": "Siddharth, knowledge worker without the optional Chrome Sentinel extension (User 48)",
+        "segment": "busy_knowledge_worker",
+        "context": "desktop, macos, good network, same_domain_active, keychain_cookie_access, lacks chrome_extension_installed",
+        "goal": "Browse Greenhouse while an agent also touches Greenhouse",
+        "outcome": "blocked",
+        "at": "conflict_sentinel_pause",
+        "moments": [
+          {
+            "step": "conflict_sentinel_pause",
+            "kind": "confusion",
+            "thought": "The foreground tab detection needed the Chrome Extension hook, which I hadn't installed, so collision arbitration stalled.",
+            "severity": 3
+          }
+        ],
+        "quote": "Nobody told me Conflict Sentinel stops working unless I install a separate Chrome extension.",
+        "would_use_again": "maybe",
+        "unmet_need": "Fall back to AppleScript/OS window-title inspection or pause cleanly if the extension is missing."
+      },
+      {
+        "persona": "Naina, busy PM interrupted during a meeting (User 50)",
+        "segment": "busy_knowledge_worker",
+        "context": "desktop, macos, good network, same_domain_active, keychain_cookie_access, chrome_extension_installed",
+        "goal": "Finish checking her LinkedIn inbox and let the agent proceed",
+        "outcome": "abandoned",
+        "at": "arbitrate_handoff",
+        "moments": [
+          {
+            "step": "conflict_sentinel_pause",
+            "kind": "question",
+            "thought": "The pause pill appeared while I was on a call, then vanished or got buried behind Zoom.",
+            "severity": 2
+          },
+          {
+            "step": "arbitrate_handoff",
+            "kind": "frustration",
+            "thought": "I stayed on LinkedIn for 5 minutes and never clicked Resume—the agent stayed frozen until the 120s TTL expired.",
+            "severity": 3
+          }
+        ],
+        "quote": "A corner toast isn't enough when you're in a meeting; it just silently timed out.",
+        "would_use_again": "maybe",
+        "unmet_need": "Auto-resume when I leave the tab, or show a clear countdown before TTL expires."
+      },
+      {
+        "persona": "Leo, developer on Linux hitting a SQLite lock error at release (User 9)",
+        "segment": "power_developer",
+        "context": "desktop, linux, good network, no_conflict, keychain_cookie_access, chrome_extension_installed",
+        "goal": "Run back-to-back MiroFish scrape leases",
+        "outcome": "error_exit",
+        "at": "release_lease",
+        "moments": [
+          {
+            "step": "release_lease",
+            "kind": "error",
+            "thought": "Task finished, then lease release failed on a transient SQLite busy error—now the domain stays locked for 120s.",
+            "severity": 3
+          }
+        ],
+        "quote": "The task actually succeeded, then failed to unlock the domain.",
+        "would_use_again": "yes",
+        "unmet_need": "Retry lease release with SQLite busy_timeout and ensure token-verified cleanup."
+      }
+    ],
+    "themes": [
+      {
+        "title": "Mandatory OS Keychain cookie cloning blocks both newcomers and public-site tasks",
+        "evidence": "Kabir (denied scary macOS Keychain prompt) and Riya (public Greenhouse form) both stalled at sync_cookies (36% of starters blocked).",
+        "steps": [
+          "sync_cookies"
+        ],
+        "recommendation": "Explain the Keychain prompt before triggering it, and allow ephemeral/unauthenticated shadow profiles when Keychain access is absent or unneeded."
+      },
+      {
+        "title": "Conflict Sentinel depends on an unverified Chrome extension prerequisite",
+        "evidence": "Siddharth had not installed the Chrome extension, stalling conflict_sentinel_pause when he opened the same domain.",
+        "steps": [
+          "conflict_sentinel_pause"
+        ],
+        "recommendation": "Check extension presence at setup and fall back to OS window-title / CDP target polling if the extension is missing."
+      },
+      {
+        "title": "Manual 'Resume' pill gets lost during real multitasking",
+        "evidence": "Naina got pulled into a meeting and never clicked Resume before the lease TTL expired; Meera nearly forgot too.",
+        "steps": [
+          "arbitrate_handoff"
+        ],
+        "recommendation": "Auto-resume 5–10 seconds after the human switches away from the conflicted domain, and show TTL countdown on the pill."
+      }
+    ],
+    "spec_gaps": [
+      {
+        "title": "Keychain denial / Linux keyring failure fallback is missing",
+        "detail": "Proposal Section 2.4 decrypts Cookies via OS Keychain APIs, but does not define what happens when the user clicks Deny or runs headless Linux.",
+        "severity": "high",
+        "step": "sync_cookies"
+      },
+      {
+        "title": "Paused agent timeout vs resume behavior",
+        "detail": "When Conflict Sentinel sets PAUSED_FOR_HUMAN, the spec says lease TTL is 120s—if the human takes >120s on their tab, does the stale lock scavenger kill the paused checkpoint?",
+        "severity": "high",
+        "step": "arbitrate_handoff"
+      },
+      {
+        "title": "Multi-monitor negative coordinates collision",
+        "detail": "If a user arranges an external monitor to the top-left of their primary display in macOS Displays, (-3200, -3200) can land on a visible monitor or snap back on-screen.",
+        "severity": "high",
+        "step": "run_detached_task"
+      }
+    ]
+  },
+  "triangulation": [
+    {
+      "step": "sync_cookies",
+      "name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "loss_share": 0.45193421357424135,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "conflict_sentinel_pause",
+      "name": "Conflict Sentinel freezes agent & shows pause pill",
+      "loss_share": 0.04818160759786889,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "arbitrate_handoff",
+      "name": "Human finishes active tab & clicks Resume on pill",
+      "loss_share": 0.016909891128098216,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "acquire_lease",
+      "name": "Acquires atomic SQLite domain lease",
+      "loss_share": 0.051192958072735696,
+      "mentions": 0,
+      "sessions": 7,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    }
+  ],
+  "sessions": [
+    {
+      "user": 4,
+      "segment": "power_developer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.45,
+        "skill": 0.79,
+        "patience": 0.78,
+        "trust": 0.5
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "no_conflict",
+        "os": "linux"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "abandoned",
+      "at": "sync_cookies",
+      "why": "confusion",
+      "seconds": 5,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 5,
+          "note": "abandoned: confusion"
+        }
+      ]
+    },
+    {
+      "user": 1,
+      "segment": "busy_knowledge_worker",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.54,
+        "skill": 0.58,
+        "patience": 0.46,
+        "trust": 0.26
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "same_domain_active",
+        "os": "linux"
+      },
+      "capabilities": [
+        "chrome_extension_installed"
+      ],
+      "outcome": "blocked",
+      "at": "sync_cookies",
+      "why": "lacks keychain_cookie_access",
+      "seconds": 1,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 1,
+          "note": "blocked: lacks keychain_cookie_access"
+        }
+      ]
+    },
+    {
+      "user": 9,
+      "segment": "power_developer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.55,
+        "skill": 0.98,
+        "patience": 0.69,
+        "trust": 0.56
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "no_conflict",
+        "os": "linux"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "error_exit",
+      "at": "release_lease",
+      "why": "error, no way to recover",
+      "seconds": 18,
+      "errors": 1,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 4,
+          "note": null
+        },
+        {
+          "step": "run_detached_task",
+          "t": 17,
+          "note": null
+        },
+        {
+          "step": "release_lease",
+          "t": 18,
+          "note": "error_exit: error, no way to recover"
+        }
+      ]
+    },
+    {
+      "user": 0,
+      "segment": "power_developer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.91,
+        "skill": 0.98,
+        "patience": 0.79,
+        "trust": 0.72
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "no_conflict",
+        "os": "macos"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "success",
+      "at": "task_completed",
+      "why": null,
+      "seconds": 38,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 6,
+          "note": null
+        },
+        {
+          "step": "run_detached_task",
+          "t": 29,
+          "note": null
+        },
+        {
+          "step": "release_lease",
+          "t": 31,
+          "note": null
+        },
+        {
+          "step": "task_completed",
+          "t": 38,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 12,
+      "segment": "first_time_installer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.46,
+        "skill": 0.47,
+        "patience": 0.39,
+        "trust": 0.29
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "no_conflict",
+        "os": "linux"
+      },
+      "capabilities": [],
+      "outcome": "never_saw",
+      "at": null,
+      "why": null,
+      "seconds": 0,
+      "errors": 0,
+      "path": []
+    },
+    {
+      "user": 7,
+      "segment": "power_developer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.82,
+        "skill": 0.7,
+        "patience": 0.45,
+        "trust": 0.57
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "no_conflict",
+        "os": "macos"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "abandoned",
+      "at": "release_lease",
+      "why": "fatigue",
+      "seconds": 21,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 6,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 10,
+          "note": null
+        },
+        {
+          "step": "run_detached_task",
+          "t": 18,
+          "note": null
+        },
+        {
+          "step": "release_lease",
+          "t": 21,
+          "note": "abandoned: fatigue"
+        }
+      ]
+    },
+    {
+      "user": 8,
+      "segment": "first_time_installer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.62,
+        "skill": 0.52,
+        "patience": 0.2,
+        "trust": 0.29
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "same_domain_active",
+        "os": "macos"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "sync_cookies",
+      "why": "lacks keychain_cookie_access",
+      "seconds": 1,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 1,
+          "note": "blocked: lacks keychain_cookie_access"
+        }
+      ]
+    },
+    {
+      "user": 10,
+      "segment": "power_developer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.98,
+        "skill": 0.87,
+        "patience": 0.57,
+        "trust": 0.62
+      },
+      "context": {
+        "device": "desktop",
+        "network": "flaky",
+        "human_overlap": "no_conflict",
+        "os": "linux"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "error_exit",
+      "at": "sync_cookies",
+      "why": "gave up after errors",
+      "seconds": 22,
+      "errors": 2,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 7,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 22,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 2,
+      "segment": "busy_knowledge_worker",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.73,
+        "skill": 0.47,
+        "patience": 0.34,
+        "trust": 0.29
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "same_domain_active",
+        "os": "linux"
+      },
+      "capabilities": [
+        "chrome_extension_installed",
+        "keychain_cookie_access"
+      ],
+      "outcome": "success",
+      "at": "task_completed",
+      "why": null,
+      "seconds": 67,
+      "errors": 1,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 3,
+          "note": "error ×1, retried"
+        },
+        {
+          "step": "acquire_lease",
+          "t": 3,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 9,
+          "note": null
+        },
+        {
+          "step": "run_detached_task",
+          "t": 22,
+          "note": null
+        },
+        {
+          "step": "conflict_sentinel_pause",
+          "t": 35,
+          "note": null
+        },
+        {
+          "step": "arbitrate_handoff",
+          "t": 54,
+          "note": null
+        },
+        {
+          "step": "release_lease",
+          "t": 56,
+          "note": null
+        },
+        {
+          "step": "task_completed",
+          "t": 67,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 23,
+      "segment": "first_time_installer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.71,
+        "skill": 0.26,
+        "patience": 0.62,
+        "trust": 0.3
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "same_domain_active",
+        "os": "macos"
+      },
+      "capabilities": [
+        "keychain_cookie_access"
+      ],
+      "outcome": "abandoned",
+      "at": "sync_cookies",
+      "why": "confusion",
+      "seconds": 5,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 2,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 5,
+          "note": "abandoned: confusion"
+        }
+      ]
+    },
+    {
+      "user": 16,
+      "segment": "first_time_installer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.35,
+        "skill": 0.19,
+        "patience": 0.47,
+        "trust": 0.24
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "human_overlap": "same_domain_active",
+        "os": "macos"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "sync_cookies",
+      "why": "lacks keychain_cookie_access",
+      "seconds": 1,
+      "errors": 0,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 1,
+          "note": null
+        },
+        {
+          "step": "sync_cookies",
+          "t": 1,
+          "note": "blocked: lacks keychain_cookie_access"
+        }
+      ]
+    },
+    {
+      "user": 15,
+      "segment": "first_time_installer",
+      "entry": "agent_lease_request",
+      "traits": {
+        "motivation": 0.49,
+        "skill": 0.13,
+        "patience": 0.29,
+        "trust": 0.42
+      },
+      "context": {
+        "device": "desktop",
+        "network": "offline",
+        "human_overlap": "no_conflict",
+        "os": "macos"
+      },
+      "capabilities": [
+        "chrome_extension_installed"
+      ],
+      "outcome": "error_exit",
+      "at": "acquire_lease",
+      "why": "gave up after errors",
+      "seconds": 9,
+      "errors": 3,
+      "path": [
+        {
+          "step": "acquire_lease",
+          "t": 9,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    }
+  ]
+}

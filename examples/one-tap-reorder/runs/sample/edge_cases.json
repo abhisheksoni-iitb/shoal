@@ -1,0 +1,920 @@
+{
+  "cases": [
+    {
+      "id": "E-place_order-offline",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Keep the basket and slot, say the order was not placed, retry when back online."
+    },
+    {
+      "id": "E-place_order-timeout",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "After a time limit, show the definite order state (looked up on the server) instead of a generic error."
+    },
+    {
+      "id": "E-place_order-server_error",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Specific message, safe retry, basket and slot kept."
+    },
+    {
+      "id": "E-place_order-double_submit",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A second press must not create a second order or charge. Disable the button on press and make the request idempotent."
+    },
+    {
+      "id": "E-place_order-partial_success",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If payment succeeds but the order fails (or the reverse), reconcile automatically and tell the customer which state they are in."
+    },
+    {
+      "id": "E-place_order-stale_data",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If a price or stock level changed between review and placement, show the change and ask once before charging."
+    },
+    {
+      "id": "E-open_sheet-empty_state",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A customer with no past order should not see the entry points, or should see a starter basket.",
+      "note": "The spec lists this as undecided; in the simulation about nine in ten new customers who start are blocked."
+    },
+    {
+      "id": "X-card-expired",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "found",
+      "title": "Saved card is expired or will be declined",
+      "question": "When is the card checked, and what happens to the basket and slot if it fails?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Check the expiry date when the sheet opens; on decline, stay in the flow, hold the slot, offer another payment method.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-partial-reorder",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "found",
+      "title": "Customer wants only some of the items",
+      "question": "Can items be unticked or quantities changed?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Allow untick and quantity change in the sheet; otherwise one-off orders make reorder useless.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-session_expired",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "session_expired",
+      "title": "Signed out while in the flow",
+      "question": "After signing in again, do they return to where they were?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Sign in again and return to the same step with the basket intact.",
+      "note": "Lower than the default: sessions on a phone app rarely expire inside a one-minute flow."
+    },
+    {
+      "id": "E-pick_slot-progress_lost",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A slot error must not reset stock decisions made in the previous step."
+    },
+    {
+      "id": "E-flow-returning_user",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "returning_user",
+      "title": "Second and tenth use",
+      "question": "Is the repeat experience shorter than the first, and are earlier choices remembered?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "On repeat use, remember the usual slot and substitute choices."
+    },
+    {
+      "id": "X-everything-discontinued",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "found",
+      "title": "Most or all items are unavailable",
+      "question": "What does the sheet show when little of the last order can be bought today?",
+      "severity": "med",
+      "status": "gap",
+      "expected": "Say so up front and offer the regular shop instead of an empty reorder.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-min-order",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "found",
+      "title": "Removing items drops the basket below the minimum order value",
+      "question": "Is the minimum checked after removals, and what is offered?",
+      "severity": "med",
+      "status": "gap",
+      "expected": "Show the shortfall and suggest items to add.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-refresh_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "refresh_midflow",
+      "title": "Page refresh or app restart mid-flow",
+      "question": "Is progress restored or does the user start again?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-deep_link_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "deep_link_midflow",
+      "title": "Link opens the middle of the flow",
+      "question": "What happens if someone lands on step 3 without doing steps 1 and 2?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-two_tabs",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "two_tabs",
+      "title": "Same flow open in two tabs or devices",
+      "question": "Which one wins, and can the two conflict?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-permission_changed",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "permission_changed",
+      "title": "Role or access changes mid-flow",
+      "question": "If access is removed while the user is in the flow, what do they see?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-interrupted_resume",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "interrupted_resume",
+      "title": "Interrupted and resumed days later",
+      "question": "Is a half-done flow kept, expired or cleaned up, and is the user reminded?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-keyboard_only",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "keyboard_only",
+      "title": "Keyboard only",
+      "question": "Can the whole flow be completed without a mouse, in a sensible focus order?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-screen_reader",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "screen_reader",
+      "title": "Screen reader",
+      "question": "Are states, errors and progress announced?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-small_screen",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "small_screen",
+      "title": "Small phone screen",
+      "question": "Is the main button reachable without scrolling past everything?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-empty_state",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-no_option_fits",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-change_mind",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-default_bias",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-empty_input",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-invalid_format",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-boundary_numbers",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-duplicate_value",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-keyboard_covers_field",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-empty_input",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-invalid_format",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-boundary_numbers",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-duplicate_value",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-keyboard_covers_field",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-place_order-slow_response",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-repeat_action",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "repeat_action",
+      "title": "Does it again right after",
+      "question": "What happens if the user completes the same thing twice?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-undo",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "undo",
+      "title": "Wants to undo",
+      "question": "Can it be undone or edited, by whom and until when?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-others_not_told",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "others_not_told",
+      "title": "Other people affected are not told",
+      "question": "Who else needs to know, and how are they notified?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-flag_off",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "flag_off",
+      "title": "Feature switched off while in use",
+      "question": "What happens to users and data mid-flow if the feature is turned off?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-large_text",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "large_text",
+      "title": "Large text or 200% zoom",
+      "question": "Does anything clip, overlap or become unreachable?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-timezone_boundary",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "timezone_boundary",
+      "title": "Time zones and midnight",
+      "question": "Do dates, deadlines and 'today' hold up across time zones?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-huge_list",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-long_text",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-huge_list",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-long_text",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-loading_state",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-max_length",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-special_chars",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-paste_formatted",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-autofill",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-max_length",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-special_chars",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-paste_formatted",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-autofill",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-place_order-rate_limited",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-next_step_unclear",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "next_step_unclear",
+      "title": "What now?",
+      "question": "Is the next useful action obvious from the success screen?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-no_confirmation",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "no_confirmation",
+      "title": "No proof it worked",
+      "question": "Does the user get clear confirmation and a record they can find later?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-back_button",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "back_button",
+      "title": "Back button mid-flow",
+      "question": "Does Back go one step back with data kept, or drop the user out?",
+      "severity": "med",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-loading_state",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-progress_lost",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Nothing is typed at this step in the base design."
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C-01",
+      "combo": {
+        "network": "good",
+        "basket": "some out of stock",
+        "card": "valid",
+        "slot": "usual slot free"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: some out of stock + card: valid + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-02",
+      "combo": {
+        "network": "flaky",
+        "basket": "price changed",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: price changed + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-03",
+      "combo": {
+        "network": "flaky",
+        "basket": "everything discontinued",
+        "card": "none",
+        "slot": "no slots today"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: everything discontinued + card: none + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-04",
+      "combo": {
+        "network": "offline",
+        "basket": "some out of stock",
+        "card": "expired",
+        "slot": "usual slot full"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: some out of stock + card: expired + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-05",
+      "combo": {
+        "network": "good",
+        "basket": "all in stock",
+        "card": "expired",
+        "slot": "no slots today"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: all in stock + card: expired + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-06",
+      "combo": {
+        "network": "good",
+        "basket": "price changed",
+        "card": "none",
+        "slot": "usual slot full"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: price changed + card: none + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-07",
+      "combo": {
+        "network": "flaky",
+        "basket": "all in stock",
+        "card": "valid",
+        "slot": "usual slot full"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: all in stock + card: valid + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-08",
+      "combo": {
+        "network": "offline",
+        "basket": "everything discontinued",
+        "card": "valid",
+        "slot": "no slots today"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: everything discontinued + card: valid + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-09",
+      "combo": {
+        "network": "offline",
+        "basket": "all in stock",
+        "card": "none",
+        "slot": "usual slot free"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: all in stock + card: none + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-10",
+      "combo": {
+        "network": "good",
+        "basket": "everything discontinued",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: everything discontinued + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-11",
+      "combo": {
+        "network": "good",
+        "basket": "price changed",
+        "card": "valid",
+        "slot": "no slots today"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: price changed + card: valid + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-12",
+      "combo": {
+        "network": "flaky",
+        "basket": "some out of stock",
+        "card": "none",
+        "slot": "no slots today"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: some out of stock + card: none + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-13",
+      "combo": {
+        "network": "good",
+        "basket": "everything discontinued",
+        "card": "none",
+        "slot": "usual slot full"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: everything discontinued + card: none + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-14",
+      "combo": {
+        "network": "offline",
+        "basket": "price changed",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: price changed + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    }
+  ]
+}

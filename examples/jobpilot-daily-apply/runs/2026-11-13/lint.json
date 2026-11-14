@@ -1,0 +1,74 @@
+[
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "read_job_card",
+    "message": "'Reads daily Telegram match card' needs verified_vault. About 30% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "choose_card_action",
+    "message": "'Picks Preview PDF or direct 1-Tap Apply' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "acquire_shadowmux",
+    "message": "'Acquires ShadowMux desktop lease & cookies' needs shadowmux_online. About 41% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "acquire_shadowmux",
+    "message": "'Acquires ShadowMux desktop lease & cookies' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "autofill_ats_form",
+    "message": "'Off-screen browser fills ATS form & uploads PDF' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "warn",
+    "code": "error-without-recovery",
+    "kind": "design",
+    "step": "hitl_escalation",
+    "message": "'Solves CAPTCHA or custom question via Telegram link' can fail (10%) but the model says nothing about what happens next.",
+    "fix": "Define on_error: can the user retry, or where do they land?"
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "hitl_escalation",
+    "message": "'Solves CAPTCHA or custom question via Telegram link' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "info",
+    "code": "hard-and-unclear",
+    "kind": "design",
+    "step": "hitl_escalation",
+    "message": "'Solves CAPTCHA or custom question via Telegram link' is both high effort and low clarity, the usual shape of the biggest drop.",
+    "fix": null
+  },
+  {
+    "level": "warn",
+    "code": "error-without-recovery",
+    "kind": "design",
+    "step": "submit_and_stamp",
+    "message": "'Submits form, captures screenshot & stamps SQLite audit' can fail (4%) but the model says nothing about what happens next.",
+    "fix": "Define on_error: can the user retry, or where do they land?"
+  }
+]

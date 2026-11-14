@@ -1,0 +1,13 @@
+{
+  "note": "Edge-case review for JobPilot Onboarding & Verified Vault Setup.",
+  "cases": [
+    {"id": "E-flow-session_expired", "verdict": "gap", "severity": "med", "expected": "Save partially verified bullets (is_verified = 0) in SQLite so returning users resume at verify_bullets instead of re-uploading."},
+    {"id": "E-upload_resume-progress_lost", "verdict": "gap", "severity": "high", "expected": "Keep uploaded file and preference inputs if Docling fails or the user steps back."},
+    {"id": "E-parse_bullets-offline", "verdict": "gap", "severity": "high", "expected": "Queue parsing locally and notify the user in Telegram once the 28 bullets are ready."},
+    {"id": "E-parse_bullets-never_completes", "verdict": "gap", "severity": "high", "expected": "Set a 30s Docling timeout; on expiry, offer plain-text fallback or manual bullet paste."},
+    {"id": "E-set_vault_and_prefs-progress_lost", "verdict": "gap", "severity": "high", "expected": "Preserve entered target titles/comp if passphrase validation fails, and wipe passphrase from Telegram chat history immediately."},
+    {"id": "X-two-column-canva-garble", "step": "parse_bullets", "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)", "title": "Two-column PDF merges unrelated columns into bullets", "question": "How does the user detect and fix merged column text before locking verified bullets?", "verdict": "gap", "severity": "high", "expected": "Flag low-confidence layout parses and let the user edit or drop individual bullets before verification."},
+    {"id": "X-fewer-than-15-bullets", "step": "verify_bullets", "step_name": "Reviews extracted bullets & approves verified facts", "title": "Candidate resume has fewer than 15 bullets", "question": "Activation target mentions >=15 verified bullets. Are junior candidates with 8-12 bullets blocked from activating?", "verdict": "gap", "severity": "high", "expected": "Warn if <15 bullets that tailoring variety is limited, but still activate with >=5 verified bullets."},
+    {"id": "X-passphrase-in-telegram-history", "step": "set_vault_and_prefs", "step_name": "Sets AES-256 passphrase & target role/comp preferences", "title": "Passphrase typed into Telegram chat persists in chat history", "question": "Where is the AES-256 passphrase entered so Telegram cloud servers never see it?", "verdict": "gap", "severity": "high", "expected": "Derive the key via local CLI / OS Keychain or local webview, never as a plaintext Telegram message."}
+  ]
+}

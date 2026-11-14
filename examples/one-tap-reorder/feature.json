@@ -1,0 +1,77 @@
+{
+  "shoal_version": "0.1",
+  "feature": {
+    "id": "one-tap-reorder",
+    "name": "One-tap reorder",
+    "summary": "Grocery customers repeat their last order in a few taps: check items, pick a slot, pay with the saved card.",
+    "session_budget_s": 240,
+    "repeat": {"d1": 0.05, "d7": 0.55, "d30": 0.75},
+    "handles": ["back_button"]
+  },
+  "segments": [
+    {
+      "id": "weekly_regular", "name": "Weekly regular", "share": 0.3,
+      "traits": {"motivation": 0.8, "skill": 0.7, "patience": 0.55, "trust": 0.8},
+      "context": {"device": {"mobile": 0.85, "desktop": 0.15}, "network": {"good": 0.85, "flaky": 0.13, "offline": 0.02}},
+      "capabilities": {"past_order": 1.0, "saved_card": 0.9},
+      "exposure": 1.0,
+      "entry": {"home_banner": 0.5, "order_history": 0.2, "sunday_push": 0.3}
+    },
+    {
+      "id": "occasional", "name": "Occasional shopper", "share": 0.45,
+      "traits": {"motivation": 0.5, "skill": 0.55, "patience": 0.45, "trust": 0.6},
+      "context": {"device": {"mobile": 0.8, "desktop": 0.2}, "network": {"good": 0.8, "flaky": 0.17, "offline": 0.03}},
+      "capabilities": {"past_order": 1.0, "saved_card": 0.6},
+      "exposure": 0.7,
+      "entry": {"home_banner": 0.7, "order_history": 0.1, "sunday_push": 0.2}
+    },
+    {
+      "id": "new_customer", "name": "New customer", "share": 0.25,
+      "traits": {"motivation": 0.55, "skill": 0.5, "patience": 0.4, "trust": 0.45},
+      "context": {"device": {"mobile": 0.9, "desktop": 0.1}, "network": {"good": 0.8, "flaky": 0.17, "offline": 0.03}},
+      "capabilities": {"past_order": 0.15, "saved_card": 0.25},
+      "exposure": 0.9,
+      "entry": {"home_banner": 1.0}
+    }
+  ],
+  "entry_points": [
+    {"id": "home_banner", "name": "Home banner", "to": "open_sheet", "discovery": 0.35},
+    {"id": "order_history", "name": "Reorder button in order history", "to": "open_sheet", "discovery": 0.6},
+    {"id": "sunday_push", "name": "Sunday push notification", "to": "open_sheet", "discovery": 0.18}
+  ],
+  "steps": [
+    {"id": "open_sheet", "name": "Opens the reorder sheet", "type": "view", "effort": 0.05, "clarity": 0.85, "value": 0.7, "time_s": 6,
+     "requires": ["past_order"], "events": ["reorder_opened"], "handles": ["loading_state"], "next": ["review_items"]},
+    {"id": "review_items", "name": "Reviews the items and prices", "type": "view", "effort": 0.3, "clarity": 0.7, "value": 0.6, "time_s": 20,
+     "events": ["reorder_items_viewed"], "next": [{"to": "fix_stock", "weight": 0.35}, {"to": "pick_slot", "weight": 0.65}]},
+    {"id": "fix_stock", "name": "Replaces or removes out-of-stock items", "type": "decision", "effort": 0.55, "clarity": 0.5, "value": 0.3, "time_s": 30,
+     "events": ["reorder_stock_resolved"], "next": ["pick_slot"]},
+    {"id": "pick_slot", "name": "Picks a delivery slot", "type": "input", "effort": 0.4, "clarity": 0.75, "value": 0.4, "time_s": 18,
+     "error_rate": 0.06, "on_error": {"recoverable": true}, "events": ["reorder_slot_picked"], "next": ["confirm_pay"]},
+    {"id": "confirm_pay", "name": "Confirms payment with the saved card", "type": "input", "effort": 0.15, "clarity": 0.85, "value": 0.6, "time_s": 8,
+     "sensitive": true, "requires": ["saved_card"], "events": [], "next": ["place_order"]},
+    {"id": "place_order", "name": "Order is placed", "type": "external", "effort": 0.05, "clarity": 0.9, "value": 0.9, "time_s": 4,
+     "error_rate": 0.04, "events": ["reorder_submitted"], "next": ["confirmed"]},
+    {"id": "confirmed", "name": "Sees the confirmation", "type": "success", "time_s": 3, "events": ["reorder_completed"], "handles": ["no_confirmation"]}
+  ],
+  "dimensions": {
+    "network": ["good", "flaky", "offline"],
+    "basket": ["all in stock", "some out of stock", "price changed", "everything discontinued"],
+    "card": ["valid", "expired", "none"],
+    "slot": ["usual slot free", "usual slot full", "no slots today"]
+  },
+  "hypotheses": [
+    {"id": "H1", "text": "At least 60% of customers who open the sheet place the order.", "metric": "completion_rate", "op": ">=", "value": 0.6},
+    {"id": "H2", "text": "At least 25% of all active customers use it.", "metric": "adoption_rate", "op": ">=", "value": 0.25},
+    {"id": "H3", "text": "It takes under a minute.", "metric": "median_time_s", "op": "<=", "value": 60},
+    {"id": "H4", "text": "At least 10% of new customers use it.", "metric": "adoption_rate", "segment": "new_customer", "op": ">=", "value": 0.1}
+  ],
+  "variants": [
+    {"id": "usual-slot", "name": "Usual slot pre-selected", "note": "The slot step shows the customer's usual slot already chosen.",
+     "patch": {"steps": {"pick_slot": {"effort": 0.1, "time_s": 5, "error_rate": 0.02}}}},
+    {"id": "add-card", "name": "Add a card inline", "note": "Customers without a saved card can add one without leaving the flow.",
+     "patch": {"add_steps": [{"id": "add_card", "name": "Adds a card", "type": "input", "effort": 0.6, "clarity": 0.7, "value": 0.4, "time_s": 45,
+                              "sensitive": true, "error_rate": 0.1, "on_error": {"recoverable": true}, "grants": ["saved_card"], "events": ["reorder_card_added"], "next": ["confirm_pay"]}],
+               "steps": {"confirm_pay": {"fallback": "add_card"}}}}
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/01_JOBPILOT_PRODUCT_PROPOSAL.md and apps/jobpilot/. Qualitative evidence only.",
+  "sessions": [
+    {
+      "persona": "Rohan, Senior Backend Engineer actively interviewing (User 0)",
+      "segment": "active_seeker",
+      "context": "mobile, good network, lever, verified_vault, shadowmux_online, clean_ats_fields",
+      "goal": "Review the 09:00 AM match on the bus and submit if the resume looks accurate",
+      "outcome": "success",
+      "at": "confirmed",
+      "moments": [
+        {"step": "read_job_card", "kind": "delight", "thought": "One card at 9am with salary and matched skills is way calmer than LinkedIn alerts.", "severity": 1},
+        {"step": "preview_pdf", "kind": "hesitation", "thought": "Had to download the PDF to see which bullets it picked. Took a moment to open in mobile viewer.", "severity": 2},
+        {"step": "confirmed", "kind": "delight", "thought": "Got the confirmation screenshot in Telegram. Didn't touch a single Lever box.", "severity": 1}
+      ],
+      "quote": "Once it worked, it felt like magic—though I only trusted it after opening the PDF.",
+      "would_use_again": "yes",
+      "unmet_need": "Show the 6 selected bullets right in the Telegram message so I don't always have to open a PDF."
+    },
+    {
+      "persona": "Elena, Staff Systems Engineer not actively looking (User 1)",
+      "segment": "passive_staff",
+      "context": "mobile, good network, greenhouse, verified_vault, shadowmux_online, missing clean_ats_fields",
+      "goal": "Glance at a high-match role without risking her reputation on sloppy AI answers",
+      "outcome": "abandoned",
+      "at": "confirm_1tap_apply",
+      "moments": [
+        {"step": "read_job_card", "kind": "question", "thought": "93% match, great company. What will it actually type into Greenhouse's custom questions?", "severity": 2},
+        {"step": "confirm_1tap_apply", "kind": "frustration", "thought": "There is only '1-Tap Apply' or 'Skip'. I can't tweak one bullet or review the form answers before it fires.", "severity": 3}
+      ],
+      "quote": "I'm not letting a bot submit under my real name when I can't even inspect what goes in the text boxes.",
+      "would_use_again": "no",
+      "unmet_need": "A pre-submit review or inline bullet/answer check before sending."
+    },
+    {
+      "persona": "Tarun, installed JobPilot yesterday evening (User 23)",
+      "segment": "unprepared_newcomer",
+      "context": "desktop, good network, greenhouse, lacks verified_vault and shadowmux_online",
+      "goal": "Check out the first morning job notification",
+      "outcome": "blocked",
+      "at": "read_job_card",
+      "moments": [
+        {"step": "read_job_card", "kind": "confusion", "thought": "I ran /start last night and uploaded my PDF, didn't approve all 28 bullets yet. Now there's no card—or an error saying profile/vault missing.", "severity": 3}
+      ],
+      "quote": "I didn't realise approving every bullet was a hard gate before seeing any jobs.",
+      "would_use_again": "no",
+      "unmet_need": "Let me preview the match card first, then finish verifying bullets inline."
+    },
+    {
+      "persona": "Maya, Backend engineer pivoting into AI systems (User 59)",
+      "segment": "career_pivoter",
+      "context": "mobile, good network, greenhouse, verified_vault, shadowmux_online, lacks clean_ats_fields",
+      "goal": "Apply to an AI platform role before morning standup",
+      "outcome": "abandoned",
+      "at": "hitl_escalation",
+      "moments": [
+        {"step": "choose_card_action", "kind": "question", "thought": "It says 'missing gap tokens: Triton'. Does my resume explain my transferable CUDA work?", "severity": 2},
+        {"step": "hitl_escalation", "kind": "frustration", "thought": "It sent me a mobile webview link for two long-form Greenhouse questions with a 180-second timer. I can't write thoughtful pivot answers on my phone in 3 minutes.", "severity": 3}
+      ],
+      "quote": "One-tap apply turned into writing essays on my phone against a countdown clock.",
+      "would_use_again": "maybe",
+      "unmet_need": "Draft grounded answers from my vault or let me pause and finish on desktop."
+    },
+    {
+      "persona": "Vikram, active seeker commuting on the train (User 50)",
+      "segment": "active_seeker",
+      "context": "desktop/mobile commute, good network, workday, verified_vault, lacks shadowmux_online",
+      "goal": "Confirm today's 9am match while away from his desk",
+      "outcome": "blocked",
+      "at": "acquire_shadowmux",
+      "moments": [
+        {"step": "read_job_card", "kind": "delight", "thought": "Great Workday role, 89% match.", "severity": 1},
+        {"step": "acquire_shadowmux", "kind": "confusion", "thought": "I tapped 1-Tap Apply and it stalled trying to talk to ShadowMux. My laptop is in my backpack asleep.", "severity": 3}
+      ],
+      "quote": "It pushes to my phone at 9am, then requires my laptop to be awake on my desk to actually apply.",
+      "would_use_again": "maybe",
+      "unmet_need": "Queue my 1-tap apply and execute automatically as soon as my laptop wakes up."
+    },
+    {
+      "persona": "Neha, active seeker on flaky subway Wi-Fi (User 55)",
+      "segment": "active_seeker",
+      "context": "mobile, flaky network, greenhouse, verified_vault, shadowmux_online, clean_ats_fields",
+      "goal": "Quickly apply before losing signal underground",
+      "outcome": "error_exit",
+      "at": "submit_and_stamp",
+      "moments": [
+        {"step": "autofill_ats_form", "kind": "hesitation", "thought": "Taking a long time on 'Submitting...'—nearly a minute already.", "severity": 2},
+        {"step": "submit_and_stamp", "kind": "error", "thought": "Connection dropped right after submit. Did Greenhouse receive my application or not? I'm scared to retry and submit twice.", "severity": 3}
+      ],
+      "quote": "No receipt, no error recovery—I don't know if I applied or broke it.",
+      "would_use_again": "maybe",
+      "unmet_need": "Clear submission state recovery: check whether Greenhouse recorded it before offering retry."
+    },
+    {
+      "persona": "Daniel, Principal Engineer evaluating a high-bar Ashby role (User 63)",
+      "segment": "passive_staff",
+      "context": "desktop, good network, ashby, verified_vault, shadowmux_online, clean_ats_fields",
+      "goal": "Inspect the tailored PDF and decide if it's worth applying",
+      "outcome": "abandoned",
+      "at": "confirm_1tap_apply",
+      "moments": [
+        {"step": "preview_pdf", "kind": "question", "thought": "The 1-page PDF looks crisp, though it dropped a key distributed-systems bullet I wanted included.", "severity": 2},
+        {"step": "confirm_1tap_apply", "kind": "hesitation", "thought": "No way to swap that bullet before applying, so I'll just apply manually later.", "severity": 3}
+      ],
+      "quote": "Almost great, but without a quick bullet swap I'd rather submit it myself.",
+      "would_use_again": "maybe",
+      "unmet_need": "Inline button to swap/pin a master bullet before tapping 1-Tap Apply."
+    }
+  ],
+  "themes": [
+    {
+      "title": "09:00 AM mobile Telegram delivery collides with desktop-only ShadowMux execution",
+      "evidence": "Vikram tapped 1-Tap Apply on the move while his laptop was asleep and hit a dead end at acquire_shadowmux (41% of users lack shadowmux_online at 09:00 AM).",
+      "steps": ["acquire_shadowmux"],
+      "recommendation": "Queue 1-Tap Apply requests locally/via relay and run automatically when desktop ShadowMux comes online, instead of failing or blocking."
+    },
+    {
+      "title": "Unverified newcomers and missing-vault users hit a hard wall on day one",
+      "evidence": "Tarun was blocked at read_job_card because JobPilot requires an approved master bullet vault with no onboarding fallback in the daily dispatch loop.",
+      "steps": ["read_job_card"],
+      "recommendation": "Route users with incomplete vaults to a fast inline onboarding prompt before expecting 09:00 AM daily cards."
+    },
+    {
+      "title": "High-bar engineers want light control before an irreversible submission",
+      "evidence": "Elena and Daniel both abandoned at confirm_1tap_apply because they could not inspect custom ATS field answers or swap a bullet.",
+      "steps": ["confirm_1tap_apply", "preview_pdf"],
+      "recommendation": "Show the 6 chosen bullets and pre-filled EEO/custom answers in Telegram with a quick swap option before 1-Tap Apply."
+    },
+    {
+      "title": "HITL escalation turns '30-second autopilot' into a timed mobile essay",
+      "evidence": "Maya hit a custom Greenhouse essay prompt via hitl_escalation and quit under the 180s timeout pressure.",
+      "steps": ["hitl_escalation", "autofill_ats_form"],
+      "recommendation": "Pre-draft grounded answers from the verified vault and allow 'Save draft & finish on desktop' instead of a hard 180s timeout."
+    }
+  ],
+  "spec_gaps": [
+    {
+      "title": "Desktop ShadowMux offline when user taps 1-Tap Apply on mobile",
+      "detail": "The proposal pushes Telegram cards at 09:00 AM (mobile commute time) but assumes desktop Chrome/ShadowMux is awake and reachable.",
+      "severity": "high",
+      "step": "acquire_shadowmux"
+    },
+    {
+      "title": "What happens after the 180-second HITL CAPTCHA/question timeout",
+      "detail": "User Story 8 specifies waiting up to 180s for human resolution, but never defines whether state is saved, retried, or discarded after timeout.",
+      "severity": "high",
+      "step": "hitl_escalation"
+    },
+    {
+      "title": "Ambiguous outcome if confirmation-page scraping fails after clicking Submit",
+      "detail": "If network drops or ATS DOM changes after clicking Submit, the spec does not say how JobPilot verifies whether the application went through without double-submitting.",
+      "severity": "high",
+      "step": "submit_and_stamp"
+    },
+    {
+      "title": "Compiler fallback returns .tex source when tectonic/pdflatex is absent",
+      "detail": "In apps/jobpilot/compiler.py, missing TeX binaries assign out_tex_path to result.pdf_path, which would fail or send raw LaTeX on Preview PDF.",
+      "severity": "med",
+      "step": "preview_pdf"
+    }
+  ]
+}

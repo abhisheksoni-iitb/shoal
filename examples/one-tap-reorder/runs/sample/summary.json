@@ -1,0 +1,2734 @@
+{
+  "shoal": "0.1.0",
+  "generated": "2026-11-14 12:14",
+  "feature": {
+    "id": "one-tap-reorder",
+    "name": "One-tap reorder",
+    "summary": "Grocery customers repeat their last order in a few taps: check items, pick a slot, pay with the saved card."
+  },
+  "variant": null,
+  "users": 5000,
+  "seed": 7,
+  "args": {
+    "users": 5000,
+    "seed": 7,
+    "reps": 24,
+    "jitter": 0.1,
+    "variant": null,
+    "quick": false
+  },
+  "metrics": {
+    "n": 5000,
+    "entered": 1436,
+    "success": 533,
+    "discovery_rate": 0.2872,
+    "completion_rate": 0.3711699164345404,
+    "adoption_rate": 0.1066,
+    "error_rate": 0.07311977715877438,
+    "blocked_rate": 0.366991643454039,
+    "median_time_s": 68.61622110794707,
+    "repeat_d1": 0.06378986866791744,
+    "repeat_d7": 0.5947467166979362,
+    "repeat_d30": 0.8424015009380863
+  },
+  "outcomes": {
+    "never_saw": 3564,
+    "success": 533,
+    "abandoned": 308,
+    "blocked": 527,
+    "error_exit": 68,
+    "stuck": 0
+  },
+  "funnel": [
+    {
+      "step": "open_sheet",
+      "name": "Opens the reorder sheet",
+      "type": "view",
+      "entered": 1436,
+      "share_of_starters": 1.0,
+      "continued": 1112,
+      "continue_rate": 0.7743732590529248,
+      "lost": 324,
+      "abandoned": 18,
+      "blocked": 306,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 18
+      },
+      "top_reason": "blocked",
+      "median_time_s": 5.843099951293938
+    },
+    {
+      "step": "review_items",
+      "name": "Reviews the items and prices",
+      "type": "view",
+      "entered": 1112,
+      "share_of_starters": 0.7743732590529248,
+      "continued": 1059,
+      "continue_rate": 0.9523381294964028,
+      "lost": 53,
+      "abandoned": 53,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 53
+      },
+      "top_reason": "effort",
+      "median_time_s": 19.422920576736114
+    },
+    {
+      "step": "fix_stock",
+      "name": "Replaces or removes out-of-stock items",
+      "type": "decision",
+      "entered": 405,
+      "share_of_starters": 0.282033426183844,
+      "continued": 301,
+      "continue_rate": 0.7432098765432099,
+      "lost": 104,
+      "abandoned": 104,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 104
+      },
+      "top_reason": "effort",
+      "median_time_s": 29.595414481743838
+    },
+    {
+      "step": "pick_slot",
+      "name": "Picks a delivery slot",
+      "type": "input",
+      "entered": 955,
+      "share_of_starters": 0.665041782729805,
+      "continued": 851,
+      "continue_rate": 0.8910994764397906,
+      "lost": 104,
+      "abandoned": 82,
+      "blocked": 0,
+      "error_exit": 22,
+      "skipped": 0,
+      "errors": 61,
+      "retries": 39,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 81,
+        "low_motivation": 1
+      },
+      "top_reason": "effort",
+      "median_time_s": 17.58116746875484
+    },
+    {
+      "step": "confirm_pay",
+      "name": "Confirms payment with the saved card",
+      "type": "input",
+      "entered": 851,
+      "share_of_starters": 0.5926183844011143,
+      "continued": 588,
+      "continue_rate": 0.690951821386604,
+      "lost": 263,
+      "abandoned": 42,
+      "blocked": 221,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "trust": 29,
+        "fatigue": 13
+      },
+      "top_reason": "blocked",
+      "median_time_s": 7.62217778578426
+    },
+    {
+      "step": "place_order",
+      "name": "Order is placed",
+      "type": "external",
+      "entered": 588,
+      "share_of_starters": 0.40947075208913647,
+      "continued": 533,
+      "continue_rate": 0.9064625850340136,
+      "lost": 55,
+      "abandoned": 9,
+      "blocked": 0,
+      "error_exit": 46,
+      "skipped": 0,
+      "errors": 46,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "fatigue": 9
+      },
+      "top_reason": "error",
+      "median_time_s": 4.298555167274304
+    },
+    {
+      "step": "confirmed",
+      "name": "Sees the confirmation",
+      "type": "success",
+      "entered": 533,
+      "share_of_starters": 0.3711699164345404,
+      "continued": 0,
+      "continue_rate": 1.0,
+      "lost": 0,
+      "abandoned": 0,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {},
+      "top_reason": null,
+      "median_time_s": 2.7935392042466414
+    }
+  ],
+  "segments": [
+    {
+      "id": "weekly_regular",
+      "name": "Weekly regular",
+      "share": 0.3,
+      "metrics": {
+        "n": 1529,
+        "entered": 523,
+        "success": 364,
+        "discovery_rate": 0.342053629823414,
+        "completion_rate": 0.6959847036328872,
+        "adoption_rate": 0.2380640941792021,
+        "error_rate": 0.10133843212237094,
+        "blocked_rate": 0.10707456978967496,
+        "median_time_s": 66.96280967879724,
+        "repeat_d1": 0.06868131868131869,
+        "repeat_d7": 0.6098901098901099,
+        "repeat_d30": 0.9038461538461539
+      }
+    },
+    {
+      "id": "occasional",
+      "name": "Occasional shopper",
+      "share": 0.45,
+      "metrics": {
+        "n": 2191,
+        "entered": 537,
+        "success": 164,
+        "discovery_rate": 0.24509356458238246,
+        "completion_rate": 0.3054003724394786,
+        "adoption_rate": 0.07485166590597901,
+        "error_rate": 0.08193668528864059,
+        "blocked_rate": 0.2532588454376164,
+        "median_time_s": 70.50649634182045,
+        "repeat_d1": 0.054878048780487805,
+        "repeat_d7": 0.5609756097560976,
+        "repeat_d30": 0.7073170731707317
+      }
+    },
+    {
+      "id": "new_customer",
+      "name": "New customer",
+      "share": 0.25,
+      "metrics": {
+        "n": 1280,
+        "entered": 376,
+        "success": 5,
+        "discovery_rate": 0.29375,
+        "completion_rate": 0.013297872340425532,
+        "adoption_rate": 0.00390625,
+        "error_rate": 0.02127659574468085,
+        "blocked_rate": 0.8909574468085106,
+        "median_time_s": 83.15186931576407,
+        "repeat_d1": 0.0,
+        "repeat_d7": 0.6,
+        "repeat_d30": 0.8
+      }
+    }
+  ],
+  "contexts": {
+    "device": {
+      "mobile": {
+        "n": 4218,
+        "entered": 1199,
+        "success": 438
+      },
+      "desktop": {
+        "n": 782,
+        "entered": 237,
+        "success": 95
+      }
+    },
+    "network": {
+      "good": {
+        "n": 4077,
+        "entered": 1174,
+        "success": 472
+      },
+      "offline": {
+        "n": 139,
+        "entered": 43,
+        "success": 0
+      },
+      "flaky": {
+        "n": 784,
+        "entered": 219,
+        "success": 61
+      }
+    }
+  },
+  "entries": {
+    "home_banner": {
+      "exposed": 3569,
+      "entered": 1020,
+      "success": 313
+    },
+    "order_history": {
+      "exposed": 524,
+      "entered": 276,
+      "success": 153
+    },
+    "sunday_push": {
+      "exposed": 907,
+      "entered": 140,
+      "success": 67
+    }
+  },
+  "events": {
+    "reorder_opened": 1130,
+    "reorder_items_viewed": 1112,
+    "reorder_slot_picked": 955,
+    "reorder_submitted": 588,
+    "reorder_completed": 533,
+    "reorder_stock_resolved": 405,
+    "pick_slot.error": 61,
+    "place_order.error": 46
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "At least 60% of customers who open the sheet place the order.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.6,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.32434943224416907,
+        "p50": 0.35439955285851166,
+        "p95": 0.38848649640515787
+      }
+    },
+    {
+      "id": "H2",
+      "text": "At least 25% of all active customers use it.",
+      "metric": "adoption_rate",
+      "op": ">=",
+      "value": 0.25,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.08583333333333333,
+        "p50": 0.10033333333333333,
+        "p95": 0.11513333333333332
+      }
+    },
+    {
+      "id": "H3",
+      "text": "It takes under a minute.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 60,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 63.933493212407,
+        "p50": 68.26024230930035,
+        "p95": 72.24590835180294
+      }
+    },
+    {
+      "id": "H4",
+      "text": "At least 10% of new customers use it.",
+      "metric": "adoption_rate",
+      "segment": "new_customer",
+      "op": ">=",
+      "value": 0.1,
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.0,
+        "p50": 0.0053773155342261795,
+        "p95": 0.012375767003716185
+      }
+    }
+  ],
+  "levers": [
+    {
+      "lever": "Give users without saved_card a way through 'Confirms payment with the saved card'",
+      "step": "confirm_pay",
+      "kind": "blocked",
+      "adoption_delta": 0.032875000000000015,
+      "completion_delta": 0.11047044499241354,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'Home banner' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.031625000000000014,
+      "completion_delta": -0.0035097784353373407,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'Sunday push notification' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.013999999999999999,
+      "completion_delta": 0.010600149325615482,
+      "within_noise": false
+    },
+    {
+      "lever": "Give users without past_order a way through 'Opens the reorder sheet'",
+      "step": "open_sheet",
+      "kind": "blocked",
+      "adoption_delta": 0.007000000000000006,
+      "completion_delta": 0.01831046137684922,
+      "within_noise": true
+    },
+    {
+      "lever": "Make the 'Reorder button in order history' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.005875000000000005,
+      "completion_delta": 0.0023428994340620735,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Confirms payment with the saved card'",
+      "step": "confirm_pay",
+      "kind": "effort",
+      "adoption_delta": 0.004750000000000004,
+      "completion_delta": 0.015796059611272062,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Confirms payment with the saved card' clearer",
+      "step": "confirm_pay",
+      "kind": "clarity",
+      "adoption_delta": 0.004500000000000004,
+      "completion_delta": 0.01527145212334935,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Replaces or removes out-of-stock items' clearer",
+      "step": "fix_stock",
+      "kind": "clarity",
+      "adoption_delta": 0.004125000000000004,
+      "completion_delta": 0.0057500341288566625,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Replaces or removes out-of-stock items'",
+      "step": "fix_stock",
+      "kind": "effort",
+      "adoption_delta": 0.0037500000000000033,
+      "completion_delta": 0.004631307785066707,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Picks a delivery slot'",
+      "step": "pick_slot",
+      "kind": "effort",
+      "adoption_delta": 0.003375000000000003,
+      "completion_delta": 0.008527272750069259,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Reviews the items and prices'",
+      "step": "review_items",
+      "kind": "effort",
+      "adoption_delta": 0.0031250000000000028,
+      "completion_delta": 0.01135599400853926,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Reviews the items and prices' clearer",
+      "step": "review_items",
+      "kind": "clarity",
+      "adoption_delta": 0.0031250000000000028,
+      "completion_delta": 0.011524772731890787,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Picks a delivery slot' clearer",
+      "step": "pick_slot",
+      "kind": "clarity",
+      "adoption_delta": 0.0026250000000000023,
+      "completion_delta": 0.006252176059858172,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Order is placed'",
+      "step": "place_order",
+      "kind": "errors",
+      "adoption_delta": 0.002125000000000002,
+      "completion_delta": 0.006575471595789473,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Picks a delivery slot'",
+      "step": "pick_slot",
+      "kind": "errors",
+      "adoption_delta": 0.0010000000000000009,
+      "completion_delta": 0.00025337523482260593,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Opens the reorder sheet' clearer",
+      "step": "open_sheet",
+      "kind": "clarity",
+      "adoption_delta": 0.0001250000000000001,
+      "completion_delta": -0.00024472232441474784,
+      "within_noise": true
+    }
+  ],
+  "variants": [
+    {
+      "id": "usual-slot",
+      "name": "Usual slot pre-selected",
+      "note": "The slot step shows the customer's usual slot already chosen.",
+      "wins_share": 0.8333333333333334,
+      "diff": {
+        "adoption_rate": {
+          "p5": -0.002366666666666664,
+          "p50": 0.008,
+          "p95": 0.017900000000000003
+        },
+        "completion_rate": {
+          "p5": -0.005645560188326596,
+          "p50": 0.020941745353372287,
+          "p95": 0.051834132422081326
+        },
+        "discovery_rate": {
+          "p5": -0.010466666666666687,
+          "p50": 0.004333333333333356,
+          "p95": 0.01749999999999996
+        },
+        "error_rate": {
+          "p5": -0.046605853616457506,
+          "p50": -0.030787581868062353,
+          "p95": -0.007695872179441714
+        },
+        "median_time_s": {
+          "p5": -17.112456913206422,
+          "p50": -15.090085206248052,
+          "p95": -10.947146101347464
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.09086666666666668,
+          "p50": 0.10633333333333334,
+          "p95": 0.12456666666666666
+        },
+        "completion_rate": {
+          "p5": 0.34447229184071293,
+          "p50": 0.3801335809272792,
+          "p95": 0.4041774434262329
+        },
+        "discovery_rate": {
+          "p5": 0.2506666666666667,
+          "p50": 0.2833333333333333,
+          "p95": 0.3341333333333333
+        },
+        "error_rate": {
+          "p5": 0.030643089037784073,
+          "p50": 0.04608580274214949,
+          "p95": 0.061289186223408225
+        },
+        "median_time_s": {
+          "p5": 51.36668770924031,
+          "p50": 53.94879957473712,
+          "p95": 55.962304114344754
+        }
+      },
+      "verdict": "no clear difference"
+    },
+    {
+      "id": "add-card",
+      "name": "Add a card inline",
+      "note": "Customers without a saved card can add one without leaving the flow.",
+      "wins_share": 0.9583333333333334,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.004600000000000004,
+          "p50": 0.017,
+          "p95": 0.03843333333333333
+        },
+        "completion_rate": {
+          "p5": 0.017681548244583765,
+          "p50": 0.05937194273398466,
+          "p95": 0.11917559053967874
+        },
+        "discovery_rate": {
+          "p5": -0.01636666666666666,
+          "p50": 0.003333333333333327,
+          "p95": 0.030166666666666665
+        },
+        "error_rate": {
+          "p5": -0.0021260458615280625,
+          "p50": 0.014294139430826143,
+          "p95": 0.03373450257326773
+        },
+        "median_time_s": {
+          "p5": -0.2393578931148035,
+          "p50": 3.129104880696822,
+          "p95": 7.956396552776979
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.10276666666666667,
+          "p50": 0.11933333333333333,
+          "p95": 0.13313333333333333
+        },
+        "completion_rate": {
+          "p5": 0.3672038813899279,
+          "p50": 0.41531399058495877,
+          "p95": 0.46787636669470145
+        },
+        "discovery_rate": {
+          "p5": 0.2521,
+          "p50": 0.2906666666666667,
+          "p95": 0.3273
+        },
+        "error_rate": {
+          "p5": 0.062055225190095535,
+          "p50": 0.08997683248600297,
+          "p95": 0.11264032577591898
+        },
+        "median_time_s": {
+          "p5": 67.23042347253433,
+          "p50": 72.15486361561005,
+          "p95": 74.68574029164957
+        }
+      },
+      "verdict": "better"
+    }
+  ],
+  "watchlist": [
+    {
+      "step": "open_sheet",
+      "name": "Opens the reorder sheet",
+      "event": "reorder_opened",
+      "expected": {
+        "p5": 0.7187423564803657,
+        "p50": 0.7495915452727792,
+        "p95": 0.8012579015051349
+      },
+      "calibrated": false
+    },
+    {
+      "step": "review_items",
+      "name": "Reviews the items and prices",
+      "event": "reorder_items_viewed",
+      "expected": {
+        "p5": 0.9219375853735421,
+        "p50": 0.9476210064445358,
+        "p95": 0.9723329393481734
+      },
+      "calibrated": false
+    },
+    {
+      "step": "fix_stock",
+      "name": "Replaces or removes out-of-stock items",
+      "event": "reorder_stock_resolved",
+      "expected": {
+        "p5": 0.6546276132404182,
+        "p50": 0.75514233997038,
+        "p95": 0.8218575718575718
+      },
+      "calibrated": false
+    },
+    {
+      "step": "pick_slot",
+      "name": "Picks a delivery slot",
+      "event": "reorder_slot_picked",
+      "expected": {
+        "p5": 0.8288418988232928,
+        "p50": 0.872395161785473,
+        "p95": 0.9095528041897596
+      },
+      "calibrated": false
+    },
+    {
+      "step": "confirm_pay",
+      "name": "Confirms payment with the saved card",
+      "event": null,
+      "expected": {
+        "p5": 0.6468270088519865,
+        "p50": 0.6946873343932167,
+        "p95": 0.7301846831582514
+      },
+      "calibrated": false
+    },
+    {
+      "step": "place_order",
+      "name": "Order is placed",
+      "event": "reorder_submitted",
+      "expected": {
+        "p5": 0.869072986881206,
+        "p50": 0.9064625850340136,
+        "p95": 0.9396285140562249
+      },
+      "calibrated": false
+    }
+  ],
+  "instrumentation": [
+    {
+      "step": "open_sheet",
+      "name": "Opens the reorder sheet",
+      "type": "view",
+      "events": [
+        "reorder_opened"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "review_items",
+      "name": "Reviews the items and prices",
+      "type": "view",
+      "events": [
+        "reorder_items_viewed"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "fix_stock",
+      "name": "Replaces or removes out-of-stock items",
+      "type": "decision",
+      "events": [
+        "reorder_stock_resolved"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "pick_slot",
+      "name": "Picks a delivery slot",
+      "type": "input",
+      "events": [
+        "reorder_slot_picked"
+      ],
+      "error_event": "pick_slot.error",
+      "missing": false
+    },
+    {
+      "step": "confirm_pay",
+      "name": "Confirms payment with the saved card",
+      "type": "input",
+      "events": [],
+      "error_event": "confirm_pay.error",
+      "missing": true
+    },
+    {
+      "step": "place_order",
+      "name": "Order is placed",
+      "type": "external",
+      "events": [
+        "reorder_submitted"
+      ],
+      "error_event": "place_order.error",
+      "missing": false
+    },
+    {
+      "step": "confirmed",
+      "name": "Sees the confirmation",
+      "type": "success",
+      "events": [
+        "reorder_completed"
+      ],
+      "error_event": null,
+      "missing": false
+    }
+  ],
+  "lint": [
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "open_sheet",
+      "message": "'Opens the reorder sheet' needs past_order. About 21% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "confirm_pay",
+      "message": "'Confirms payment with the saved card' needs saved_card. About 40% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "confirm_pay",
+      "message": "'Confirms payment with the saved card' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "warn",
+      "code": "error-without-recovery",
+      "kind": "design",
+      "step": "place_order",
+      "message": "'Order is placed' can fail (4%) but the model says nothing about what happens next.",
+      "fix": "Define on_error: can the user retry, or where do they land?"
+    }
+  ],
+  "replication": {
+    "reps": 24,
+    "users": 1500,
+    "jitter": 0.1,
+    "overall": {
+      "discovery_rate": {
+        "p5": 0.2495,
+        "p50": 0.2823333333333333,
+        "p95": 0.3235
+      },
+      "completion_rate": {
+        "p5": 0.32434943224416907,
+        "p50": 0.35439955285851166,
+        "p95": 0.38848649640515787
+      },
+      "adoption_rate": {
+        "p5": 0.08583333333333333,
+        "p50": 0.10033333333333333,
+        "p95": 0.11513333333333332
+      },
+      "error_rate": {
+        "p5": 0.04581196581196581,
+        "p50": 0.07475255427841634,
+        "p95": 0.09884713446402836
+      },
+      "blocked_rate": {
+        "p5": 0.35388968699664797,
+        "p50": 0.38332705433915437,
+        "p95": 0.40615617715617713
+      },
+      "repeat_d1": {
+        "p5": 0.028710434302539566,
+        "p50": 0.05242566510172143,
+        "p95": 0.08379032258064517
+      },
+      "repeat_d7": {
+        "p5": 0.5573964497041419,
+        "p50": 0.6156191369606003,
+        "p95": 0.6774906015037594
+      },
+      "repeat_d30": {
+        "p5": 0.7871290295070783,
+        "p50": 0.8524565479263466,
+        "p95": 0.8928007889546351
+      },
+      "median_time_s": {
+        "p5": 63.933493212407,
+        "p50": 68.26024230930035,
+        "p95": 72.24590835180294
+      }
+    },
+    "segments": {
+      "weekly_regular": {
+        "discovery_rate": {
+          "p5": 0.28105479384249865,
+          "p50": 0.33751222201418796,
+          "p95": 0.37562261529778934
+        },
+        "completion_rate": {
+          "p5": 0.6423541165436529,
+          "p50": 0.6820715382927365,
+          "p95": 0.7221866096866096
+        },
+        "adoption_rate": {
+          "p5": 0.19176483690541007,
+          "p50": 0.232128563512099,
+          "p95": 0.26493061349352015
+        },
+        "error_rate": {
+          "p5": 0.06836121067303863,
+          "p50": 0.10237694179300019,
+          "p95": 0.14755852998787425
+        },
+        "blocked_rate": {
+          "p5": 0.06503405448717949,
+          "p50": 0.09403868930122385,
+          "p95": 0.12323027473788933
+        },
+        "repeat_d1": {
+          "p5": 0.018785714285714288,
+          "p50": 0.053342412892974686,
+          "p95": 0.08215666421207658
+        },
+        "repeat_d7": {
+          "p5": 0.5909957983193277,
+          "p50": 0.6576086956521738,
+          "p95": 0.7259634684865516
+        },
+        "repeat_d30": {
+          "p5": 0.8546508563899868,
+          "p50": 0.9108083921646615,
+          "p95": 0.9494108983799705
+        },
+        "median_time_s": {
+          "p5": 62.299683263054746,
+          "p50": 67.04679969546928,
+          "p95": 72.42196096760124
+        }
+      },
+      "occasional": {
+        "discovery_rate": {
+          "p5": 0.19654551661063235,
+          "p50": 0.22927504771885177,
+          "p95": 0.2817125483692648
+        },
+        "completion_rate": {
+          "p5": 0.24833872126436782,
+          "p50": 0.2926864801864802,
+          "p95": 0.3287514934289128
+        },
+        "adoption_rate": {
+          "p5": 0.05787714263711054,
+          "p50": 0.06657620985979196,
+          "p95": 0.08759126445693607
+        },
+        "error_rate": {
+          "p5": 0.05664328852522891,
+          "p50": 0.09036366209141078,
+          "p95": 0.11442617991125453
+        },
+        "blocked_rate": {
+          "p5": 0.18675258468721712,
+          "p50": 0.255497022446175,
+          "p95": 0.31108108108108107
+        },
+        "repeat_d1": {
+          "p5": 0.0028301886792452854,
+          "p50": 0.046536796536796536,
+          "p95": 0.13809523809523802
+        },
+        "repeat_d7": {
+          "p5": 0.43815406976744187,
+          "p50": 0.5,
+          "p95": 0.6103664192949907
+        },
+        "repeat_d30": {
+          "p5": 0.6078203639179248,
+          "p50": 0.7154761904761905,
+          "p95": 0.7953985367731998
+        },
+        "median_time_s": {
+          "p5": 64.12314048159881,
+          "p50": 70.54828369080371,
+          "p95": 76.52936783946868
+        }
+      },
+      "new_customer": {
+        "discovery_rate": {
+          "p5": 0.2531716417910448,
+          "p50": 0.3185585637260525,
+          "p95": 0.37540282087024296
+        },
+        "completion_rate": {
+          "p5": 0.0,
+          "p50": 0.018967997123336928,
+          "p95": 0.03616803278688524
+        },
+        "adoption_rate": {
+          "p5": 0.0,
+          "p50": 0.0053773155342261795,
+          "p95": 0.012375767003716185
+        },
+        "error_rate": {
+          "p5": 0.0,
+          "p50": 0.007752403846153846,
+          "p95": 0.026736111111111096
+        },
+        "blocked_rate": {
+          "p5": 0.8965488614800758,
+          "p50": 0.9250801282051282,
+          "p95": 0.9533748645720477
+        },
+        "repeat_d1": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.3333333333333333
+        },
+        "repeat_d7": {
+          "p5": 0.0,
+          "p50": 0.41666666666666663,
+          "p95": 1.0
+        },
+        "repeat_d30": {
+          "p5": 0.0,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "median_time_s": {
+          "p5": 0.0,
+          "p50": 73.59367748139323,
+          "p95": 90.1521719001488
+        }
+      }
+    },
+    "steps": {
+      "open_sheet": {
+        "p5": 0.7187423564803657,
+        "p50": 0.7495915452727792,
+        "p95": 0.8012579015051349
+      },
+      "review_items": {
+        "p5": 0.9219375853735421,
+        "p50": 0.9476210064445358,
+        "p95": 0.9723329393481734
+      },
+      "fix_stock": {
+        "p5": 0.6546276132404182,
+        "p50": 0.75514233997038,
+        "p95": 0.8218575718575718
+      },
+      "pick_slot": {
+        "p5": 0.8288418988232928,
+        "p50": 0.872395161785473,
+        "p95": 0.9095528041897596
+      },
+      "confirm_pay": {
+        "p5": 0.6468270088519865,
+        "p50": 0.6946873343932167,
+        "p95": 0.7301846831582514
+      },
+      "place_order": {
+        "p5": 0.869072986881206,
+        "p50": 0.9064625850340136,
+        "p95": 0.9396285140562249
+      },
+      "confirmed": {
+        "p5": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      }
+    }
+  },
+  "edge_cases": [
+    {
+      "id": "E-place_order-offline",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Keep the basket and slot, say the order was not placed, retry when back online."
+    },
+    {
+      "id": "E-place_order-timeout",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "After a time limit, show the definite order state (looked up on the server) instead of a generic error."
+    },
+    {
+      "id": "E-place_order-server_error",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Specific message, safe retry, basket and slot kept."
+    },
+    {
+      "id": "E-place_order-double_submit",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A second press must not create a second order or charge. Disable the button on press and make the request idempotent."
+    },
+    {
+      "id": "E-place_order-partial_success",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If payment succeeds but the order fails (or the reverse), reconcile automatically and tell the customer which state they are in."
+    },
+    {
+      "id": "E-place_order-stale_data",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If a price or stock level changed between review and placement, show the change and ask once before charging."
+    },
+    {
+      "id": "E-open_sheet-empty_state",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A customer with no past order should not see the entry points, or should see a starter basket.",
+      "note": "The spec lists this as undecided; in the simulation about nine in ten new customers who start are blocked."
+    },
+    {
+      "id": "X-card-expired",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "found",
+      "title": "Saved card is expired or will be declined",
+      "question": "When is the card checked, and what happens to the basket and slot if it fails?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Check the expiry date when the sheet opens; on decline, stay in the flow, hold the slot, offer another payment method.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-partial-reorder",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "found",
+      "title": "Customer wants only some of the items",
+      "question": "Can items be unticked or quantities changed?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Allow untick and quantity change in the sheet; otherwise one-off orders make reorder useless.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-session_expired",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "session_expired",
+      "title": "Signed out while in the flow",
+      "question": "After signing in again, do they return to where they were?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Sign in again and return to the same step with the basket intact.",
+      "note": "Lower than the default: sessions on a phone app rarely expire inside a one-minute flow."
+    },
+    {
+      "id": "E-pick_slot-progress_lost",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "A slot error must not reset stock decisions made in the previous step."
+    },
+    {
+      "id": "E-flow-returning_user",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "returning_user",
+      "title": "Second and tenth use",
+      "question": "Is the repeat experience shorter than the first, and are earlier choices remembered?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "On repeat use, remember the usual slot and substitute choices."
+    },
+    {
+      "id": "X-everything-discontinued",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "found",
+      "title": "Most or all items are unavailable",
+      "question": "What does the sheet show when little of the last order can be bought today?",
+      "severity": "med",
+      "status": "gap",
+      "expected": "Say so up front and offer the regular shop instead of an empty reorder.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-min-order",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "found",
+      "title": "Removing items drops the basket below the minimum order value",
+      "question": "Is the minimum checked after removals, and what is offered?",
+      "severity": "med",
+      "status": "gap",
+      "expected": "Show the shortfall and suggest items to add.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-refresh_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "refresh_midflow",
+      "title": "Page refresh or app restart mid-flow",
+      "question": "Is progress restored or does the user start again?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-deep_link_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "deep_link_midflow",
+      "title": "Link opens the middle of the flow",
+      "question": "What happens if someone lands on step 3 without doing steps 1 and 2?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-two_tabs",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "two_tabs",
+      "title": "Same flow open in two tabs or devices",
+      "question": "Which one wins, and can the two conflict?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-permission_changed",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "permission_changed",
+      "title": "Role or access changes mid-flow",
+      "question": "If access is removed while the user is in the flow, what do they see?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-interrupted_resume",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "interrupted_resume",
+      "title": "Interrupted and resumed days later",
+      "question": "Is a half-done flow kept, expired or cleaned up, and is the user reminded?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-keyboard_only",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "keyboard_only",
+      "title": "Keyboard only",
+      "question": "Can the whole flow be completed without a mouse, in a sensible focus order?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-screen_reader",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "screen_reader",
+      "title": "Screen reader",
+      "question": "Are states, errors and progress announced?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-small_screen",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "small_screen",
+      "title": "Small phone screen",
+      "question": "Is the main button reachable without scrolling past everything?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-empty_state",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-no_option_fits",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-change_mind",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-fix_stock-default_bias",
+      "step": "fix_stock",
+      "step_name": "Replaces or removes out-of-stock items",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-empty_input",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-invalid_format",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-boundary_numbers",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-duplicate_value",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-keyboard_covers_field",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-empty_input",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-invalid_format",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-boundary_numbers",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-duplicate_value",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-keyboard_covers_field",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-place_order-slow_response",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-repeat_action",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "repeat_action",
+      "title": "Does it again right after",
+      "question": "What happens if the user completes the same thing twice?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-undo",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "undo",
+      "title": "Wants to undo",
+      "question": "Can it be undone or edited, by whom and until when?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-others_not_told",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "others_not_told",
+      "title": "Other people affected are not told",
+      "question": "Who else needs to know, and how are they notified?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-flag_off",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "flag_off",
+      "title": "Feature switched off while in use",
+      "question": "What happens to users and data mid-flow if the feature is turned off?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-large_text",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "large_text",
+      "title": "Large text or 200% zoom",
+      "question": "Does anything clip, overlap or become unreachable?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-timezone_boundary",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "timezone_boundary",
+      "title": "Time zones and midnight",
+      "question": "Do dates, deadlines and 'today' hold up across time zones?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-huge_list",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-long_text",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-huge_list",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-long_text",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-review_items-loading_state",
+      "step": "review_items",
+      "step_name": "Reviews the items and prices",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-max_length",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-special_chars",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-paste_formatted",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-pick_slot-autofill",
+      "step": "pick_slot",
+      "step_name": "Picks a delivery slot",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-max_length",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-special_chars",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-paste_formatted",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-autofill",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-place_order-rate_limited",
+      "step": "place_order",
+      "step_name": "Order is placed",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-next_step_unclear",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "next_step_unclear",
+      "title": "What now?",
+      "question": "Is the next useful action obvious from the success screen?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-no_confirmation",
+      "step": "confirmed",
+      "step_name": "Sees the confirmation",
+      "key": "no_confirmation",
+      "title": "No proof it worked",
+      "question": "Does the user get clear confirmation and a record they can find later?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-back_button",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "back_button",
+      "title": "Back button mid-flow",
+      "question": "Does Back go one step back with data kept, or drop the user out?",
+      "severity": "med",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-open_sheet-loading_state",
+      "step": "open_sheet",
+      "step_name": "Opens the reorder sheet",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_pay-progress_lost",
+      "step": "confirm_pay",
+      "step_name": "Confirms payment with the saved card",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Nothing is typed at this step in the base design."
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C-01",
+      "combo": {
+        "network": "good",
+        "basket": "some out of stock",
+        "card": "valid",
+        "slot": "usual slot free"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: some out of stock + card: valid + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-02",
+      "combo": {
+        "network": "flaky",
+        "basket": "price changed",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: price changed + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-03",
+      "combo": {
+        "network": "flaky",
+        "basket": "everything discontinued",
+        "card": "none",
+        "slot": "no slots today"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: everything discontinued + card: none + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-04",
+      "combo": {
+        "network": "offline",
+        "basket": "some out of stock",
+        "card": "expired",
+        "slot": "usual slot full"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: some out of stock + card: expired + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-05",
+      "combo": {
+        "network": "good",
+        "basket": "all in stock",
+        "card": "expired",
+        "slot": "no slots today"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: all in stock + card: expired + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-06",
+      "combo": {
+        "network": "good",
+        "basket": "price changed",
+        "card": "none",
+        "slot": "usual slot full"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: price changed + card: none + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-07",
+      "combo": {
+        "network": "flaky",
+        "basket": "all in stock",
+        "card": "valid",
+        "slot": "usual slot full"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: all in stock + card: valid + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-08",
+      "combo": {
+        "network": "offline",
+        "basket": "everything discontinued",
+        "card": "valid",
+        "slot": "no slots today"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: everything discontinued + card: valid + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-09",
+      "combo": {
+        "network": "offline",
+        "basket": "all in stock",
+        "card": "none",
+        "slot": "usual slot free"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: all in stock + card: none + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-10",
+      "combo": {
+        "network": "good",
+        "basket": "everything discontinued",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: everything discontinued + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-11",
+      "combo": {
+        "network": "good",
+        "basket": "price changed",
+        "card": "valid",
+        "slot": "no slots today"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: price changed + card: valid + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-12",
+      "combo": {
+        "network": "flaky",
+        "basket": "some out of stock",
+        "card": "none",
+        "slot": "no slots today"
+      },
+      "share": 0.15800000000000003,
+      "title": "network: flaky + basket: some out of stock + card: none + slot: no slots today",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-13",
+      "combo": {
+        "network": "good",
+        "basket": "everything discontinued",
+        "card": "none",
+        "slot": "usual slot full"
+      },
+      "share": 0.815,
+      "title": "network: good + basket: everything discontinued + card: none + slot: usual slot full",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-14",
+      "combo": {
+        "network": "offline",
+        "basket": "price changed",
+        "card": "expired",
+        "slot": "usual slot free"
+      },
+      "share": 0.027,
+      "title": "network: offline + basket: price changed + card: expired + slot: usual slot free",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    }
+  ],
+  "qualitative": {
+    "note": "Think-aloud walkthroughs played by Claude in persona, against spec.md. Qualitative evidence only.",
+    "sessions": [
+      {
+        "persona": "Meera, weekly regular, orders every Sunday",
+        "segment": "weekly_regular",
+        "context": "mobile, good network, saved card",
+        "goal": "Repeat last week's basket before the kids wake up",
+        "outcome": "success",
+        "moments": [
+          {
+            "step": "review_items",
+            "kind": "hesitation",
+            "thought": "Milk went up. Is this today's price or last week's? I can't tell which prices changed.",
+            "severity": 2
+          },
+          {
+            "step": "pick_slot",
+            "kind": "frustration",
+            "thought": "I always take Sunday 6 to 8pm. Why am I scrolling a slot list again?",
+            "severity": 2
+          },
+          {
+            "step": "confirmed",
+            "kind": "delight",
+            "thought": "Done in about a minute. That is what I wanted.",
+            "severity": 1
+          }
+        ],
+        "quote": "It saved me the basket building, then made me do the slot dance anyway.",
+        "would_use_again": "yes",
+        "unmet_need": "Remember my usual slot."
+      },
+      {
+        "persona": "Arjun, weekly regular on the commute",
+        "segment": "weekly_regular",
+        "context": "mobile, flaky network, saved card",
+        "goal": "Reorder from the train",
+        "outcome": "error_exit",
+        "at": "place_order",
+        "moments": [
+          {
+            "step": "fix_stock",
+            "kind": "confusion",
+            "thought": "Two items are greyed out. Do I have to fix both before I can go on? There is no 'remove all unavailable'.",
+            "severity": 2
+          },
+          {
+            "step": "place_order",
+            "kind": "error",
+            "thought": "Spinner, then 'Something went wrong'. Did it charge me? Did the order go through? I am not pressing it again.",
+            "severity": 3
+          }
+        ],
+        "quote": "I don't know if I just bought groceries or not.",
+        "would_use_again": "maybe",
+        "unmet_need": "A clear answer on whether the order was placed, and a safe retry."
+      },
+      {
+        "persona": "Sana, occasional shopper, orders once a month",
+        "segment": "occasional",
+        "context": "mobile, good network, no saved card",
+        "goal": "Top up the basics",
+        "outcome": "blocked",
+        "at": "confirm_pay",
+        "moments": [
+          {
+            "step": "review_items",
+            "kind": "question",
+            "thought": "Last order was for a party. I don't want 12 bottles of soda again. Can I untick things?",
+            "severity": 2
+          },
+          {
+            "step": "confirm_pay",
+            "kind": "confusion",
+            "thought": "It says 'Pay with saved card' but I never saved one. The button is just disabled.",
+            "severity": 3
+          }
+        ],
+        "quote": "It walked me all the way to the end and then shut the door.",
+        "would_use_again": "no",
+        "unmet_need": "Add a card here, or tell me at the start."
+      },
+      {
+        "persona": "Dev, occasional shopper, price sensitive",
+        "segment": "occasional",
+        "context": "desktop, good network, saved card",
+        "goal": "Check whether a reorder is cheaper than building a new basket",
+        "outcome": "abandoned",
+        "at": "fix_stock",
+        "moments": [
+          {
+            "step": "review_items",
+            "kind": "hesitation",
+            "thought": "Total is higher than last time. Which items? I want a 'what changed' line.",
+            "severity": 2
+          },
+          {
+            "step": "fix_stock",
+            "kind": "confusion",
+            "thought": "The substitute for my coffee is a different brand at a higher price. Is that chosen for me? I will just build the basket myself.",
+            "severity": 3
+          }
+        ],
+        "quote": "If I have to check every line anyway, it is not one tap.",
+        "would_use_again": "maybe",
+        "unmet_need": "Show price and stock changes at the top, with one decision for all of them."
+      },
+      {
+        "persona": "Priya, new customer, installed the app yesterday",
+        "segment": "new_customer",
+        "context": "mobile, good network, no past order",
+        "goal": "Place a first order",
+        "outcome": "blocked",
+        "at": "open_sheet",
+        "moments": [
+          {
+            "step": "open_sheet",
+            "kind": "confusion",
+            "thought": "The banner says 'Reorder in one tap'. I tap it and get an empty sheet. Reorder what?",
+            "severity": 3
+          }
+        ],
+        "quote": "Why show me a reorder button when I have never ordered?",
+        "would_use_again": "no",
+        "unmet_need": "Do not show it to me yet, or offer a starter basket."
+      },
+      {
+        "persona": "Kabir, weekly regular whose card expired last month",
+        "segment": "weekly_regular",
+        "context": "mobile, good network, saved card expired",
+        "goal": "Usual Sunday order",
+        "outcome": "error_exit",
+        "at": "place_order",
+        "moments": [
+          {
+            "step": "confirm_pay",
+            "kind": "question",
+            "thought": "It shows my card ending 4421. Looks fine.",
+            "severity": 1
+          },
+          {
+            "step": "place_order",
+            "kind": "error",
+            "thought": "Payment declined. Now I am back on the home screen and my slot is gone.",
+            "severity": 3
+          }
+        ],
+        "quote": "It let me confirm a card it could have known was expired.",
+        "would_use_again": "yes",
+        "unmet_need": "Check the card before the last step and keep my slot while I fix it."
+      }
+    ],
+    "themes": [
+      {
+        "title": "The flow ends in a locked door for people without a usable card",
+        "evidence": "Sana (no card) and Kabir (expired card) both reached the last steps before learning they could not pay.",
+        "steps": [
+          "confirm_pay",
+          "place_order"
+        ],
+        "recommendation": "Check payment readiness when the sheet opens; let users add or update a card inline and keep the slot held."
+      },
+      {
+        "title": "A failed order leaves the customer unsure whether they paid",
+        "evidence": "Arjun on a flaky network would not retry because the outcome was unclear.",
+        "steps": [
+          "place_order"
+        ],
+        "recommendation": "Make order placement idempotent, show the definite state (placed or not placed), and offer a safe retry."
+      },
+      {
+        "title": "'One tap' breaks as soon as anything changed since last time",
+        "evidence": "Price changes and out-of-stock items forced line-by-line review for Meera, Dev and Arjun.",
+        "steps": [
+          "review_items",
+          "fix_stock"
+        ],
+        "recommendation": "Summarise what changed at the top and offer one decision: accept suggested substitutes, or remove unavailable items."
+      },
+      {
+        "title": "New customers are promised something they cannot use",
+        "evidence": "Priya opened an empty reorder sheet.",
+        "steps": [
+          "open_sheet"
+        ],
+        "recommendation": "Hide the entry points until there is a past order, or replace them with a starter basket."
+      }
+    ],
+    "spec_gaps": [
+      {
+        "title": "Partial reorder is not specified",
+        "detail": "Can a customer untick items or change quantities, or is it all-or-nothing?",
+        "severity": "high",
+        "step": "review_items"
+      },
+      {
+        "title": "Expired or declined card",
+        "detail": "The spec lists this as undecided; it is the most damaging late failure in the flow.",
+        "severity": "high",
+        "step": "confirm_pay"
+      },
+      {
+        "title": "Slot held or not during the flow",
+        "detail": "If the slot fills while the customer fixes stock or payment, what happens?",
+        "severity": "med",
+        "step": "pick_slot"
+      },
+      {
+        "title": "Which order is 'the last order'",
+        "detail": "Most recent, most frequent, or a saved favourite? A one-off party order makes a poor default.",
+        "severity": "med",
+        "step": "open_sheet"
+      }
+    ]
+  },
+  "triangulation": [
+    {
+      "step": "review_items",
+      "name": "Reviews the items and prices",
+      "loss_share": 0.03690807799442897,
+      "mentions": 3,
+      "sessions": 6,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "confirm_pay",
+      "name": "Confirms payment with the saved card",
+      "loss_share": 0.18314763231197773,
+      "mentions": 2,
+      "sessions": 6,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "fix_stock",
+      "name": "Replaces or removes out-of-stock items",
+      "loss_share": 0.07242339832869081,
+      "mentions": 2,
+      "sessions": 6,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "open_sheet",
+      "name": "Opens the reorder sheet",
+      "loss_share": 0.22562674094707522,
+      "mentions": 1,
+      "sessions": 6,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    },
+    {
+      "step": "place_order",
+      "name": "Order is placed",
+      "loss_share": 0.0383008356545961,
+      "mentions": 2,
+      "sessions": 6,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "pick_slot",
+      "name": "Picks a delivery slot",
+      "loss_share": 0.07242339832869081,
+      "mentions": 1,
+      "sessions": 6,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    }
+  ],
+  "sessions": [
+    {
+      "user": 5,
+      "segment": "weekly_regular",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.9,
+        "skill": 0.77,
+        "patience": 0.81,
+        "trust": 0.84
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "abandoned",
+      "at": "confirm_pay",
+      "why": "fatigue",
+      "seconds": 135,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 5,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 42,
+          "note": null
+        },
+        {
+          "step": "fix_stock",
+          "t": 114,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 129,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 135,
+          "note": "abandoned: fatigue"
+        }
+      ]
+    },
+    {
+      "user": 18,
+      "segment": "new_customer",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.66,
+        "skill": 0.84,
+        "patience": 0.42,
+        "trust": 0.44
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "open_sheet",
+      "why": "lacks past_order",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 0,
+          "note": "blocked: lacks past_order"
+        }
+      ]
+    },
+    {
+      "user": 106,
+      "segment": "occasional",
+      "entry": "order_history",
+      "traits": {
+        "motivation": 0.5,
+        "skill": 0.8,
+        "patience": 0.34,
+        "trust": 0.75
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order"
+      ],
+      "outcome": "error_exit",
+      "at": "pick_slot",
+      "why": "gave up after errors",
+      "seconds": 56,
+      "errors": 1,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 5,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 37,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 56,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 0,
+      "segment": "occasional",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.61,
+        "skill": 0.7,
+        "patience": 0.59,
+        "trust": 0.67
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "success",
+      "at": "confirmed",
+      "why": null,
+      "seconds": 50,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 7,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 28,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 42,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 46,
+          "note": null
+        },
+        {
+          "step": "place_order",
+          "t": 48,
+          "note": null
+        },
+        {
+          "step": "confirmed",
+          "t": 50,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 1,
+      "segment": "occasional",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.24,
+        "skill": 0.51,
+        "patience": 0.44,
+        "trust": 0.49
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order"
+      ],
+      "outcome": "never_saw",
+      "at": null,
+      "why": null,
+      "seconds": 0,
+      "errors": 0,
+      "path": []
+    },
+    {
+      "user": 6,
+      "segment": "new_customer",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.63,
+        "skill": 0.27,
+        "patience": 0.39,
+        "trust": 0.36
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "abandoned",
+      "at": "pick_slot",
+      "why": "effort",
+      "seconds": 96,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 6,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 68,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 96,
+          "note": "abandoned: effort"
+        }
+      ]
+    },
+    {
+      "user": 33,
+      "segment": "occasional",
+      "entry": "sunday_push",
+      "traits": {
+        "motivation": 0.48,
+        "skill": 0.76,
+        "patience": 0.41,
+        "trust": 0.7
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order"
+      ],
+      "outcome": "blocked",
+      "at": "confirm_pay",
+      "why": "lacks saved_card",
+      "seconds": 98,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 5,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 55,
+          "note": null
+        },
+        {
+          "step": "fix_stock",
+          "t": 77,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 98,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 98,
+          "note": "blocked: lacks saved_card"
+        }
+      ]
+    },
+    {
+      "user": 144,
+      "segment": "occasional",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.23,
+        "skill": 0.6,
+        "patience": 0.31,
+        "trust": 0.66
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky"
+      },
+      "capabilities": [
+        "past_order"
+      ],
+      "outcome": "error_exit",
+      "at": "pick_slot",
+      "why": "gave up after errors",
+      "seconds": 65,
+      "errors": 1,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 15,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 41,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 65,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 4,
+      "segment": "weekly_regular",
+      "entry": "sunday_push",
+      "traits": {
+        "motivation": 0.72,
+        "skill": 0.72,
+        "patience": 0.58,
+        "trust": 0.83
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "success",
+      "at": "confirmed",
+      "why": null,
+      "seconds": 51,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 8,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 21,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 36,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 44,
+          "note": null
+        },
+        {
+          "step": "place_order",
+          "t": 49,
+          "note": null
+        },
+        {
+          "step": "confirmed",
+          "t": 51,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 20,
+      "segment": "occasional",
+      "entry": "sunday_push",
+      "traits": {
+        "motivation": 0.51,
+        "skill": 0.55,
+        "patience": 0.31,
+        "trust": 0.61
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "abandoned",
+      "at": "open_sheet",
+      "why": "confusion",
+      "seconds": 5,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 5,
+          "note": "abandoned: confusion"
+        }
+      ]
+    },
+    {
+      "user": 34,
+      "segment": "occasional",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.77,
+        "skill": 0.52,
+        "patience": 0.55,
+        "trust": 0.59
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good"
+      },
+      "capabilities": [
+        "past_order"
+      ],
+      "outcome": "blocked",
+      "at": "confirm_pay",
+      "why": "lacks saved_card",
+      "seconds": 55,
+      "errors": 0,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 11,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 41,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 55,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 55,
+          "note": "blocked: lacks saved_card"
+        }
+      ]
+    },
+    {
+      "user": 216,
+      "segment": "weekly_regular",
+      "entry": "home_banner",
+      "traits": {
+        "motivation": 0.85,
+        "skill": 0.59,
+        "patience": 0.55,
+        "trust": 0.9
+      },
+      "context": {
+        "device": "mobile",
+        "network": "offline"
+      },
+      "capabilities": [
+        "past_order",
+        "saved_card"
+      ],
+      "outcome": "error_exit",
+      "at": "place_order",
+      "why": "error, no way to recover",
+      "seconds": 91,
+      "errors": 1,
+      "path": [
+        {
+          "step": "open_sheet",
+          "t": 4,
+          "note": null
+        },
+        {
+          "step": "review_items",
+          "t": 49,
+          "note": null
+        },
+        {
+          "step": "pick_slot",
+          "t": 74,
+          "note": null
+        },
+        {
+          "step": "confirm_pay",
+          "t": 81,
+          "note": null
+        },
+        {
+          "step": "place_order",
+          "t": 91,
+          "note": "error_exit: error, no way to recover"
+        }
+      ]
+    }
+  ]
+}

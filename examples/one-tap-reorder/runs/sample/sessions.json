@@ -1,0 +1,57 @@
+{
+  "note": "Think-aloud walkthroughs played by Claude in persona, against spec.md. Qualitative evidence only.",
+  "sessions": [
+    {"persona": "Meera, weekly regular, orders every Sunday", "segment": "weekly_regular", "context": "mobile, good network, saved card",
+     "goal": "Repeat last week's basket before the kids wake up", "outcome": "success",
+     "moments": [
+       {"step": "review_items", "kind": "hesitation", "thought": "Milk went up. Is this today's price or last week's? I can't tell which prices changed.", "severity": 2},
+       {"step": "pick_slot", "kind": "frustration", "thought": "I always take Sunday 6 to 8pm. Why am I scrolling a slot list again?", "severity": 2},
+       {"step": "confirmed", "kind": "delight", "thought": "Done in about a minute. That is what I wanted.", "severity": 1}],
+     "quote": "It saved me the basket building, then made me do the slot dance anyway.", "would_use_again": "yes", "unmet_need": "Remember my usual slot."},
+    {"persona": "Arjun, weekly regular on the commute", "segment": "weekly_regular", "context": "mobile, flaky network, saved card",
+     "goal": "Reorder from the train", "outcome": "error_exit", "at": "place_order",
+     "moments": [
+       {"step": "fix_stock", "kind": "confusion", "thought": "Two items are greyed out. Do I have to fix both before I can go on? There is no 'remove all unavailable'.", "severity": 2},
+       {"step": "place_order", "kind": "error", "thought": "Spinner, then 'Something went wrong'. Did it charge me? Did the order go through? I am not pressing it again.", "severity": 3}],
+     "quote": "I don't know if I just bought groceries or not.", "would_use_again": "maybe", "unmet_need": "A clear answer on whether the order was placed, and a safe retry."},
+    {"persona": "Sana, occasional shopper, orders once a month", "segment": "occasional", "context": "mobile, good network, no saved card",
+     "goal": "Top up the basics", "outcome": "blocked", "at": "confirm_pay",
+     "moments": [
+       {"step": "review_items", "kind": "question", "thought": "Last order was for a party. I don't want 12 bottles of soda again. Can I untick things?", "severity": 2},
+       {"step": "confirm_pay", "kind": "confusion", "thought": "It says 'Pay with saved card' but I never saved one. The button is just disabled.", "severity": 3}],
+     "quote": "It walked me all the way to the end and then shut the door.", "would_use_again": "no", "unmet_need": "Add a card here, or tell me at the start."},
+    {"persona": "Dev, occasional shopper, price sensitive", "segment": "occasional", "context": "desktop, good network, saved card",
+     "goal": "Check whether a reorder is cheaper than building a new basket", "outcome": "abandoned", "at": "fix_stock",
+     "moments": [
+       {"step": "review_items", "kind": "hesitation", "thought": "Total is higher than last time. Which items? I want a 'what changed' line.", "severity": 2},
+       {"step": "fix_stock", "kind": "confusion", "thought": "The substitute for my coffee is a different brand at a higher price. Is that chosen for me? I will just build the basket myself.", "severity": 3}],
+     "quote": "If I have to check every line anyway, it is not one tap.", "would_use_again": "maybe", "unmet_need": "Show price and stock changes at the top, with one decision for all of them."},
+    {"persona": "Priya, new customer, installed the app yesterday", "segment": "new_customer", "context": "mobile, good network, no past order",
+     "goal": "Place a first order", "outcome": "blocked", "at": "open_sheet",
+     "moments": [
+       {"step": "open_sheet", "kind": "confusion", "thought": "The banner says 'Reorder in one tap'. I tap it and get an empty sheet. Reorder what?", "severity": 3}],
+     "quote": "Why show me a reorder button when I have never ordered?", "would_use_again": "no", "unmet_need": "Do not show it to me yet, or offer a starter basket."},
+    {"persona": "Kabir, weekly regular whose card expired last month", "segment": "weekly_regular", "context": "mobile, good network, saved card expired",
+     "goal": "Usual Sunday order", "outcome": "error_exit", "at": "place_order",
+     "moments": [
+       {"step": "confirm_pay", "kind": "question", "thought": "It shows my card ending 4421. Looks fine.", "severity": 1},
+       {"step": "place_order", "kind": "error", "thought": "Payment declined. Now I am back on the home screen and my slot is gone.", "severity": 3}],
+     "quote": "It let me confirm a card it could have known was expired.", "would_use_again": "yes", "unmet_need": "Check the card before the last step and keep my slot while I fix it."}
+  ],
+  "themes": [
+    {"title": "The flow ends in a locked door for people without a usable card", "evidence": "Sana (no card) and Kabir (expired card) both reached the last steps before learning they could not pay.",
+     "steps": ["confirm_pay", "place_order"], "recommendation": "Check payment readiness when the sheet opens; let users add or update a card inline and keep the slot held."},
+    {"title": "A failed order leaves the customer unsure whether they paid", "evidence": "Arjun on a flaky network would not retry because the outcome was unclear.",
+     "steps": ["place_order"], "recommendation": "Make order placement idempotent, show the definite state (placed or not placed), and offer a safe retry."},
+    {"title": "'One tap' breaks as soon as anything changed since last time", "evidence": "Price changes and out-of-stock items forced line-by-line review for Meera, Dev and Arjun.",
+     "steps": ["review_items", "fix_stock"], "recommendation": "Summarise what changed at the top and offer one decision: accept suggested substitutes, or remove unavailable items."},
+    {"title": "New customers are promised something they cannot use", "evidence": "Priya opened an empty reorder sheet.",
+     "steps": ["open_sheet"], "recommendation": "Hide the entry points until there is a past order, or replace them with a starter basket."}
+  ],
+  "spec_gaps": [
+    {"title": "Partial reorder is not specified", "detail": "Can a customer untick items or change quantities, or is it all-or-nothing?", "severity": "high", "step": "review_items"},
+    {"title": "Expired or declined card", "detail": "The spec lists this as undecided; it is the most damaging late failure in the flow.", "severity": "high", "step": "confirm_pay"},
+    {"title": "Slot held or not during the flow", "detail": "If the slot fills while the customer fixes stock or payment, what happens?", "severity": "med", "step": "pick_slot"},
+    {"title": "Which order is 'the last order'", "detail": "Most recent, most frequent, or a saved favourite? A one-off party order makes a poor default.", "severity": "med", "step": "open_sheet"}
+  ]
+}

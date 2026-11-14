@@ -1,0 +1,2187 @@
+{
+  "shoal": "0.1.0",
+  "generated": "2026-11-13 12:07",
+  "feature": {
+    "id": "jobpilot-onboarding",
+    "name": "JobPilot: Onboarding & Verified Vault Setup",
+    "summary": "A new user starts the Telegram bot, uploads their PDF resume, verifies extracted achievement bullets, sets preferences and encryption, and arms the 09:00 AM daily job loop."
+  },
+  "variant": null,
+  "users": 5000,
+  "seed": 7,
+  "args": {
+    "users": 5000,
+    "seed": 7,
+    "reps": 24,
+    "jitter": 0.1,
+    "variant": null,
+    "quick": false
+  },
+  "metrics": {
+    "n": 5000,
+    "entered": 2903,
+    "success": 570,
+    "discovery_rate": 0.5806,
+    "completion_rate": 0.19634860489149156,
+    "adoption_rate": 0.114,
+    "error_rate": 0.1174646916982432,
+    "blocked_rate": 0.3754736479503961,
+    "median_time_s": 146.80617172390083
+  },
+  "outcomes": {
+    "never_saw": 2097,
+    "success": 570,
+    "abandoned": 1087,
+    "blocked": 1090,
+    "error_exit": 156,
+    "stuck": 0
+  },
+  "funnel": [
+    {
+      "step": "upload_resume",
+      "name": "Uploads master resume (PDF/DOCX)",
+      "type": "input",
+      "entered": 2903,
+      "share_of_starters": 1.0,
+      "continued": 1158,
+      "continue_rate": 0.3988976920427144,
+      "lost": 1745,
+      "abandoned": 593,
+      "blocked": 1090,
+      "error_exit": 62,
+      "skipped": 0,
+      "errors": 150,
+      "retries": 88,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 474,
+        "trust": 118,
+        "low_motivation": 1
+      },
+      "top_reason": "blocked",
+      "median_time_s": 31.764607498244942
+    },
+    {
+      "step": "parse_bullets",
+      "name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "type": "wait",
+      "entered": 1158,
+      "share_of_starters": 0.3988976920427144,
+      "continued": 1053,
+      "continue_rate": 0.9093264248704663,
+      "lost": 105,
+      "abandoned": 31,
+      "blocked": 0,
+      "error_exit": 74,
+      "skipped": 0,
+      "errors": 211,
+      "retries": 137,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 28,
+        "low_motivation": 3
+      },
+      "top_reason": "error",
+      "median_time_s": 13.526853276750934
+    },
+    {
+      "step": "verify_bullets",
+      "name": "Reviews extracted bullets & approves verified facts",
+      "type": "decision",
+      "entered": 1053,
+      "share_of_starters": 0.36272821219428175,
+      "continued": 883,
+      "continue_rate": 0.8385565052231719,
+      "lost": 170,
+      "abandoned": 170,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 164,
+        "fatigue": 6
+      },
+      "top_reason": "effort",
+      "median_time_s": 48.69244647300102
+    },
+    {
+      "step": "set_vault_and_prefs",
+      "name": "Sets AES-256 passphrase & target role/comp preferences",
+      "type": "input",
+      "entered": 883,
+      "share_of_starters": 0.30416810196348604,
+      "continued": 570,
+      "continue_rate": 0.6455266138165345,
+      "lost": 313,
+      "abandoned": 293,
+      "blocked": 0,
+      "error_exit": 20,
+      "skipped": 0,
+      "errors": 51,
+      "retries": 31,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 171,
+        "trust": 82,
+        "fatigue": 39,
+        "out_of_time": 1
+      },
+      "top_reason": "effort",
+      "median_time_s": 35.351234264435355
+    },
+    {
+      "step": "vault_armed",
+      "name": "Vault locked & 09:00 AM daily loop scheduled",
+      "type": "success",
+      "entered": 570,
+      "share_of_starters": 0.19634860489149156,
+      "continued": 0,
+      "continue_rate": 1.0,
+      "lost": 0,
+      "abandoned": 0,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {},
+      "top_reason": null,
+      "median_time_s": 8.666712576771005
+    }
+  ],
+  "segments": [
+    {
+      "id": "desktop_cli_installer",
+      "name": "Developer installing from GitHub / Kiro on desktop",
+      "share": 0.45,
+      "metrics": {
+        "n": 2254,
+        "entered": 1256,
+        "success": 486,
+        "discovery_rate": 0.5572315882874889,
+        "completion_rate": 0.3869426751592357,
+        "adoption_rate": 0.21561668145519078,
+        "error_rate": 0.1823248407643312,
+        "blocked_rate": 0.1679936305732484,
+        "median_time_s": 144.22206197774761
+      }
+    },
+    {
+      "id": "mobile_telegram_seeker",
+      "name": "Job seeker starting from Telegram on mobile",
+      "share": 0.4,
+      "metrics": {
+        "n": 2010,
+        "entered": 1258,
+        "success": 74,
+        "discovery_rate": 0.6258706467661691,
+        "completion_rate": 0.058823529411764705,
+        "adoption_rate": 0.03681592039800995,
+        "error_rate": 0.07154213036565978,
+        "blocked_rate": 0.5699523052464229,
+        "median_time_s": 167.05596057512258
+      }
+    },
+    {
+      "id": "skeptical_senior",
+      "name": "Privacy-cautious senior engineer testing it out",
+      "share": 0.15,
+      "metrics": {
+        "n": 736,
+        "entered": 389,
+        "success": 10,
+        "discovery_rate": 0.5285326086956522,
+        "completion_rate": 0.02570694087403599,
+        "adoption_rate": 0.01358695652173913,
+        "error_rate": 0.056555269922879174,
+        "blocked_rate": 0.41645244215938304,
+        "median_time_s": 114.41037914433176
+      }
+    }
+  ],
+  "contexts": {
+    "device": {
+      "desktop": {
+        "n": 2380,
+        "entered": 1345,
+        "success": 390
+      },
+      "mobile": {
+        "n": 2620,
+        "entered": 1558,
+        "success": 180
+      }
+    },
+    "network": {
+      "good": {
+        "n": 4375,
+        "entered": 2521,
+        "success": 527
+      },
+      "flaky": {
+        "n": 515,
+        "entered": 315,
+        "success": 43
+      },
+      "offline": {
+        "n": 110,
+        "entered": 67,
+        "success": 0
+      }
+    },
+    "resume_format": {
+      "clean_single_col": {
+        "n": 3008,
+        "entered": 1738,
+        "success": 354
+      },
+      "two_col_canva": {
+        "n": 1992,
+        "entered": 1165,
+        "success": 216
+      }
+    }
+  },
+  "entries": {
+    "telegram_start": {
+      "exposed": 2969,
+      "entered": 1908,
+      "success": 269
+    },
+    "cli_quickstart": {
+      "exposed": 2031,
+      "entered": 995,
+      "success": 301
+    }
+  },
+  "events": {
+    "resume_uploaded": 1813,
+    "bullets_verified": 1053,
+    "vault_sealed": 883,
+    "onboarding_completed": 570,
+    "parse_bullets.error": 211,
+    "upload_resume.error": 150,
+    "set_vault_and_prefs.error": 51
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Activation: at least 75% of users who start onboarding finish verifying their vault.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.75,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.16658415544393973,
+        "p50": 0.20075151100467556,
+        "p95": 0.22078189637901804
+      }
+    },
+    {
+      "id": "H2",
+      "text": "Onboarding completes in 3 minutes (180s) or less.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 180,
+      "segment": "all",
+      "holds_share": 1.0,
+      "verdict": "supported",
+      "predicted": {
+        "p5": 140.85393450746048,
+        "p50": 146.2212204095449,
+        "p95": 149.99173927652447
+      }
+    },
+    {
+      "id": "H3",
+      "text": "Mobile Telegram seekers activate at least 50% of the time.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.5,
+      "segment": "mobile_telegram_seeker",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.027947121510483033,
+        "p50": 0.04880897982046255,
+        "p95": 0.06163783995894835
+      }
+    }
+  ],
+  "levers": [
+    {
+      "lever": "Give users without resume_file_ready a way through 'Uploads master resume (PDF/DOCX)'",
+      "step": "upload_resume",
+      "kind": "blocked",
+      "adoption_delta": 0.042124999999999996,
+      "completion_delta": 0.07160634002472288,
+      "within_noise": false
+    },
+    {
+      "lever": "Cut the effort of 'Sets AES-256 passphrase & target role/comp preferences'",
+      "step": "set_vault_and_prefs",
+      "kind": "effort",
+      "adoption_delta": 0.023375000000000007,
+      "completion_delta": 0.036398115491034555,
+      "within_noise": false
+    },
+    {
+      "lever": "Make 'Sets AES-256 passphrase & target role/comp preferences' clearer",
+      "step": "set_vault_and_prefs",
+      "kind": "clarity",
+      "adoption_delta": 0.022125000000000006,
+      "completion_delta": 0.03487773755112586,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'README / Kiro CLI setup link' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.016750000000000015,
+      "completion_delta": 0.010958880747776983,
+      "within_noise": false
+    },
+    {
+      "lever": "Cut the effort of 'Uploads master resume (PDF/DOCX)'",
+      "step": "upload_resume",
+      "kind": "effort",
+      "adoption_delta": 0.012999999999999984,
+      "completion_delta": 0.01754300816909657,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'Telegram /start onboarding prompt' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.012499999999999983,
+      "completion_delta": -0.0026100418218951704,
+      "within_noise": false
+    },
+    {
+      "lever": "Make 'Uploads master resume (PDF/DOCX)' clearer",
+      "step": "upload_resume",
+      "kind": "clarity",
+      "adoption_delta": 0.011624999999999996,
+      "completion_delta": 0.01495974448813367,
+      "within_noise": false
+    },
+    {
+      "lever": "Cut the effort of 'Reviews extracted bullets & approves verified facts'",
+      "step": "verify_bullets",
+      "kind": "effort",
+      "adoption_delta": 0.006624999999999992,
+      "completion_delta": 0.011067471552284491,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Reviews extracted bullets & approves verified facts' clearer",
+      "step": "verify_bullets",
+      "kind": "clarity",
+      "adoption_delta": 0.006499999999999992,
+      "completion_delta": 0.010697346593066676,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Docling parses & calibrates 28 bullets (110-118 chars)'",
+      "step": "parse_bullets",
+      "kind": "errors",
+      "adoption_delta": 0.004500000000000004,
+      "completion_delta": 0.006895124664793945,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Uploads master resume (PDF/DOCX)'",
+      "step": "upload_resume",
+      "kind": "errors",
+      "adoption_delta": 0.003500000000000003,
+      "completion_delta": 0.005832695309641922,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Sets AES-256 passphrase & target role/comp preferences'",
+      "step": "set_vault_and_prefs",
+      "kind": "errors",
+      "adoption_delta": 0.002124999999999988,
+      "completion_delta": 0.003086982403942784,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Docling parses & calibrates 28 bullets (110-118 chars)' clearer",
+      "step": "parse_bullets",
+      "kind": "clarity",
+      "adoption_delta": 0.0,
+      "completion_delta": -0.0006282184091637166,
+      "within_noise": true
+    }
+  ],
+  "variants": [
+    {
+      "id": "linkedin-or-paste-fallback",
+      "name": "Allow pasting resume text or LinkedIn URL when PDF is not on phone",
+      "note": "Instead of requiring a local PDF upload on mobile, accept pasted text or LinkedIn profile import.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.040199999999999986,
+          "p50": 0.064,
+          "p95": 0.09156666666666666
+        },
+        "completion_rate": {
+          "p5": 0.05762392354130286,
+          "p50": 0.1064456545192032,
+          "p95": 0.15135740746731458
+        },
+        "discovery_rate": {
+          "p5": -0.02573333333333333,
+          "p50": 0.003333333333333355,
+          "p95": 0.024366666666666627
+        },
+        "error_rate": {
+          "p5": 0.04483982071136276,
+          "p50": 0.07631540163049944,
+          "p95": 0.09072698906985972
+        },
+        "median_time_s": {
+          "p5": -7.895865327847463,
+          "p50": -0.9047604768399111,
+          "p95": 4.9437841180984305
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.14193333333333333,
+          "p50": 0.178,
+          "p95": 0.21256666666666663
+        },
+        "completion_rate": {
+          "p5": 0.2658185860731158,
+          "p50": 0.3007317653236993,
+          "p95": 0.360841065432139
+        },
+        "discovery_rate": {
+          "p5": 0.5223333333333333,
+          "p50": 0.5706666666666667,
+          "p95": 0.6451
+        },
+        "error_rate": {
+          "p5": 0.15461912011624981,
+          "p50": 0.18454579825949755,
+          "p95": 0.20235369407462428
+        },
+        "median_time_s": {
+          "p5": 140.9685638709884,
+          "p50": 145.18516865983742,
+          "p95": 150.16500452885626
+        }
+      },
+      "verdict": "better"
+    },
+    {
+      "id": "inline-bullet-edit",
+      "name": "Grouped verification + per-bullet tap-to-edit",
+      "note": "Show extracted skills/metrics grouped by role with quick tap-to-fix instead of a 28-bullet wall of text.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.0040000000000000036,
+          "p50": 0.014000000000000005,
+          "p95": 0.02863333333333333
+        },
+        "completion_rate": {
+          "p5": 0.006000828875458194,
+          "p50": 0.023917365581225494,
+          "p95": 0.048320404935332
+        },
+        "discovery_rate": {
+          "p5": -0.015100000000000013,
+          "p50": -0.0040000000000000036,
+          "p95": 0.009599999999999904
+        },
+        "error_rate": {
+          "p5": -0.016159816466901962,
+          "p50": 0.0024089957370688683,
+          "p95": 0.013428877282845735
+        },
+        "median_time_s": {
+          "p5": -24.38973576356707,
+          "p50": -21.04262739689173,
+          "p95": -17.42382791104033
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.0995,
+          "p50": 0.13,
+          "p95": 0.1560333333333333
+        },
+        "completion_rate": {
+          "p5": 0.19008928757284002,
+          "p50": 0.2228351345998405,
+          "p95": 0.26901813913785744
+        },
+        "discovery_rate": {
+          "p5": 0.5084333333333333,
+          "p50": 0.572,
+          "p95": 0.6239
+        },
+        "error_rate": {
+          "p5": 0.09713630925322185,
+          "p50": 0.10915492957746478,
+          "p95": 0.12584274421230943
+        },
+        "median_time_s": {
+          "p5": 121.76146596811255,
+          "p50": 125.40792134898861,
+          "p95": 128.47476701155435
+        }
+      },
+      "verdict": "better"
+    }
+  ],
+  "watchlist": [
+    {
+      "step": "upload_resume",
+      "name": "Uploads master resume (PDF/DOCX)",
+      "event": "resume_uploaded",
+      "expected": {
+        "p5": 0.36627504775840347,
+        "p50": 0.40150187734668336,
+        "p95": 0.4373363894082876
+      },
+      "calibrated": false
+    },
+    {
+      "step": "parse_bullets",
+      "name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "event": null,
+      "expected": {
+        "p5": 0.8785160687884211,
+        "p50": 0.9011003757380569,
+        "p95": 0.9310102935569958
+      },
+      "calibrated": false
+    },
+    {
+      "step": "verify_bullets",
+      "name": "Reviews extracted bullets & approves verified facts",
+      "event": "bullets_verified",
+      "expected": {
+        "p5": 0.7746343713956171,
+        "p50": 0.8309010421079386,
+        "p95": 0.8553244466800805
+      },
+      "calibrated": false
+    },
+    {
+      "step": "set_vault_and_prefs",
+      "name": "Sets AES-256 passphrase & target role/comp preferences",
+      "event": "vault_sealed",
+      "expected": {
+        "p5": 0.573368808722886,
+        "p50": 0.6619445238776094,
+        "p95": 0.7274981622151433
+      },
+      "calibrated": false
+    }
+  ],
+  "instrumentation": [
+    {
+      "step": "upload_resume",
+      "name": "Uploads master resume (PDF/DOCX)",
+      "type": "input",
+      "events": [
+        "resume_uploaded"
+      ],
+      "error_event": "upload_resume.error",
+      "missing": false
+    },
+    {
+      "step": "parse_bullets",
+      "name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "type": "wait",
+      "events": [],
+      "error_event": "parse_bullets.error",
+      "missing": true
+    },
+    {
+      "step": "verify_bullets",
+      "name": "Reviews extracted bullets & approves verified facts",
+      "type": "decision",
+      "events": [
+        "bullets_verified"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "set_vault_and_prefs",
+      "name": "Sets AES-256 passphrase & target role/comp preferences",
+      "type": "input",
+      "events": [
+        "vault_sealed"
+      ],
+      "error_event": "set_vault_and_prefs.error",
+      "missing": false
+    },
+    {
+      "step": "vault_armed",
+      "name": "Vault locked & 09:00 AM daily loop scheduled",
+      "type": "success",
+      "events": [
+        "onboarding_completed"
+      ],
+      "error_event": null,
+      "missing": false
+    }
+  ],
+  "lint": [
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "upload_resume",
+      "message": "'Uploads master resume (PDF/DOCX)' needs resume_file_ready. About 37% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "parse_bullets",
+      "message": "'Docling parses & calibrates 28 bullets (110-118 chars)' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    }
+  ],
+  "replication": {
+    "reps": 24,
+    "users": 1500,
+    "jitter": 0.1,
+    "overall": {
+      "discovery_rate": {
+        "p5": 0.5105666666666667,
+        "p50": 0.5693333333333334,
+        "p95": 0.6361666666666667
+      },
+      "completion_rate": {
+        "p5": 0.16658415544393973,
+        "p50": 0.20075151100467556,
+        "p95": 0.22078189637901804
+      },
+      "adoption_rate": {
+        "p5": 0.0941,
+        "p50": 0.116,
+        "p95": 0.13236666666666666
+      },
+      "error_rate": {
+        "p5": 0.09182687151749704,
+        "p50": 0.11448425881260751,
+        "p95": 0.12590392118256255
+      },
+      "blocked_rate": {
+        "p5": 0.3586179610629014,
+        "p50": 0.38477567298105686,
+        "p95": 0.4183654125741561
+      },
+      "median_time_s": {
+        "p5": 140.85393450746048,
+        "p50": 146.2212204095449,
+        "p95": 149.99173927652447
+      }
+    },
+    "segments": {
+      "desktop_cli_installer": {
+        "discovery_rate": {
+          "p5": 0.4952290630558681,
+          "p50": 0.5668943135626556,
+          "p95": 0.638814687634958
+        },
+        "completion_rate": {
+          "p5": 0.32942381870781096,
+          "p50": 0.39598930481283423,
+          "p95": 0.42751818825650273
+        },
+        "adoption_rate": {
+          "p5": 0.171364532477318,
+          "p50": 0.2246268656716418,
+          "p95": 0.2534821194139579
+        },
+        "error_rate": {
+          "p5": 0.13084239130434783,
+          "p50": 0.15422136577140794,
+          "p95": 0.18810875685286707
+        },
+        "blocked_rate": {
+          "p5": 0.15906779511903296,
+          "p50": 0.17716318649885582,
+          "p95": 0.20982972136222908
+        },
+        "median_time_s": {
+          "p5": 139.2394613249362,
+          "p50": 144.53793102861596,
+          "p95": 149.21305697813466
+        }
+      },
+      "mobile_telegram_seeker": {
+        "discovery_rate": {
+          "p5": 0.5378034171868104,
+          "p50": 0.632704504797528,
+          "p95": 0.7110374933757286
+        },
+        "completion_rate": {
+          "p5": 0.027947121510483033,
+          "p50": 0.04880897982046255,
+          "p95": 0.06163783995894835
+        },
+        "adoption_rate": {
+          "p5": 0.01915739268680445,
+          "p50": 0.02986013986013986,
+          "p95": 0.041795366795366794
+        },
+        "error_rate": {
+          "p5": 0.05643701951507983,
+          "p50": 0.07385407551995693,
+          "p95": 0.0983818819582126
+        },
+        "blocked_rate": {
+          "p5": 0.5477190438674422,
+          "p50": 0.5884658697158698,
+          "p95": 0.6322294372294371
+        },
+        "median_time_s": {
+          "p5": 152.07020101943436,
+          "p50": 160.6490937257393,
+          "p95": 180.04626077958744
+        }
+      },
+      "skeptical_senior": {
+        "discovery_rate": {
+          "p5": 0.4427481937382928,
+          "p50": 0.5254897333018644,
+          "p95": 0.5803263546798029
+        },
+        "completion_rate": {
+          "p5": 0.023768028846153845,
+          "p50": 0.04644140905823149,
+          "p95": 0.08053745474798106
+        },
+        "adoption_rate": {
+          "p5": 0.013401865791159512,
+          "p50": 0.023222983749299538,
+          "p95": 0.0462778197554609
+        },
+        "error_rate": {
+          "p5": 0.02625031733942625,
+          "p50": 0.0782781862745098,
+          "p95": 0.1079369918699187
+        },
+        "blocked_rate": {
+          "p5": 0.3339895635673624,
+          "p50": 0.38307291666666665,
+          "p95": 0.4722027972027972
+        },
+        "median_time_s": {
+          "p5": 116.7384071623358,
+          "p50": 142.93800442076616,
+          "p95": 163.14179315806348
+        }
+      }
+    },
+    "steps": {
+      "upload_resume": {
+        "p5": 0.36627504775840347,
+        "p50": 0.40150187734668336,
+        "p95": 0.4373363894082876
+      },
+      "parse_bullets": {
+        "p5": 0.8785160687884211,
+        "p50": 0.9011003757380569,
+        "p95": 0.9310102935569958
+      },
+      "verify_bullets": {
+        "p5": 0.7746343713956171,
+        "p50": 0.8309010421079386,
+        "p95": 0.8553244466800805
+      },
+      "set_vault_and_prefs": {
+        "p5": 0.573368808722886,
+        "p50": 0.6619445238776094,
+        "p95": 0.7274981622151433
+      },
+      "vault_armed": {
+        "p5": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      }
+    }
+  },
+  "edge_cases": [
+    {
+      "id": "E-upload_resume-progress_lost",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Keep uploaded file and preference inputs if Docling fails or the user steps back."
+    },
+    {
+      "id": "E-parse_bullets-offline",
+      "step": "parse_bullets",
+      "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "key": "offline",
+      "title": "Connection drops while waiting",
+      "question": "Does the wait resume, restart or fail silently?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Queue parsing locally and notify the user in Telegram once the 28 bullets are ready."
+    },
+    {
+      "id": "E-parse_bullets-never_completes",
+      "step": "parse_bullets",
+      "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "key": "never_completes",
+      "title": "The thing being waited for never arrives",
+      "question": "Is there a time limit and a next step when it runs out?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Set a 30s Docling timeout; on expiry, offer plain-text fallback or manual bullet paste."
+    },
+    {
+      "id": "E-set_vault_and_prefs-progress_lost",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Preserve entered target titles/comp if passphrase validation fails, and wipe passphrase from Telegram chat history immediately."
+    },
+    {
+      "id": "X-two-column-canva-garble",
+      "step": "parse_bullets",
+      "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "key": "found",
+      "title": "Two-column PDF merges unrelated columns into bullets",
+      "question": "How does the user detect and fix merged column text before locking verified bullets?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Flag low-confidence layout parses and let the user edit or drop individual bullets before verification.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-fewer-than-15-bullets",
+      "step": "verify_bullets",
+      "step_name": "Reviews extracted bullets & approves verified facts",
+      "key": "found",
+      "title": "Candidate resume has fewer than 15 bullets",
+      "question": "Activation target mentions >=15 verified bullets. Are junior candidates with 8-12 bullets blocked from activating?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Warn if <15 bullets that tailoring variety is limited, but still activate with >=5 verified bullets.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-passphrase-in-telegram-history",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "found",
+      "title": "Passphrase typed into Telegram chat persists in chat history",
+      "question": "Where is the AES-256 passphrase entered so Telegram cloud servers never see it?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Derive the key via local CLI / OS Keychain or local webview, never as a plaintext Telegram message.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-session_expired",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "session_expired",
+      "title": "Signed out while in the flow",
+      "question": "After signing in again, do they return to where they were?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Save partially verified bullets (is_verified = 0) in SQLite so returning users resume at verify_bullets instead of re-uploading."
+    },
+    {
+      "id": "E-flow-back_button",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "back_button",
+      "title": "Back button mid-flow",
+      "question": "Does Back go one step back with data kept, or drop the user out?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-refresh_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "refresh_midflow",
+      "title": "Page refresh or app restart mid-flow",
+      "question": "Is progress restored or does the user start again?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-deep_link_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "deep_link_midflow",
+      "title": "Link opens the middle of the flow",
+      "question": "What happens if someone lands on step 3 without doing steps 1 and 2?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-two_tabs",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "two_tabs",
+      "title": "Same flow open in two tabs or devices",
+      "question": "Which one wins, and can the two conflict?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-permission_changed",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "permission_changed",
+      "title": "Role or access changes mid-flow",
+      "question": "If access is removed while the user is in the flow, what do they see?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-interrupted_resume",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "interrupted_resume",
+      "title": "Interrupted and resumed days later",
+      "question": "Is a half-done flow kept, expired or cleaned up, and is the user reminded?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-returning_user",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "returning_user",
+      "title": "Second and tenth use",
+      "question": "Is the repeat experience shorter than the first, and are earlier choices remembered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-keyboard_only",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "keyboard_only",
+      "title": "Keyboard only",
+      "question": "Can the whole flow be completed without a mouse, in a sensible focus order?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-screen_reader",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "screen_reader",
+      "title": "Screen reader",
+      "question": "Are states, errors and progress announced?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-small_screen",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "small_screen",
+      "title": "Small phone screen",
+      "question": "Is the main button reachable without scrolling past everything?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-empty_input",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-invalid_format",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-boundary_numbers",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-duplicate_value",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-keyboard_covers_field",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-parse_bullets-user_leaves",
+      "step": "parse_bullets",
+      "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "key": "user_leaves",
+      "title": "User closes the screen while waiting",
+      "question": "Does it carry on in the background, and how do they learn the result?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-parse_bullets-slow_response",
+      "step": "parse_bullets",
+      "step_name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "key": "slow_response",
+      "title": "Wait is much longer than promised",
+      "question": "Is the expected time shown, and updated?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-verify_bullets-no_option_fits",
+      "step": "verify_bullets",
+      "step_name": "Reviews extracted bullets & approves verified facts",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-verify_bullets-change_mind",
+      "step": "verify_bullets",
+      "step_name": "Reviews extracted bullets & approves verified facts",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-verify_bullets-default_bias",
+      "step": "verify_bullets",
+      "step_name": "Reviews extracted bullets & approves verified facts",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-empty_input",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-invalid_format",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-boundary_numbers",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-duplicate_value",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-keyboard_covers_field",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-vault_armed-repeat_action",
+      "step": "vault_armed",
+      "step_name": "Vault locked & 09:00 AM daily loop scheduled",
+      "key": "repeat_action",
+      "title": "Does it again right after",
+      "question": "What happens if the user completes the same thing twice?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-vault_armed-undo",
+      "step": "vault_armed",
+      "step_name": "Vault locked & 09:00 AM daily loop scheduled",
+      "key": "undo",
+      "title": "Wants to undo",
+      "question": "Can it be undone or edited, by whom and until when?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-vault_armed-others_not_told",
+      "step": "vault_armed",
+      "step_name": "Vault locked & 09:00 AM daily loop scheduled",
+      "key": "others_not_told",
+      "title": "Other people affected are not told",
+      "question": "Who else needs to know, and how are they notified?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-flag_off",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "flag_off",
+      "title": "Feature switched off while in use",
+      "question": "What happens to users and data mid-flow if the feature is turned off?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-large_text",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "large_text",
+      "title": "Large text or 200% zoom",
+      "question": "Does anything clip, overlap or become unreachable?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-timezone_boundary",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "timezone_boundary",
+      "title": "Time zones and midnight",
+      "question": "Do dates, deadlines and 'today' hold up across time zones?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-max_length",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-special_chars",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-paste_formatted",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-upload_resume-autofill",
+      "step": "upload_resume",
+      "step_name": "Uploads master resume (PDF/DOCX)",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-max_length",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-special_chars",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-paste_formatted",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-set_vault_and_prefs-autofill",
+      "step": "set_vault_and_prefs",
+      "step_name": "Sets AES-256 passphrase & target role/comp preferences",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-vault_armed-next_step_unclear",
+      "step": "vault_armed",
+      "step_name": "Vault locked & 09:00 AM daily loop scheduled",
+      "key": "next_step_unclear",
+      "title": "What now?",
+      "question": "Is the next useful action obvious from the success screen?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-vault_armed-no_confirmation",
+      "step": "vault_armed",
+      "step_name": "Vault locked & 09:00 AM daily loop scheduled",
+      "key": "no_confirmation",
+      "title": "No proof it worked",
+      "question": "Does the user get clear confirmation and a record they can find later?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C-01",
+      "combo": {
+        "device": "desktop",
+        "network": "flaky",
+        "resume_format": "two_col_canva",
+        "bullet_count": "15-28 clean bullets"
+      },
+      "share": 0.014939999999999998,
+      "title": "device: desktop + network: flaky + resume_format: two_col_canva + bullet_count: 15-28 clean bullets",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-02",
+      "combo": {
+        "device": "desktop",
+        "network": "offline",
+        "resume_format": "clean_single_col",
+        "bullet_count": "<15 bullets (junior)"
+      },
+      "share": 0.0057374999999999995,
+      "title": "device: desktop + network: offline + resume_format: clean_single_col + bullet_count: <15 bullets (junior)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-03",
+      "combo": {
+        "device": "mobile",
+        "network": "good",
+        "resume_format": "clean_single_col",
+        "bullet_count": "15-28 clean bullets"
+      },
+      "share": 0.2487725,
+      "title": "device: mobile + network: good + resume_format: clean_single_col + bullet_count: 15-28 clean bullets",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-04",
+      "combo": {
+        "device": "mobile",
+        "network": "offline",
+        "resume_format": "two_col_canva",
+        "bullet_count": "40+ bullets (multi-page CV)"
+      },
+      "share": 0.0062475,
+      "title": "device: mobile + network: offline + resume_format: two_col_canva + bullet_count: 40+ bullets (multi-page CV)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-05",
+      "combo": {
+        "device": "mobile",
+        "network": "flaky",
+        "resume_format": "clean_single_col",
+        "bullet_count": "40+ bullets (multi-page CV)"
+      },
+      "share": 0.03519,
+      "title": "device: mobile + network: flaky + resume_format: clean_single_col + bullet_count: 40+ bullets (multi-page CV)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-06",
+      "combo": {
+        "device": "mobile",
+        "network": "good",
+        "resume_format": "two_col_canva",
+        "bullet_count": "<15 bullets (junior)"
+      },
+      "share": 0.19631749999999998,
+      "title": "device: mobile + network: good + resume_format: two_col_canva + bullet_count: <15 bullets (junior)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-07",
+      "combo": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "clean_single_col",
+        "bullet_count": "40+ bullets (multi-page CV)"
+      },
+      "share": 0.27507750000000003,
+      "title": "device: desktop + network: good + resume_format: clean_single_col + bullet_count: 40+ bullets (multi-page CV)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-08",
+      "combo": {
+        "device": "mobile",
+        "network": "offline",
+        "resume_format": "two_col_canva",
+        "bullet_count": "15-28 clean bullets"
+      },
+      "share": 0.0062475,
+      "title": "device: mobile + network: offline + resume_format: two_col_canva + bullet_count: 15-28 clean bullets",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-09",
+      "combo": {
+        "device": "mobile",
+        "network": "flaky",
+        "resume_format": "clean_single_col",
+        "bullet_count": "<15 bullets (junior)"
+      },
+      "share": 0.03519,
+      "title": "device: mobile + network: flaky + resume_format: clean_single_col + bullet_count: <15 bullets (junior)",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    }
+  ],
+  "qualitative": {
+    "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/01_JOBPILOT_PRODUCT_PROPOSAL.md Section 4.1.",
+    "sessions": [
+      {
+        "persona": "Ananya, Senior Backend Engineer installing from GitHub at her desk (User 0)",
+        "segment": "desktop_cli_installer",
+        "context": "desktop, good network, clean_single_col, resume_file_ready",
+        "goal": "Import her resume PDF and get daily 09:00 AM matches turned on",
+        "outcome": "success",
+        "at": "vault_armed",
+        "moments": [
+          {
+            "step": "upload_resume",
+            "kind": "delight",
+            "thought": "Dragging my LaTeX PDF into Telegram Desktop worked cleanly.",
+            "severity": 1
+          },
+          {
+            "step": "verify_bullets",
+            "kind": "hesitation",
+            "thought": "28 bullets in one Telegram message is a lot to eyeball on screen, though the metrics looked right.",
+            "severity": 2
+          },
+          {
+            "step": "vault_armed",
+            "kind": "delight",
+            "thought": "Locked and ready for 9am tomorrow.",
+            "severity": 1
+          }
+        ],
+        "quote": "Worked well on desktop once I squinted through all 28 bullets.",
+        "would_use_again": "yes",
+        "unmet_need": "Group bullets under each past role when reviewing."
+      },
+      {
+        "persona": "Rishabh, mid-level engineer discovering JobPilot on his phone (User 13)",
+        "segment": "mobile_telegram_seeker",
+        "context": "mobile, flaky network, clean_single_col, lacks resume_file_ready",
+        "goal": "Try out JobPilot right after seeing a hackathon demo link",
+        "outcome": "blocked",
+        "at": "upload_resume",
+        "moments": [
+          {
+            "step": "upload_resume",
+            "kind": "confusion",
+            "thought": "It asks me to drop my PDF/DOCX resume in chat, but my latest resume is on Google Drive / my work laptop, not on my phone.",
+            "severity": 3
+          }
+        ],
+        "quote": "I tapped /start on my phone and hit a wall immediately because it only takes a PDF file.",
+        "would_use_again": "no",
+        "unmet_need": "Let me paste my LinkedIn URL or a few paragraphs of text now and upload the PDF later."
+      },
+      {
+        "persona": "Karan, frontend lead with a 2-column Canva resume (User 4)",
+        "segment": "desktop_cli_installer",
+        "context": "desktop, good network, two_col_canva, resume_file_ready",
+        "goal": "Set up his vault before bed",
+        "outcome": "abandoned",
+        "at": "verify_bullets",
+        "moments": [
+          {
+            "step": "parse_bullets",
+            "kind": "question",
+            "thought": "It took 19 seconds and trimmed my Canva bullets to 110–118 chars, merging two side-bar skills into a role line.",
+            "severity": 2
+          },
+          {
+            "step": "verify_bullets",
+            "kind": "frustration",
+            "thought": "The only button is 'Approve All Verified Facts'. Three of the 28 bullets got garbled by the 2-column parse and there is no way to fix just those three.",
+            "severity": 3
+          }
+        ],
+        "quote": "I can't tap 'Approve All' when three bullets have mangled dates, and there's no edit button.",
+        "would_use_again": "no",
+        "unmet_need": "Per-bullet edit or reject before approving the vault."
+      },
+      {
+        "persona": "Priya, mobile seeker who happened to have her PDF in WhatsApp Files (User 7)",
+        "segment": "mobile_telegram_seeker",
+        "context": "mobile, good network, clean_single_col, resume_file_ready",
+        "goal": "Finish onboarding on her phone",
+        "outcome": "abandoned",
+        "at": "verify_bullets",
+        "moments": [
+          {
+            "step": "verify_bullets",
+            "kind": "frustration",
+            "thought": "Reading 28 dense technical lines inside a narrow Telegram chat bubble on a 6-inch screen gave me a headache.",
+            "severity": 3
+          }
+        ],
+        "quote": "Reviewing 28 resume lines in one chat message is impossible on a phone.",
+        "would_use_again": "maybe",
+        "unmet_need": "Review 3–5 bullets at a time, or send a clean mini-app checklist."
+      },
+      {
+        "persona": "Samir, Staff Engineer cautious about personal data (User 9)",
+        "segment": "skeptical_senior",
+        "context": "desktop, good network, clean_single_col, resume_file_ready",
+        "goal": "Test whether JobPilot really keeps data local",
+        "outcome": "abandoned",
+        "at": "upload_resume",
+        "moments": [
+          {
+            "step": "upload_resume",
+            "kind": "hesitation",
+            "thought": "Even if SQLite is local, I'm uploading my unencrypted PDF through Telegram's cloud servers right here in step 1.",
+            "severity": 3
+          }
+        ],
+        "quote": "Why am I sending my full contact info and resume over Telegram just to seed a local SQLite database?",
+        "would_use_again": "no",
+        "unmet_need": "Allow local CLI ingestion (`jobpilot ingest resume.pdf`) without ever sending the raw PDF through Telegram."
+      },
+      {
+        "persona": "Devika, desktop installer hitting an upload error (User 40)",
+        "segment": "desktop_cli_installer",
+        "context": "desktop, good network, clean_single_col, resume_file_ready",
+        "goal": "Upload her 3-page academic/engineering CV",
+        "outcome": "error_exit",
+        "at": "upload_resume",
+        "moments": [
+          {
+            "step": "upload_resume",
+            "kind": "error",
+            "thought": "The upload failed or timed out without saying whether it was file size, format, or Telegram bot state.",
+            "severity": 3
+          }
+        ],
+        "quote": "It just errored out on upload with no guidance on format or size limits.",
+        "would_use_again": "maybe",
+        "unmet_need": "Show supported formats, max size, and a specific parse error message."
+      },
+      {
+        "persona": "Nikhil, desktop developer quitting at passphrase & prefs (User 18)",
+        "segment": "desktop_cli_installer",
+        "context": "desktop, good network, clean_single_col, resume_file_ready",
+        "goal": "Complete vault encryption and target role setup",
+        "outcome": "abandoned",
+        "at": "set_vault_and_prefs",
+        "moments": [
+          {
+            "step": "parse_bullets",
+            "kind": "error",
+            "thought": "Parser retried once and got through.",
+            "severity": 1
+          },
+          {
+            "step": "set_vault_and_prefs",
+            "kind": "frustration",
+            "thought": "Now it asks me to type an AES-256 passphrase into Telegram chat, plus target titles, locations, and min comp, and doesn't say what happens if I forget the passphrase.",
+            "severity": 3
+          }
+        ],
+        "quote": "Typing an encryption passphrase into a Telegram chat message feels wrong—and what if I forget it?",
+        "would_use_again": "maybe",
+        "unmet_need": "Use OS Keychain / local CLI for encryption keys instead of typing passphrases into chat."
+      }
+    ],
+    "themes": [
+      {
+        "title": "Requiring a local PDF file in Telegram blocks mobile users on step 1",
+        "evidence": "Rishabh lacked his resume PDF on his phone at upload_resume (37% of starters blocked there).",
+        "steps": [
+          "upload_resume"
+        ],
+        "recommendation": "Add a fallback to paste LinkedIn URL or raw resume text on mobile, or import via local CLI."
+      },
+      {
+        "title": "'Approve All 28 Bullets' breaks on messy PDFs and tiny phone screens",
+        "evidence": "Karan (2-column Canva parse error) and Priya (wall of 28 lines on mobile) both quit at verify_bullets.",
+        "steps": [
+          "verify_bullets",
+          "parse_bullets"
+        ],
+        "recommendation": "Group extracted bullets by role and allow tapping individual bullets to edit or exclude before locking."
+      },
+      {
+        "title": "Privacy narrative clashes with sending raw PDFs and passphrases through Telegram",
+        "evidence": "Samir distrusted uploading his resume to Telegram, and Nikhil balked at typing his AES-256 passphrase into chat.",
+        "steps": [
+          "upload_resume",
+          "set_vault_and_prefs"
+        ],
+        "recommendation": "Support local CLI ingestion and OS Keychain key generation so sensitive files and passphrases never traverse Telegram."
+      }
+    ],
+    "spec_gaps": [
+      {
+        "title": "No partial/per-bullet edit path before 'Approve All Verified Facts'",
+        "detail": "Flow 1 shows a single '[Approve All Verified Facts]' button; if 2 of 28 bullets are mis-parsed, the spec gives no fix path.",
+        "severity": "high",
+        "step": "verify_bullets"
+      },
+      {
+        "title": "AES-256-GCM passphrase reset / loss behavior undefined",
+        "detail": "Proposal Section 7.3 derives keys from a local passphrase, but does not state how keys are entered or recovered if forgotten.",
+        "severity": "high",
+        "step": "set_vault_and_prefs"
+      },
+      {
+        "title": "Desktop ShadowMux pairing is absent from onboarding",
+        "detail": "Onboarding arms the 09:00 AM Telegram loop without checking whether desktop ShadowMux / Chrome cookie parity is set up.",
+        "severity": "high",
+        "step": "vault_armed"
+      }
+    ]
+  },
+  "triangulation": [
+    {
+      "step": "upload_resume",
+      "name": "Uploads master resume (PDF/DOCX)",
+      "loss_share": 0.6011023079572856,
+      "mentions": 3,
+      "sessions": 7,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "verify_bullets",
+      "name": "Reviews extracted bullets & approves verified facts",
+      "loss_share": 0.05856011023079573,
+      "mentions": 3,
+      "sessions": 7,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "parse_bullets",
+      "name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "loss_share": 0.036169479848432655,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "set_vault_and_prefs",
+      "name": "Sets AES-256 passphrase & target role/comp preferences",
+      "loss_share": 0.1078194970719945,
+      "mentions": 1,
+      "sessions": 7,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    }
+  ],
+  "sessions": [
+    {
+      "user": 4,
+      "segment": "desktop_cli_installer",
+      "entry": "cli_quickstart",
+      "traits": {
+        "motivation": 0.66,
+        "skill": 0.62,
+        "patience": 0.79,
+        "trust": 0.59
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "two_col_canva"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "abandoned",
+      "at": "verify_bullets",
+      "why": "effort",
+      "seconds": 92,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 25,
+          "note": null
+        },
+        {
+          "step": "parse_bullets",
+          "t": 44,
+          "note": null
+        },
+        {
+          "step": "verify_bullets",
+          "t": 92,
+          "note": "abandoned: effort"
+        }
+      ]
+    },
+    {
+      "user": 6,
+      "segment": "skeptical_senior",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.34,
+        "skill": 0.7,
+        "patience": 0.21,
+        "trust": 0.12
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "two_col_canva"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "upload_resume",
+      "why": "lacks resume_file_ready",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 0,
+          "note": "blocked: lacks resume_file_ready"
+        }
+      ]
+    },
+    {
+      "user": 40,
+      "segment": "desktop_cli_installer",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.77,
+        "skill": 0.81,
+        "patience": 0.64,
+        "trust": 0.55
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "error_exit",
+      "at": "upload_resume",
+      "why": "gave up after errors",
+      "seconds": 25,
+      "errors": 1,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 25,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 0,
+      "segment": "desktop_cli_installer",
+      "entry": "cli_quickstart",
+      "traits": {
+        "motivation": 0.83,
+        "skill": 0.95,
+        "patience": 0.69,
+        "trust": 0.67
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "success",
+      "at": "vault_armed",
+      "why": null,
+      "seconds": 105,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 36,
+          "note": null
+        },
+        {
+          "step": "parse_bullets",
+          "t": 48,
+          "note": null
+        },
+        {
+          "step": "verify_bullets",
+          "t": 84,
+          "note": null
+        },
+        {
+          "step": "set_vault_and_prefs",
+          "t": 101,
+          "note": null
+        },
+        {
+          "step": "vault_armed",
+          "t": 105,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 1,
+      "segment": "desktop_cli_installer",
+      "entry": "cli_quickstart",
+      "traits": {
+        "motivation": 0.65,
+        "skill": 0.96,
+        "patience": 0.44,
+        "trust": 0.63
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "never_saw",
+      "at": null,
+      "why": null,
+      "seconds": 0,
+      "errors": 0,
+      "path": []
+    },
+    {
+      "user": 7,
+      "segment": "mobile_telegram_seeker",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.69,
+        "skill": 0.52,
+        "patience": 0.4,
+        "trust": 0.49
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "abandoned",
+      "at": "verify_bullets",
+      "why": "effort",
+      "seconds": 119,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 27,
+          "note": null
+        },
+        {
+          "step": "parse_bullets",
+          "t": 41,
+          "note": null
+        },
+        {
+          "step": "verify_bullets",
+          "t": 119,
+          "note": "abandoned: effort"
+        }
+      ]
+    },
+    {
+      "user": 12,
+      "segment": "skeptical_senior",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.3,
+        "skill": 0.93,
+        "patience": 0.55,
+        "trust": 0.18
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "upload_resume",
+      "why": "lacks resume_file_ready",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 0,
+          "note": "blocked: lacks resume_file_ready"
+        }
+      ]
+    },
+    {
+      "user": 59,
+      "segment": "mobile_telegram_seeker",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.9,
+        "skill": 0.63,
+        "patience": 0.4,
+        "trust": 0.44
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "error_exit",
+      "at": "upload_resume",
+      "why": "gave up after errors",
+      "seconds": 60,
+      "errors": 1,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 60,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 14,
+      "segment": "desktop_cli_installer",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.63,
+        "skill": 0.75,
+        "patience": 0.49,
+        "trust": 0.63
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "success",
+      "at": "vault_armed",
+      "why": null,
+      "seconds": 148,
+      "errors": 1,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 53,
+          "note": "error ×1, retried"
+        },
+        {
+          "step": "upload_resume",
+          "t": 53,
+          "note": null
+        },
+        {
+          "step": "parse_bullets",
+          "t": 61,
+          "note": null
+        },
+        {
+          "step": "verify_bullets",
+          "t": 112,
+          "note": null
+        },
+        {
+          "step": "set_vault_and_prefs",
+          "t": 140,
+          "note": null
+        },
+        {
+          "step": "vault_armed",
+          "t": 148,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 8,
+      "segment": "mobile_telegram_seeker",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.75,
+        "skill": 0.63,
+        "patience": 0.54,
+        "trust": 0.45
+      },
+      "context": {
+        "device": "desktop",
+        "network": "flaky",
+        "resume_format": "two_col_canva"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "abandoned",
+      "at": "upload_resume",
+      "why": "effort",
+      "seconds": 47,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 47,
+          "note": "abandoned: effort"
+        }
+      ]
+    },
+    {
+      "user": 13,
+      "segment": "mobile_telegram_seeker",
+      "entry": "telegram_start",
+      "traits": {
+        "motivation": 0.66,
+        "skill": 0.52,
+        "patience": 0.57,
+        "trust": 0.39
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky",
+        "resume_format": "clean_single_col"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "upload_resume",
+      "why": "lacks resume_file_ready",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 0,
+          "note": "blocked: lacks resume_file_ready"
+        }
+      ]
+    },
+    {
+      "user": 95,
+      "segment": "desktop_cli_installer",
+      "entry": "cli_quickstart",
+      "traits": {
+        "motivation": 0.62,
+        "skill": 0.73,
+        "patience": 0.52,
+        "trust": 0.6
+      },
+      "context": {
+        "device": "desktop",
+        "network": "offline",
+        "resume_format": "two_col_canva"
+      },
+      "capabilities": [
+        "resume_file_ready"
+      ],
+      "outcome": "error_exit",
+      "at": "parse_bullets",
+      "why": "gave up after errors",
+      "seconds": 46,
+      "errors": 1,
+      "path": [
+        {
+          "step": "upload_resume",
+          "t": 24,
+          "note": null
+        },
+        {
+          "step": "parse_bullets",
+          "t": 46,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "shoal_version": "0.1",
+  "feature": {
+    "id": "jobpilot-onboarding",
+    "name": "JobPilot: Onboarding & Verified Vault Setup",
+    "summary": "A new user starts the Telegram bot, uploads their PDF resume, verifies extracted achievement bullets, sets preferences and encryption, and arms the 09:00 AM daily job loop.",
+    "session_budget_s": 240,
+    "handles": []
+  },
+  "segments": [
+    {
+      "id": "desktop_cli_installer",
+      "name": "Developer installing from GitHub / Kiro on desktop",
+      "share": 0.45,
+      "traits": {
+        "motivation": 0.72,
+        "skill": 0.8,
+        "patience": 0.55,
+        "trust": 0.6
+      },
+      "context": {
+        "device": {
+          "desktop": 0.75,
+          "mobile": 0.25
+        },
+        "network": {
+          "good": 0.9,
+          "flaky": 0.08,
+          "offline": 0.02
+        },
+        "resume_format": {
+          "clean_single_col": 0.65,
+          "two_col_canva": 0.35
+        }
+      },
+      "capabilities": {
+        "resume_file_ready": 0.82
+      },
+      "exposure": 0.9,
+      "entry": {
+        "cli_quickstart": 0.65,
+        "telegram_start": 0.35
+      }
+    },
+    {
+      "id": "mobile_telegram_seeker",
+      "name": "Job seeker starting from Telegram on mobile",
+      "share": 0.4,
+      "traits": {
+        "motivation": 0.65,
+        "skill": 0.5,
+        "patience": 0.38,
+        "trust": 0.42
+      },
+      "context": {
+        "device": {
+          "mobile": 0.88,
+          "desktop": 0.12
+        },
+        "network": {
+          "good": 0.82,
+          "flaky": 0.15,
+          "offline": 0.03
+        },
+        "resume_format": {
+          "clean_single_col": 0.5,
+          "two_col_canva": 0.5
+        }
+      },
+      "capabilities": {
+        "resume_file_ready": 0.42
+      },
+      "exposure": 0.85,
+      "entry": {
+        "telegram_start": 0.9,
+        "cli_quickstart": 0.1
+      }
+    },
+    {
+      "id": "skeptical_senior",
+      "name": "Privacy-cautious senior engineer testing it out",
+      "share": 0.15,
+      "traits": {
+        "motivation": 0.4,
+        "skill": 0.85,
+        "patience": 0.35,
+        "trust": 0.25
+      },
+      "context": {
+        "device": {
+          "desktop": 0.6,
+          "mobile": 0.4
+        },
+        "network": {
+          "good": 0.92,
+          "flaky": 0.07,
+          "offline": 0.01
+        },
+        "resume_format": {
+          "clean_single_col": 0.7,
+          "two_col_canva": 0.3
+        }
+      },
+      "capabilities": {
+        "resume_file_ready": 0.6
+      },
+      "exposure": 0.8,
+      "entry": {
+        "cli_quickstart": 0.5,
+        "telegram_start": 0.5
+      }
+    }
+  ],
+  "entry_points": [
+    {
+      "id": "telegram_start",
+      "name": "Telegram /start onboarding prompt",
+      "to": "upload_resume",
+      "discovery": 0.75
+    },
+    {
+      "id": "cli_quickstart",
+      "name": "README / Kiro CLI setup link",
+      "to": "upload_resume",
+      "discovery": 0.55
+    }
+  ],
+  "steps": [
+    {
+      "id": "upload_resume",
+      "name": "Uploads master resume (PDF/DOCX)",
+      "type": "input",
+      "effort": 0.65,
+      "clarity": 0.7,
+      "value": 0.3,
+      "time_s": 35,
+      "error_rate": 0.08,
+      "on_error": {
+        "recoverable": true
+      },
+      "requires": [
+        "resume_file_ready"
+      ],
+      "sensitive": true,
+      "next": [
+        {
+          "to": "parse_bullets",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "resume_uploaded"
+      ],
+      "handles": [],
+      "fallback": null,
+      "optional": false,
+      "observed_continue": null,
+      "grants": []
+    },
+    {
+      "id": "parse_bullets",
+      "name": "Docling parses & calibrates 28 bullets (110-118 chars)",
+      "type": "wait",
+      "effort": 0.05,
+      "clarity": 0.65,
+      "value": 0.45,
+      "time_s": 14,
+      "error_rate": 0.1,
+      "on_error": {
+        "recoverable": true
+      },
+      "next": [
+        {
+          "to": "verify_bullets",
+          "weight": 1.0
+        }
+      ],
+      "events": [],
+      "handles": [],
+      "requires": [],
+      "fallback": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "verify_bullets",
+      "name": "Reviews extracted bullets & approves verified facts",
+      "type": "decision",
+      "effort": 0.55,
+      "clarity": 0.45,
+      "value": 0.6,
+      "time_s": 55,
+      "next": [
+        {
+          "to": "set_vault_and_prefs",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "bullets_verified"
+      ],
+      "handles": [],
+      "error_rate": 0.0,
+      "requires": [],
+      "fallback": null,
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    },
+    {
+      "id": "set_vault_and_prefs",
+      "name": "Sets AES-256 passphrase & target role/comp preferences",
+      "type": "input",
+      "effort": 0.5,
+      "clarity": 0.55,
+      "value": 0.5,
+      "time_s": 40,
+      "error_rate": 0.05,
+      "on_error": {
+        "recoverable": true
+      },
+      "sensitive": true,
+      "next": [
+        {
+          "to": "vault_armed",
+          "weight": 1.0
+        }
+      ],
+      "events": [
+        "vault_sealed"
+      ],
+      "handles": [],
+      "requires": [],
+      "fallback": null,
+      "optional": false,
+      "observed_continue": null,
+      "grants": []
+    },
+    {
+      "id": "vault_armed",
+      "name": "Vault locked & 09:00 AM daily loop scheduled",
+      "type": "success",
+      "events": [
+        "onboarding_completed"
+      ],
+      "handles": [
+        "no_confirmation"
+      ],
+      "effort": 0.2,
+      "clarity": 0.8,
+      "value": 0.4,
+      "time_s": 10,
+      "error_rate": 0.0,
+      "requires": [],
+      "fallback": null,
+      "next": [],
+      "on_error": null,
+      "optional": false,
+      "observed_continue": null,
+      "sensitive": false,
+      "grants": []
+    }
+  ],
+  "dimensions": {
+    "device": [
+      "desktop",
+      "mobile"
+    ],
+    "network": [
+      "good",
+      "flaky",
+      "offline"
+    ],
+    "resume_format": [
+      "clean_single_col",
+      "two_col_canva"
+    ],
+    "bullet_count": [
+      "15-28 clean bullets",
+      "<15 bullets (junior)",
+      "40+ bullets (multi-page CV)"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Activation: at least 75% of users who start onboarding finish verifying their vault.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.75
+    },
+    {
+      "id": "H2",
+      "text": "Onboarding completes in 3 minutes (180s) or less.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 180
+    },
+    {
+      "id": "H3",
+      "text": "Mobile Telegram seekers activate at least 50% of the time.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.5,
+      "segment": "mobile_telegram_seeker"
+    }
+  ],
+  "variants": [
+    {
+      "id": "linkedin-or-paste-fallback",
+      "name": "Allow pasting resume text or LinkedIn URL when PDF is not on phone",
+      "note": "Instead of requiring a local PDF upload on mobile, accept pasted text or LinkedIn profile import.",
+      "patch": {
+        "steps": {
+          "upload_resume": {
+            "fallback": "paste_text_or_link",
+            "effort": 0.4
+          }
+        },
+        "add_steps": [
+          {
+            "id": "paste_text_or_link",
+            "name": "Pastes LinkedIn URL or summary text instead of PDF",
+            "type": "input",
+            "effort": 0.35,
+            "clarity": 0.75,
+            "value": 0.45,
+            "time_s": 25,
+            "grants": [
+              "resume_file_ready"
+            ],
+            "next": [
+              "parse_bullets"
+            ],
+            "events": [
+              "resume_text_submitted"
+            ],
+            "handles": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "inline-bullet-edit",
+      "name": "Grouped verification + per-bullet tap-to-edit",
+      "note": "Show extracted skills/metrics grouped by role with quick tap-to-fix instead of a 28-bullet wall of text.",
+      "patch": {
+        "steps": {
+          "verify_bullets": {
+            "effort": 0.35,
+            "clarity": 0.72,
+            "time_s": 30
+          }
+        }
+      }
+    }
+  ],
+  "success": [
+    "vault_armed"
+  ]
+}

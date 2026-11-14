@@ -1,0 +1,54 @@
+{
+  "shoal_version": "0.1",
+  "feature": {
+    "id": "my-feature",
+    "name": "My feature",
+    "summary": "One sentence: who it is for and what it lets them do.",
+    "session_budget_s": 300,
+    "repeat": {"d1": 0.4, "d7": 0.25, "d30": 0.12},
+    "handles": []
+  },
+  "segments": [
+    {
+      "id": "core_user",
+      "name": "Core user",
+      "share": 0.6,
+      "traits": {"motivation": 0.7, "skill": 0.7, "patience": 0.6, "trust": 0.7},
+      "context": {"device": {"desktop": 0.7, "mobile": 0.3}, "network": {"good": 0.9, "flaky": 0.1}},
+      "capabilities": {"account_set_up": 0.95},
+      "exposure": 1.0,
+      "entry": {"main_entry": 1.0}
+    },
+    {
+      "id": "casual_user",
+      "name": "Casual user",
+      "share": 0.4,
+      "traits": {"motivation": 0.45, "skill": 0.45, "patience": 0.45, "trust": 0.55},
+      "context": {"device": {"desktop": 0.4, "mobile": 0.6}, "network": {"good": 0.8, "flaky": 0.2}},
+      "capabilities": {"account_set_up": 0.7},
+      "exposure": 0.8,
+      "entry": {"main_entry": 1.0}
+    }
+  ],
+  "entry_points": [
+    {"id": "main_entry", "name": "Main entry", "to": "start", "discovery": 0.5}
+  ],
+  "steps": [
+    {"id": "start", "name": "Opens the feature", "type": "view", "effort": 0.1, "clarity": 0.8, "value": 0.5, "time_s": 8,
+     "events": ["feature_opened"], "next": ["fill_in"]},
+    {"id": "fill_in", "name": "Fills in the details", "type": "input", "effort": 0.5, "clarity": 0.7, "value": 0.4, "time_s": 40,
+     "error_rate": 0.1, "on_error": {"recoverable": true}, "events": ["details_entered"], "handles": ["invalid_format"], "next": ["submit"]},
+    {"id": "submit", "name": "Submits", "type": "external", "effort": 0.1, "clarity": 0.9, "value": 0.7, "time_s": 4,
+     "requires": ["account_set_up"], "error_rate": 0.03, "on_error": {"recoverable": true}, "events": ["submitted"], "next": ["done"]},
+    {"id": "done", "name": "Done", "type": "success", "time_s": 3, "events": ["feature_completed"]}
+  ],
+  "dimensions": {
+    "network": ["good", "flaky", "offline"],
+    "device": ["desktop", "mobile"],
+    "account_state": ["new", "established", "suspended"]
+  },
+  "hypotheses": [
+    {"id": "H1", "text": "At least half of the people who start will finish.", "metric": "completion_rate", "op": ">=", "value": 0.5}
+  ],
+  "variants": []
+}

@@ -1,0 +1,3333 @@
+{
+  "shoal": "0.1.0",
+  "generated": "2026-11-13 12:06",
+  "feature": {
+    "id": "jobpilot-daily-apply",
+    "name": "JobPilot: Daily 09:00 AM Curation & 1-Tap Apply",
+    "summary": "A job seeker opens the 09:00 AM Telegram job card, optionally previews a zero-hallucination LaTeX resume, and taps 1-Tap Apply for off-screen ShadowMux submission."
+  },
+  "variant": null,
+  "users": 5000,
+  "seed": 7,
+  "args": {
+    "users": 5000,
+    "seed": 7,
+    "reps": 24,
+    "jitter": 0.1,
+    "variant": null,
+    "quick": false
+  },
+  "metrics": {
+    "n": 5000,
+    "entered": 1752,
+    "success": 211,
+    "discovery_rate": 0.3504,
+    "completion_rate": 0.1204337899543379,
+    "adoption_rate": 0.0422,
+    "error_rate": 0.09075342465753425,
+    "blocked_rate": 0.4394977168949772,
+    "median_time_s": 72.5699152007419,
+    "repeat_d1": 0.8246445497630331,
+    "repeat_d7": 0.5971563981042654,
+    "repeat_d30": 0.38388625592417064
+  },
+  "outcomes": {
+    "never_saw": 3248,
+    "success": 211,
+    "abandoned": 681,
+    "blocked": 770,
+    "error_exit": 90,
+    "stuck": 0
+  },
+  "funnel": [
+    {
+      "step": "read_job_card",
+      "name": "Reads daily Telegram match card",
+      "type": "view",
+      "entered": 1752,
+      "share_of_starters": 1.0,
+      "continued": 1192,
+      "continue_rate": 0.680365296803653,
+      "lost": 560,
+      "abandoned": 44,
+      "blocked": 516,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 28,
+        "low_motivation": 16
+      },
+      "top_reason": "blocked",
+      "median_time_s": 11.237861751761558
+    },
+    {
+      "step": "choose_card_action",
+      "name": "Picks Preview PDF or direct 1-Tap Apply",
+      "type": "decision",
+      "entered": 1192,
+      "share_of_starters": 0.680365296803653,
+      "continued": 1100,
+      "continue_rate": 0.9228187919463087,
+      "lost": 92,
+      "abandoned": 92,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 58,
+        "low_motivation": 34
+      },
+      "top_reason": "confusion",
+      "median_time_s": 7.621241789589854
+    },
+    {
+      "step": "preview_pdf",
+      "name": "Previews single-page LaTeX PDF in Telegram",
+      "type": "external",
+      "entered": 716,
+      "share_of_starters": 0.408675799086758,
+      "continued": 658,
+      "continue_rate": 0.9189944134078212,
+      "lost": 58,
+      "abandoned": 31,
+      "blocked": 0,
+      "error_exit": 27,
+      "skipped": 0,
+      "errors": 75,
+      "retries": 48,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 22,
+        "low_motivation": 7,
+        "fatigue": 2
+      },
+      "top_reason": "error",
+      "median_time_s": 4.4685452603999725
+    },
+    {
+      "step": "confirm_1tap_apply",
+      "name": "Taps 1-Tap Apply Now",
+      "type": "decision",
+      "entered": 1042,
+      "share_of_starters": 0.5947488584474886,
+      "continued": 709,
+      "continue_rate": 0.6804222648752399,
+      "lost": 333,
+      "abandoned": 333,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "trust": 194,
+        "confusion": 139
+      },
+      "top_reason": "trust",
+      "median_time_s": 6.7348418100276835
+    },
+    {
+      "step": "acquire_shadowmux",
+      "name": "Acquires ShadowMux desktop lease & cookies",
+      "type": "external",
+      "entered": 709,
+      "share_of_starters": 0.4046803652968037,
+      "continued": 377,
+      "continue_rate": 0.5317348377997179,
+      "lost": 332,
+      "abandoned": 49,
+      "blocked": 254,
+      "error_exit": 29,
+      "skipped": 0,
+      "errors": 72,
+      "retries": 43,
+      "fallbacks": 0,
+      "reasons": {
+        "confusion": 45,
+        "fatigue": 3,
+        "low_motivation": 1
+      },
+      "top_reason": "blocked",
+      "median_time_s": 6.1761277222824456
+    },
+    {
+      "step": "autofill_ats_form",
+      "name": "Off-screen browser fills ATS form & uploads PDF",
+      "type": "external",
+      "entered": 377,
+      "share_of_starters": 0.2151826484018265,
+      "continued": 354,
+      "continue_rate": 0.9389920424403183,
+      "lost": 23,
+      "abandoned": 23,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 33,
+      "retries": 0,
+      "fallbacks": 132,
+      "reasons": {
+        "fatigue": 19,
+        "confusion": 2,
+        "out_of_time": 1,
+        "low_motivation": 1
+      },
+      "top_reason": "fatigue",
+      "median_time_s": 15.176753479158418
+    },
+    {
+      "step": "submit_and_stamp",
+      "name": "Submits form, captures screenshot & stamps SQLite audit",
+      "type": "external",
+      "entered": 232,
+      "share_of_starters": 0.1324200913242009,
+      "continued": 211,
+      "continue_rate": 0.9094827586206896,
+      "lost": 21,
+      "abandoned": 10,
+      "blocked": 0,
+      "error_exit": 11,
+      "skipped": 0,
+      "errors": 11,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "fatigue": 9,
+        "out_of_time": 1
+      },
+      "top_reason": "error",
+      "median_time_s": 5.9798531128847845
+    },
+    {
+      "step": "hitl_escalation",
+      "name": "Solves CAPTCHA or custom question via Telegram link",
+      "type": "input",
+      "entered": 165,
+      "share_of_starters": 0.09417808219178082,
+      "continued": 43,
+      "continue_rate": 0.2606060606060606,
+      "lost": 122,
+      "abandoned": 99,
+      "blocked": 0,
+      "error_exit": 23,
+      "skipped": 0,
+      "errors": 23,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {
+        "effort": 68,
+        "fatigue": 31
+      },
+      "top_reason": "effort",
+      "median_time_s": 49.64138714838945
+    },
+    {
+      "step": "confirmed",
+      "name": "Application submitted with confirmation receipt",
+      "type": "success",
+      "entered": 211,
+      "share_of_starters": 0.1204337899543379,
+      "continued": 0,
+      "continue_rate": 1.0,
+      "lost": 0,
+      "abandoned": 0,
+      "blocked": 0,
+      "error_exit": 0,
+      "skipped": 0,
+      "errors": 0,
+      "retries": 0,
+      "fallbacks": 0,
+      "reasons": {},
+      "top_reason": null,
+      "median_time_s": 9.797230271789978
+    }
+  ],
+  "segments": [
+    {
+      "id": "active_seeker",
+      "name": "Active mid/senior tech seeker",
+      "share": 0.45,
+      "metrics": {
+        "n": 2233,
+        "entered": 806,
+        "success": 167,
+        "discovery_rate": 0.36094939543215404,
+        "completion_rate": 0.20719602977667495,
+        "adoption_rate": 0.0747872816838334,
+        "error_rate": 0.11538461538461539,
+        "blocked_rate": 0.3784119106699752,
+        "median_time_s": 73.98048596946958,
+        "repeat_d1": 0.8263473053892215,
+        "repeat_d7": 0.6167664670658682,
+        "repeat_d30": 0.40119760479041916
+      }
+    },
+    {
+      "id": "passive_staff",
+      "name": "Passive staff / principal engineer",
+      "share": 0.25,
+      "metrics": {
+        "n": 1262,
+        "entered": 424,
+        "success": 25,
+        "discovery_rate": 0.3359746434231379,
+        "completion_rate": 0.0589622641509434,
+        "adoption_rate": 0.019809825673534072,
+        "error_rate": 0.07075471698113207,
+        "blocked_rate": 0.33962264150943394,
+        "median_time_s": 62.94220991333654,
+        "repeat_d1": 0.72,
+        "repeat_d7": 0.56,
+        "repeat_d30": 0.24
+      }
+    },
+    {
+      "id": "career_pivoter",
+      "name": "Strategic career pivoter (Backend to AI)",
+      "share": 0.2,
+      "metrics": {
+        "n": 1047,
+        "entered": 364,
+        "success": 19,
+        "discovery_rate": 0.34765998089780326,
+        "completion_rate": 0.0521978021978022,
+        "adoption_rate": 0.018147086914995225,
+        "error_rate": 0.09065934065934066,
+        "blocked_rate": 0.5054945054945055,
+        "median_time_s": 77.93329878756542,
+        "repeat_d1": 0.9473684210526315,
+        "repeat_d7": 0.47368421052631576,
+        "repeat_d30": 0.42105263157894735
+      }
+    },
+    {
+      "id": "unprepared_newcomer",
+      "name": "Newcomer who has not finished vault or desktop setup",
+      "share": 0.1,
+      "metrics": {
+        "n": 458,
+        "entered": 158,
+        "success": 0,
+        "discovery_rate": 0.34497816593886466,
+        "completion_rate": 0.0,
+        "adoption_rate": 0.0,
+        "error_rate": 0.0189873417721519,
+        "blocked_rate": 0.8670886075949367,
+        "median_time_s": 0.0,
+        "repeat_d1": 0.0,
+        "repeat_d7": 0.0,
+        "repeat_d30": 0.0
+      }
+    }
+  ],
+  "contexts": {
+    "device": {
+      "mobile": {
+        "n": 3797,
+        "entered": 1329,
+        "success": 155
+      },
+      "desktop": {
+        "n": 1203,
+        "entered": 423,
+        "success": 56
+      }
+    },
+    "network": {
+      "good": {
+        "n": 4191,
+        "entered": 1465,
+        "success": 189
+      },
+      "flaky": {
+        "n": 693,
+        "entered": 250,
+        "success": 22
+      },
+      "offline": {
+        "n": 116,
+        "entered": 37,
+        "success": 0
+      }
+    },
+    "ats_portal": {
+      "lever": {
+        "n": 1210,
+        "entered": 438,
+        "success": 56
+      },
+      "greenhouse": {
+        "n": 2063,
+        "entered": 738,
+        "success": 85
+      },
+      "workday": {
+        "n": 784,
+        "entered": 250,
+        "success": 29
+      },
+      "ashby": {
+        "n": 943,
+        "entered": 326,
+        "success": 41
+      }
+    }
+  },
+  "entries": {
+    "telegram_0900_card": {
+      "exposed": 4177,
+      "entered": 1666,
+      "success": 207
+    },
+    "manual_jd_drop": {
+      "exposed": 823,
+      "entered": 86,
+      "success": 4
+    }
+  },
+  "events": {
+    "notification_delivered": 1236,
+    "apply_confirmed": 1042,
+    "preview_opened": 716,
+    "submission_verified": 443,
+    "preview_pdf.error": 75,
+    "acquire_shadowmux.error": 72,
+    "autofill_ats_form.error": 33,
+    "hitl_escalation.error": 23,
+    "submit_and_stamp.error": 11
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "Daily Engagement: at least 85% of eligible candidates open and review the 09:00 AM Telegram card.",
+      "metric": "discovery_rate",
+      "op": ">=",
+      "value": 0.85,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.2904,
+        "p50": 0.36133333333333334,
+        "p95": 0.4278
+      }
+    },
+    {
+      "id": "H2",
+      "text": "Application Confirmation Rate: at least 40% of candidates who open a card finish applying.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.4,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 0.08696886977141755,
+        "p50": 0.11577193363761501,
+        "p95": 0.14344286941580753
+      }
+    },
+    {
+      "id": "H3",
+      "text": "Execution Cycle Time: median time from opening the card to stamped receipt is 45 seconds or less.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 45,
+      "segment": "all",
+      "holds_share": 0.0,
+      "verdict": "contradicted",
+      "predicted": {
+        "p5": 70.14747486028024,
+        "p50": 72.66090784566063,
+        "p95": 80.43338260482906
+      }
+    },
+    {
+      "id": "H4",
+      "text": "Trust threshold: at least half of candidates who reach 1-Tap Apply proceed to submit.",
+      "metric": "step_continue:confirm_1tap_apply",
+      "op": ">=",
+      "value": 0.5,
+      "segment": "all",
+      "holds_share": 1.0,
+      "verdict": "supported",
+      "predicted": {
+        "p5": 0.6048878205128205,
+        "p50": 0.6848844313206395,
+        "p95": 0.7761509985891611
+      }
+    }
+  ],
+  "levers": [
+    {
+      "lever": "Give users without shadowmux_online a way through 'Acquires ShadowMux desktop lease & cookies'",
+      "step": "acquire_shadowmux",
+      "kind": "blocked",
+      "adoption_delta": 0.029625000000000005,
+      "completion_delta": 0.08550340445991243,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'Daily 09:00 AM Telegram role card' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.01625,
+      "completion_delta": 0.01081719448011323,
+      "within_noise": false
+    },
+    {
+      "lever": "Give users without verified_vault a way through 'Reads daily Telegram match card'",
+      "step": "read_job_card",
+      "kind": "blocked",
+      "adoption_delta": 0.010125000000000002,
+      "completion_delta": 0.029951619679014593,
+      "within_noise": false
+    },
+    {
+      "lever": "Cut the effort of 'Taps 1-Tap Apply Now'",
+      "step": "confirm_1tap_apply",
+      "kind": "effort",
+      "adoption_delta": 0.005874999999999998,
+      "completion_delta": 0.015113712128308518,
+      "within_noise": false
+    },
+    {
+      "lever": "Make the 'Paste ATS URL into Telegram chat' entry point easier to find",
+      "step": null,
+      "kind": "discovery",
+      "adoption_delta": 0.005499999999999998,
+      "completion_delta": 0.008012084146361412,
+      "within_noise": false
+    },
+    {
+      "lever": "Make 'Taps 1-Tap Apply Now' clearer",
+      "step": "confirm_1tap_apply",
+      "kind": "clarity",
+      "adoption_delta": 0.004499999999999997,
+      "completion_delta": 0.012124157775375496,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Acquires ShadowMux desktop lease & cookies'",
+      "step": "acquire_shadowmux",
+      "kind": "errors",
+      "adoption_delta": 0.0029999999999999957,
+      "completion_delta": 0.009162547188379541,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Off-screen browser fills ATS form & uploads PDF'",
+      "step": "autofill_ats_form",
+      "kind": "errors",
+      "adoption_delta": 0.0029999999999999957,
+      "completion_delta": 0.009310712311224198,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Solves CAPTCHA or custom question via Telegram link'",
+      "step": "hitl_escalation",
+      "kind": "effort",
+      "adoption_delta": 0.0026249999999999954,
+      "completion_delta": 0.007207649226034382,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Solves CAPTCHA or custom question via Telegram link' clearer",
+      "step": "hitl_escalation",
+      "kind": "clarity",
+      "adoption_delta": 0.0024999999999999953,
+      "completion_delta": 0.006808008876747179,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Picks Preview PDF or direct 1-Tap Apply'",
+      "step": "choose_card_action",
+      "kind": "effort",
+      "adoption_delta": 0.0020000000000000018,
+      "completion_delta": 0.0053018782598708986,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Picks Preview PDF or direct 1-Tap Apply' clearer",
+      "step": "choose_card_action",
+      "kind": "clarity",
+      "adoption_delta": 0.0020000000000000018,
+      "completion_delta": 0.005219951937967746,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Previews single-page LaTeX PDF in Telegram'",
+      "step": "preview_pdf",
+      "kind": "errors",
+      "adoption_delta": 0.0020000000000000018,
+      "completion_delta": 0.006378583635646182,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Off-screen browser fills ATS form & uploads PDF' clearer",
+      "step": "autofill_ats_form",
+      "kind": "clarity",
+      "adoption_delta": 0.0016250000000000014,
+      "completion_delta": 0.004696247485491772,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Previews single-page LaTeX PDF in Telegram'",
+      "step": "preview_pdf",
+      "kind": "effort",
+      "adoption_delta": 0.0010000000000000009,
+      "completion_delta": 0.0026536721682685754,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Solves CAPTCHA or custom question via Telegram link'",
+      "step": "hitl_escalation",
+      "kind": "errors",
+      "adoption_delta": 0.0010000000000000009,
+      "completion_delta": 0.002872511604441061,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Acquires ShadowMux desktop lease & cookies' clearer",
+      "step": "acquire_shadowmux",
+      "kind": "clarity",
+      "adoption_delta": 0.000999999999999994,
+      "completion_delta": 0.0028094963164870396,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Previews single-page LaTeX PDF in Telegram' clearer",
+      "step": "preview_pdf",
+      "kind": "clarity",
+      "adoption_delta": 0.0008750000000000008,
+      "completion_delta": 0.0026176071452762573,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Submits form, captures screenshot & stamps SQLite audit' clearer",
+      "step": "submit_and_stamp",
+      "kind": "clarity",
+      "adoption_delta": 0.0005000000000000004,
+      "completion_delta": 0.0013995801259622104,
+      "within_noise": true
+    },
+    {
+      "lever": "Make 'Reads daily Telegram match card' clearer",
+      "step": "read_job_card",
+      "kind": "clarity",
+      "adoption_delta": 0.0002500000000000002,
+      "completion_delta": 0.0009691842052480387,
+      "within_noise": true
+    },
+    {
+      "lever": "Halve the errors at 'Submits form, captures screenshot & stamps SQLite audit'",
+      "step": "submit_and_stamp",
+      "kind": "errors",
+      "adoption_delta": 0.0002500000000000002,
+      "completion_delta": 0.0007171598741786828,
+      "within_noise": true
+    },
+    {
+      "lever": "Cut the effort of 'Reads daily Telegram match card'",
+      "step": "read_job_card",
+      "kind": "effort",
+      "adoption_delta": -0.0002500000000000002,
+      "completion_delta": -0.0006545544346551052,
+      "within_noise": true
+    }
+  ],
+  "variants": [
+    {
+      "id": "queued-desktop-relay",
+      "name": "Queue application when desktop ShadowMux is asleep",
+      "note": "Instead of blocking mobile commuters whose laptop is closed, queue the 1-tap apply request and run it automatically when ShadowMux reconnects.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.010400000000000003,
+          "p50": 0.02,
+          "p95": 0.02923333333333333
+        },
+        "completion_rate": {
+          "p5": 0.035269386339713334,
+          "p50": 0.060250658651123126,
+          "p95": 0.0809819557519196
+        },
+        "discovery_rate": {
+          "p5": -0.015133333333333315,
+          "p50": -0.006000000000000005,
+          "p95": 0.020399999999999998
+        },
+        "error_rate": {
+          "p5": 0.005950597777632065,
+          "p50": 0.039381142360659226,
+          "p95": 0.06438897855960508
+        },
+        "median_time_s": {
+          "p5": -1.092841414724409,
+          "p50": 3.5712622674228953,
+          "p95": 8.348546625397864
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.046533333333333336,
+          "p50": 0.059333333333333335,
+          "p95": 0.07466666666666667
+        },
+        "completion_rate": {
+          "p5": 0.1384911004784689,
+          "p50": 0.17499965927521022,
+          "p95": 0.20385959269891563
+        },
+        "discovery_rate": {
+          "p5": 0.28276666666666667,
+          "p50": 0.361,
+          "p95": 0.4195
+        },
+        "error_rate": {
+          "p5": 0.10124909975825355,
+          "p50": 0.1316285770193586,
+          "p95": 0.1507606236578074
+        },
+        "median_time_s": {
+          "p5": 72.43650442146779,
+          "p50": 77.46603371665725,
+          "p95": 81.30769681000616
+        }
+      },
+      "verdict": "better"
+    },
+    {
+      "id": "inline-bullet-review",
+      "name": "Show tailored bullets & custom answers before 1-Tap Apply",
+      "note": "Include a compact summary of the 6 selected bullets and pre-filled EEO/custom answers under the card so cautious engineers trust what will be submitted.",
+      "wins_share": 0.9583333333333334,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.0007666666666666631,
+          "p50": 0.007333333333333334,
+          "p95": 0.014566666666666667
+        },
+        "completion_rate": {
+          "p5": 0.00030336676980536546,
+          "p50": 0.02318148585589818,
+          "p95": 0.048069701050993924
+        },
+        "discovery_rate": {
+          "p5": -0.022266666666666664,
+          "p50": -0.0006666666666666488,
+          "p95": 0.016366666666666658
+        },
+        "error_rate": {
+          "p5": -0.010425049424445,
+          "p50": 0.012972830674172958,
+          "p95": 0.025503087310116433
+        },
+        "median_time_s": {
+          "p5": -1.7034214022355385,
+          "p50": 2.3770097221825566,
+          "p95": 7.0837538343021365
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.03666666666666667,
+          "p50": 0.04933333333333333,
+          "p95": 0.06063333333333332
+        },
+        "completion_rate": {
+          "p5": 0.11443356170992955,
+          "p50": 0.13219451189761822,
+          "p95": 0.1604095186981273
+        },
+        "discovery_rate": {
+          "p5": 0.2952666666666667,
+          "p50": 0.35133333333333333,
+          "p95": 0.41636666666666666
+        },
+        "error_rate": {
+          "p5": 0.07937747263098403,
+          "p50": 0.10244694533762058,
+          "p95": 0.11657717048112028
+        },
+        "median_time_s": {
+          "p5": 71.18204872392288,
+          "p50": 77.12775012984523,
+          "p95": 82.56776879685864
+        }
+      },
+      "verdict": "better"
+    },
+    {
+      "id": "vault-grounded-qa",
+      "name": "Pre-draft grounded answers for custom ATS questions",
+      "note": "Auto-answer standard custom ATS fields (sponsorship, notice period, why company) from the verified vault so fewer runs escalate to mobile HITL.",
+      "wins_share": 1.0,
+      "diff": {
+        "adoption_rate": {
+          "p5": 0.0034333333333333334,
+          "p50": 0.007333333333333334,
+          "p95": 0.013333333333333332
+        },
+        "completion_rate": {
+          "p5": 0.008796145184097147,
+          "p50": 0.020890421427384065,
+          "p95": 0.04040323253784142
+        },
+        "discovery_rate": {
+          "p5": -0.010000000000000009,
+          "p50": 0.0003333333333333244,
+          "p95": 0.016066666666666653
+        },
+        "error_rate": {
+          "p5": -0.0063331001890874995,
+          "p50": 0.00018496884735202251,
+          "p95": 0.009494495934776843
+        },
+        "median_time_s": {
+          "p5": -8.879998522992594,
+          "p50": -2.719681040942703,
+          "p95": 0.9027444389948456
+        }
+      },
+      "value": {
+        "adoption_rate": {
+          "p5": 0.0382,
+          "p50": 0.04833333333333333,
+          "p95": 0.06463333333333332
+        },
+        "completion_rate": {
+          "p5": 0.10651227979639229,
+          "p50": 0.13858404894510137,
+          "p95": 0.16491523055284685
+        },
+        "discovery_rate": {
+          "p5": 0.2992666666666667,
+          "p50": 0.359,
+          "p95": 0.4266666666666667
+        },
+        "error_rate": {
+          "p5": 0.07255513394432118,
+          "p50": 0.09381798440824375,
+          "p95": 0.1061715308370044
+        },
+        "median_time_s": {
+          "p5": 67.3413105548163,
+          "p50": 70.18541086302471,
+          "p95": 73.34172930123684
+        }
+      },
+      "verdict": "better"
+    }
+  ],
+  "watchlist": [
+    {
+      "step": "read_job_card",
+      "name": "Reads daily Telegram match card",
+      "event": "notification_delivered",
+      "expected": {
+        "p5": 0.6604851330203443,
+        "p50": 0.6809058063574323,
+        "p95": 0.719837747554283
+      },
+      "calibrated": false
+    },
+    {
+      "step": "choose_card_action",
+      "name": "Picks Preview PDF or direct 1-Tap Apply",
+      "event": null,
+      "expected": {
+        "p5": 0.912152229141494,
+        "p50": 0.9452886445103332,
+        "p95": 0.9701225806451612
+      },
+      "calibrated": false
+    },
+    {
+      "step": "preview_pdf",
+      "name": "Previews single-page LaTeX PDF in Telegram",
+      "event": "preview_opened",
+      "expected": {
+        "p5": 0.8895167949708319,
+        "p50": 0.9177202588352414,
+        "p95": 0.9403409090909091
+      },
+      "calibrated": false
+    },
+    {
+      "step": "confirm_1tap_apply",
+      "name": "Taps 1-Tap Apply Now",
+      "event": "apply_confirmed",
+      "expected": {
+        "p5": 0.6048878205128205,
+        "p50": 0.6848844313206395,
+        "p95": 0.7761509985891611
+      },
+      "calibrated": false
+    },
+    {
+      "step": "acquire_shadowmux",
+      "name": "Acquires ShadowMux desktop lease & cookies",
+      "event": null,
+      "expected": {
+        "p5": 0.4596581875993641,
+        "p50": 0.5042037362517893,
+        "p95": 0.5467161410018553
+      },
+      "calibrated": false
+    },
+    {
+      "step": "autofill_ats_form",
+      "name": "Off-screen browser fills ATS form & uploads PDF",
+      "event": null,
+      "expected": {
+        "p5": 0.9137498551732128,
+        "p50": 0.9546761604819938,
+        "p95": 0.9846508563899868
+      },
+      "calibrated": false
+    },
+    {
+      "step": "submit_and_stamp",
+      "name": "Submits form, captures screenshot & stamps SQLite audit",
+      "event": "submission_verified",
+      "expected": {
+        "p5": 0.8333333333333334,
+        "p50": 0.8994949494949496,
+        "p95": 0.9510731052984573
+      },
+      "calibrated": false
+    },
+    {
+      "step": "hitl_escalation",
+      "name": "Solves CAPTCHA or custom question via Telegram link",
+      "event": null,
+      "expected": {
+        "p5": 0.15856321839080462,
+        "p50": 0.27113264283327765,
+        "p95": 0.36104280510018216
+      },
+      "calibrated": false
+    }
+  ],
+  "instrumentation": [
+    {
+      "step": "read_job_card",
+      "name": "Reads daily Telegram match card",
+      "type": "view",
+      "events": [
+        "notification_delivered"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "choose_card_action",
+      "name": "Picks Preview PDF or direct 1-Tap Apply",
+      "type": "decision",
+      "events": [],
+      "error_event": null,
+      "missing": true
+    },
+    {
+      "step": "preview_pdf",
+      "name": "Previews single-page LaTeX PDF in Telegram",
+      "type": "external",
+      "events": [
+        "preview_opened"
+      ],
+      "error_event": "preview_pdf.error",
+      "missing": false
+    },
+    {
+      "step": "confirm_1tap_apply",
+      "name": "Taps 1-Tap Apply Now",
+      "type": "decision",
+      "events": [
+        "apply_confirmed"
+      ],
+      "error_event": null,
+      "missing": false
+    },
+    {
+      "step": "acquire_shadowmux",
+      "name": "Acquires ShadowMux desktop lease & cookies",
+      "type": "external",
+      "events": [],
+      "error_event": "acquire_shadowmux.error",
+      "missing": true
+    },
+    {
+      "step": "autofill_ats_form",
+      "name": "Off-screen browser fills ATS form & uploads PDF",
+      "type": "external",
+      "events": [],
+      "error_event": "autofill_ats_form.error",
+      "missing": true
+    },
+    {
+      "step": "submit_and_stamp",
+      "name": "Submits form, captures screenshot & stamps SQLite audit",
+      "type": "external",
+      "events": [
+        "submission_verified"
+      ],
+      "error_event": "submit_and_stamp.error",
+      "missing": false
+    },
+    {
+      "step": "hitl_escalation",
+      "name": "Solves CAPTCHA or custom question via Telegram link",
+      "type": "input",
+      "events": [],
+      "error_event": "hitl_escalation.error",
+      "missing": true
+    },
+    {
+      "step": "confirmed",
+      "name": "Application submitted with confirmation receipt",
+      "type": "success",
+      "events": [
+        "submission_verified"
+      ],
+      "error_event": null,
+      "missing": false
+    }
+  ],
+  "lint": [
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "read_job_card",
+      "message": "'Reads daily Telegram match card' needs verified_vault. About 30% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "choose_card_action",
+      "message": "'Picks Preview PDF or direct 1-Tap Apply' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "warn",
+      "code": "blocked-without-fallback",
+      "kind": "design",
+      "step": "acquire_shadowmux",
+      "message": "'Acquires ShadowMux desktop lease & cookies' needs shadowmux_online. About 41% of users lack it and have nowhere to go.",
+      "fix": "Add a fallback step (set it up, request it, or explain why not)."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "acquire_shadowmux",
+      "message": "'Acquires ShadowMux desktop lease & cookies' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "autofill_ats_form",
+      "message": "'Off-screen browser fills ATS form & uploads PDF' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "warn",
+      "code": "error-without-recovery",
+      "kind": "design",
+      "step": "hitl_escalation",
+      "message": "'Solves CAPTCHA or custom question via Telegram link' can fail (10%) but the model says nothing about what happens next.",
+      "fix": "Define on_error: can the user retry, or where do they land?"
+    },
+    {
+      "level": "info",
+      "code": "not-instrumented",
+      "kind": "design",
+      "step": "hitl_escalation",
+      "message": "'Solves CAPTCHA or custom question via Telegram link' fires no analytics event: a drop here would be invisible after launch.",
+      "fix": "Add an event for this step."
+    },
+    {
+      "level": "info",
+      "code": "hard-and-unclear",
+      "kind": "design",
+      "step": "hitl_escalation",
+      "message": "'Solves CAPTCHA or custom question via Telegram link' is both high effort and low clarity, the usual shape of the biggest drop.",
+      "fix": null
+    },
+    {
+      "level": "warn",
+      "code": "error-without-recovery",
+      "kind": "design",
+      "step": "submit_and_stamp",
+      "message": "'Submits form, captures screenshot & stamps SQLite audit' can fail (4%) but the model says nothing about what happens next.",
+      "fix": "Define on_error: can the user retry, or where do they land?"
+    }
+  ],
+  "replication": {
+    "reps": 24,
+    "users": 1500,
+    "jitter": 0.1,
+    "overall": {
+      "discovery_rate": {
+        "p5": 0.2904,
+        "p50": 0.36133333333333334,
+        "p95": 0.4278
+      },
+      "completion_rate": {
+        "p5": 0.08696886977141755,
+        "p50": 0.11577193363761501,
+        "p95": 0.14344286941580753
+      },
+      "adoption_rate": {
+        "p5": 0.028300000000000002,
+        "p50": 0.04066666666666666,
+        "p95": 0.055499999999999994
+      },
+      "error_rate": {
+        "p5": 0.07167691125624279,
+        "p50": 0.08955264593562466,
+        "p95": 0.10805572660098522
+      },
+      "blocked_rate": {
+        "p5": 0.42686962038563164,
+        "p50": 0.4523667649334086,
+        "p95": 0.5017917680219314
+      },
+      "repeat_d1": {
+        "p5": 0.7176306835756263,
+        "p50": 0.7902680197762164,
+        "p95": 0.8817857142857143
+      },
+      "repeat_d7": {
+        "p5": 0.5311556603773585,
+        "p50": 0.6285403050108933,
+        "p95": 0.6833333333333333
+      },
+      "repeat_d30": {
+        "p5": 0.3032704402515723,
+        "p50": 0.40487938596491224,
+        "p95": 0.5413188871054039
+      },
+      "median_time_s": {
+        "p5": 70.14747486028024,
+        "p50": 72.66090784566063,
+        "p95": 80.43338260482906
+      }
+    },
+    "segments": {
+      "active_seeker": {
+        "discovery_rate": {
+          "p5": 0.32113421610850423,
+          "p50": 0.37569895039149453,
+          "p95": 0.4633397353819889
+        },
+        "completion_rate": {
+          "p5": 0.1249521072796935,
+          "p50": 0.17258300006347999,
+          "p95": 0.2078006134969325
+        },
+        "adoption_rate": {
+          "p5": 0.045483055730148755,
+          "p50": 0.06768767165090021,
+          "p95": 0.0931283932501834
+        },
+        "error_rate": {
+          "p5": 0.10643440988835726,
+          "p50": 0.12336491698809324,
+          "p95": 0.1559776043118669
+        },
+        "blocked_rate": {
+          "p5": 0.3868399381533394,
+          "p50": 0.4151526636189213,
+          "p95": 0.48865580633418276
+        },
+        "repeat_d1": {
+          "p5": 0.7641304347826088,
+          "p50": 0.8186090225563909,
+          "p95": 0.9073426573426573
+        },
+        "repeat_d7": {
+          "p5": 0.49509993552546744,
+          "p50": 0.6521739130434783,
+          "p95": 0.7243382352941177
+        },
+        "repeat_d30": {
+          "p5": 0.2946808510638298,
+          "p50": 0.39528508771929827,
+          "p95": 0.563598901098901
+        },
+        "median_time_s": {
+          "p5": 69.32493650920534,
+          "p50": 73.53128976192076,
+          "p95": 81.59163713464565
+        }
+      },
+      "passive_staff": {
+        "discovery_rate": {
+          "p5": 0.2638825565687268,
+          "p50": 0.3432083703046436,
+          "p95": 0.4292248466657967
+        },
+        "completion_rate": {
+          "p5": 0.03900634249471459,
+          "p50": 0.05809228650137741,
+          "p95": 0.07587301587301587
+        },
+        "adoption_rate": {
+          "p5": 0.010543113101903695,
+          "p50": 0.019958042952638318,
+          "p95": 0.028126526624328282
+        },
+        "error_rate": {
+          "p5": 0.023934108527131782,
+          "p50": 0.05785296574770259,
+          "p95": 0.08598368599580035
+        },
+        "blocked_rate": {
+          "p5": 0.2643092105263158,
+          "p50": 0.32546296296296295,
+          "p95": 0.43308080808080807
+        },
+        "repeat_d1": {
+          "p5": 0.25,
+          "p50": 0.6,
+          "p95": 0.9812499999999997
+        },
+        "repeat_d7": {
+          "p5": 0.20750000000000002,
+          "p50": 0.5357142857142857,
+          "p95": 0.8208333333333332
+        },
+        "repeat_d30": {
+          "p5": 0.0,
+          "p50": 0.2857142857142857,
+          "p95": 0.5607142857142855
+        },
+        "median_time_s": {
+          "p5": 56.267300733688685,
+          "p50": 61.48423192481994,
+          "p95": 65.1045290009492
+        }
+      },
+      "career_pivoter": {
+        "discovery_rate": {
+          "p5": 0.2678688291364347,
+          "p50": 0.341703348005869,
+          "p95": 0.4188081499820309
+        },
+        "completion_rate": {
+          "p5": 0.049796747967479675,
+          "p50": 0.08003021685033772,
+          "p95": 0.13361486486486485
+        },
+        "adoption_rate": {
+          "p5": 0.016611295681063124,
+          "p50": 0.027417805169545145,
+          "p95": 0.04322677595628415
+        },
+        "error_rate": {
+          "p5": 0.023048492016558248,
+          "p50": 0.06565276828434723,
+          "p95": 0.09983564872240137
+        },
+        "blocked_rate": {
+          "p5": 0.46844975632397307,
+          "p50": 0.522257053291536,
+          "p95": 0.5955505916445303
+        },
+        "repeat_d1": {
+          "p5": 0.6716666666666666,
+          "p50": 0.8166666666666667,
+          "p95": 1.0
+        },
+        "repeat_d7": {
+          "p5": 0.3690909090909091,
+          "p50": 0.6515151515151515,
+          "p95": 0.8333333333333334
+        },
+        "repeat_d30": {
+          "p5": 0.25,
+          "p50": 0.4356060606060606,
+          "p95": 0.8020833333333329
+        },
+        "median_time_s": {
+          "p5": 71.61196798106239,
+          "p50": 83.46011370498445,
+          "p95": 100.9322448145337
+        }
+      },
+      "unprepared_newcomer": {
+        "discovery_rate": {
+          "p5": 0.2362144565506245,
+          "p50": 0.32938856015779094,
+          "p95": 0.4066161616161616
+        },
+        "completion_rate": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.01888888888888884
+        },
+        "adoption_rate": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.00559210526315788
+        },
+        "error_rate": {
+          "p5": 0.0,
+          "p50": 0.01835016835016835,
+          "p95": 0.0430409356725146
+        },
+        "blocked_rate": {
+          "p5": 0.7461363636363637,
+          "p50": 0.8377192982456141,
+          "p95": 0.8882478632478632
+        },
+        "repeat_d1": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "repeat_d7": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "repeat_d30": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "median_time_s": {
+          "p5": 0.0,
+          "p50": 0.0,
+          "p95": 74.18065251926474
+        }
+      }
+    },
+    "steps": {
+      "read_job_card": {
+        "p5": 0.6604851330203443,
+        "p50": 0.6809058063574323,
+        "p95": 0.719837747554283
+      },
+      "choose_card_action": {
+        "p5": 0.912152229141494,
+        "p50": 0.9452886445103332,
+        "p95": 0.9701225806451612
+      },
+      "preview_pdf": {
+        "p5": 0.8895167949708319,
+        "p50": 0.9177202588352414,
+        "p95": 0.9403409090909091
+      },
+      "confirm_1tap_apply": {
+        "p5": 0.6048878205128205,
+        "p50": 0.6848844313206395,
+        "p95": 0.7761509985891611
+      },
+      "acquire_shadowmux": {
+        "p5": 0.4596581875993641,
+        "p50": 0.5042037362517893,
+        "p95": 0.5467161410018553
+      },
+      "autofill_ats_form": {
+        "p5": 0.9137498551732128,
+        "p50": 0.9546761604819938,
+        "p95": 0.9846508563899868
+      },
+      "hitl_escalation": {
+        "p5": 0.15856321839080462,
+        "p50": 0.27113264283327765,
+        "p95": 0.36104280510018216
+      },
+      "submit_and_stamp": {
+        "p5": 0.8333333333333334,
+        "p50": 0.8994949494949496,
+        "p95": 0.9510731052984573
+      },
+      "confirmed": {
+        "p5": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      }
+    }
+  },
+  "edge_cases": [
+    {
+      "id": "E-flow-session_expired",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "session_expired",
+      "title": "Signed out while in the flow",
+      "question": "After signing in again, do they return to where they were?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the desktop ATS SSO session or Telegram auth expires mid-apply, pause and prompt re-auth in ShadowMux/Telegram without losing the tailored PDF or form state."
+    },
+    {
+      "id": "E-preview_pdf-server_error",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If Tectonic is missing or LaTeX compilation fails (compiler.py currently returns .tex path), surface a clear error and never send raw .tex as a PDF preview."
+    },
+    {
+      "id": "E-acquire_shadowmux-offline",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the user taps 1-Tap Apply on mobile while desktop ShadowMux is asleep or offline, queue the job and notify the user when the desktop worker picks it up."
+    },
+    {
+      "id": "E-acquire_shadowmux-server_error",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If ShadowMux daemon crashes or Chrome fails to spawn at (-3200,-3200), release any partial lock and notify Telegram with a manual apply link."
+    },
+    {
+      "id": "E-acquire_shadowmux-partial_success",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If SQLite lease is acquired but cookie mirroring fails, release the lease immediately so the domain is not locked for 120s TTL."
+    },
+    {
+      "id": "E-autofill_ats_form-offline",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If network drops mid-autofill, abort before Submit, release the ShadowMux lease, and offer a retry without risking partial form submission."
+    },
+    {
+      "id": "E-autofill_ats_form-server_error",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the ATS returns 4xx/5xx or rejects the PDF upload format/size, capture the error banner screenshot and notify Telegram."
+    },
+    {
+      "id": "E-autofill_ats_form-double_submit",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Check the local applications ledger (UNIQUE job_id) and disable the Telegram 1-Tap Apply button immediately after first confirmation."
+    },
+    {
+      "id": "E-autofill_ats_form-partial_success",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If fields fill but file upload fails, escalate to HITL with the partial form intact rather than submitting without a resume."
+    },
+    {
+      "id": "E-autofill_ats_form-stale_data",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Verify the requisition is still open (not 404/closed) before filling; if closed overnight, mark expired and surface tomorrow's #2 role."
+    },
+    {
+      "id": "E-submit_and_stamp-offline",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Never blindly retry Submit after a network drop; check ATS confirmation email/page state first or escalate to human verification."
+    },
+    {
+      "id": "E-submit_and_stamp-timeout",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "After clicking Submit, poll up to 30s for confirmation; on timeout, save a screenshot and mark status='uncertain_needs_check' instead of failing."
+    },
+    {
+      "id": "E-submit_and_stamp-server_error",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "server_error",
+      "title": "The other system returns an error",
+      "question": "Is the message specific, and is there a retry or another route?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Parse inline ATS validation errors (e.g. invalid phone format) and route to HITL instead of generic failure."
+    },
+    {
+      "id": "E-submit_and_stamp-partial_success",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If ATS accepted the submission but local SQLite write or screenshot failed, still record the confirmation code from browser DOM and retry DB write."
+    },
+    {
+      "id": "E-hitl_escalation-progress_lost",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "progress_lost",
+      "title": "Typed data lost on error or navigation",
+      "question": "If the step fails or the user steps back, is what they typed kept?",
+      "severity": "high",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the 180s HITL window expires or the mobile webview reloads, persist any typed custom essay answers locally and allow resuming."
+    },
+    {
+      "id": "X-hitl-180s-timeout",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "found",
+      "title": "180-second HITL timer expires before user finishes",
+      "question": "What happens to the detached browser tab, lease, and typed answers when the 180s timeout fires?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Save typed answers, release the ShadowMux lease cleanly, and send a 'Resume on desktop' option instead of silently dropping.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-work-auth-sponsorship",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "found",
+      "title": "ATS sponsorship / visa question does not match boolean preset",
+      "question": "How are nuanced multi-option work authorization dropdowns mapped when preset is a single string?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Escalate ambiguous visa/sponsorship dropdowns to HITL instead of guessing a legally binding answer.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "X-tectonic-missing-fallback",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "found",
+      "title": "Tectonic/pdflatex binary missing on host",
+      "question": "apps/jobpilot/compiler.py falls back to writing .tex path into pdf_path. What does Telegram send?",
+      "severity": "high",
+      "status": "gap",
+      "expected": "Fail fast at setup/lint or ship bundled Tectonic binary; never attach a .tex file as a resume upload to an ATS.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-preview_pdf-offline",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "offline",
+      "title": "No connection",
+      "question": "What does the user see offline, and is their work kept until they are back?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "Pre-compiled PDFs cached locally at 08:58 AM should queue cleanly in Telegram and deliver when connectivity returns; show a clear offline status if requested on demand."
+    },
+    {
+      "id": "E-preview_pdf-partial_success",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "partial_success",
+      "title": "Half of it worked",
+      "question": "If only part succeeded, what state is the user left in and how do they finish?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If PDF renders but fails pdftotext containment or >1-page overflow check after pruning, block preview and alert the user instead of sending a broken PDF."
+    },
+    {
+      "id": "E-preview_pdf-stale_data",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the user edits master_bullets after 08:58 AM pre-compilation, invalidate the cached PDF before sending Preview."
+    },
+    {
+      "id": "E-acquire_shadowmux-stale_data",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "med",
+      "status": "gap",
+      "source": "checklist",
+      "verdict": "gap",
+      "expected": "If the user logged into the ATS in their visible Chrome after ShadowMux started, re-sync cookies before navigating."
+    },
+    {
+      "id": "X-already-applied-manually",
+      "step": "read_job_card",
+      "step_name": "Reads daily Telegram match card",
+      "key": "found",
+      "title": "Candidate already applied to this role outside JobPilot",
+      "question": "Can the user mark 'Already applied' on the card without penalizing the company/skills in Skip calibration?",
+      "severity": "med",
+      "status": "gap",
+      "expected": "Add an 'Already applied' action distinct from 'Skip' so preference weights are not distorted.",
+      "note": null,
+      "verdict": "gap",
+      "source": "review"
+    },
+    {
+      "id": "E-flow-back_button",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "back_button",
+      "title": "Back button mid-flow",
+      "question": "Does Back go one step back with data kept, or drop the user out?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-refresh_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "refresh_midflow",
+      "title": "Page refresh or app restart mid-flow",
+      "question": "Is progress restored or does the user start again?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-deep_link_midflow",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "deep_link_midflow",
+      "title": "Link opens the middle of the flow",
+      "question": "What happens if someone lands on step 3 without doing steps 1 and 2?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-two_tabs",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "two_tabs",
+      "title": "Same flow open in two tabs or devices",
+      "question": "Which one wins, and can the two conflict?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-permission_changed",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "permission_changed",
+      "title": "Role or access changes mid-flow",
+      "question": "If access is removed while the user is in the flow, what do they see?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-interrupted_resume",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "interrupted_resume",
+      "title": "Interrupted and resumed days later",
+      "question": "Is a half-done flow kept, expired or cleaned up, and is the user reminded?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-keyboard_only",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "keyboard_only",
+      "title": "Keyboard only",
+      "question": "Can the whole flow be completed without a mouse, in a sensible focus order?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-screen_reader",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "screen_reader",
+      "title": "Screen reader",
+      "question": "Are states, errors and progress announced?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-small_screen",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "small_screen",
+      "title": "Small phone screen",
+      "question": "Is the main button reachable without scrolling past everything?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-read_job_card-empty_state",
+      "step": "read_job_card",
+      "step_name": "Reads daily Telegram match card",
+      "key": "empty_state",
+      "title": "Nothing to show yet",
+      "question": "What does a first-time or zero-data user see, and what should they do next?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-choose_card_action-no_option_fits",
+      "step": "choose_card_action",
+      "step_name": "Picks Preview PDF or direct 1-Tap Apply",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-choose_card_action-change_mind",
+      "step": "choose_card_action",
+      "step_name": "Picks Preview PDF or direct 1-Tap Apply",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-choose_card_action-default_bias",
+      "step": "choose_card_action",
+      "step_name": "Picks Preview PDF or direct 1-Tap Apply",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-preview_pdf-slow_response",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_1tap_apply-no_option_fits",
+      "step": "confirm_1tap_apply",
+      "step_name": "Taps 1-Tap Apply Now",
+      "key": "no_option_fits",
+      "title": "None of the choices fit",
+      "question": "Is there an 'other', a skip, or a way to ask for help?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_1tap_apply-change_mind",
+      "step": "confirm_1tap_apply",
+      "step_name": "Taps 1-Tap Apply Now",
+      "key": "change_mind",
+      "title": "User wants to change the choice later",
+      "question": "Can they go back or change it afterwards without starting over?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirm_1tap_apply-default_bias",
+      "step": "confirm_1tap_apply",
+      "step_name": "Taps 1-Tap Apply Now",
+      "key": "default_bias",
+      "title": "User accepts the default without reading",
+      "question": "Is the default safe for someone who never looks at it?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_shadowmux-slow_response",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-autofill_ats_form-slow_response",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-submit_and_stamp-slow_response",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "slow_response",
+      "title": "Takes longer than 10 seconds",
+      "question": "Is there progress feedback, and can the user leave and come back?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-empty_input",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "empty_input",
+      "title": "Submitted empty",
+      "question": "What does the user see if they submit with nothing entered?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-invalid_format",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "invalid_format",
+      "title": "Wrong format",
+      "question": "Is the error shown next to the field, in plain words, before or after submit?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-boundary_numbers",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "boundary_numbers",
+      "title": "Zero, negative, decimal or huge numbers",
+      "question": "Which are allowed, and what is the message for the rest?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-duplicate_value",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "duplicate_value",
+      "title": "Value that already exists",
+      "question": "Is a duplicate rejected, merged or allowed, and does the user understand which?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-keyboard_covers_field",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "keyboard_covers_field",
+      "title": "On-screen keyboard hides the field or button",
+      "question": "On a phone, can the user still see what they type and reach the button?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-repeat_action",
+      "step": "confirmed",
+      "step_name": "Application submitted with confirmation receipt",
+      "key": "repeat_action",
+      "title": "Does it again right after",
+      "question": "What happens if the user completes the same thing twice?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-undo",
+      "step": "confirmed",
+      "step_name": "Application submitted with confirmation receipt",
+      "key": "undo",
+      "title": "Wants to undo",
+      "question": "Can it be undone or edited, by whom and until when?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-others_not_told",
+      "step": "confirmed",
+      "step_name": "Application submitted with confirmation receipt",
+      "key": "others_not_told",
+      "title": "Other people affected are not told",
+      "question": "Who else needs to know, and how are they notified?",
+      "severity": "med",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-flag_off",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "flag_off",
+      "title": "Feature switched off while in use",
+      "question": "What happens to users and data mid-flow if the feature is turned off?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-large_text",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "large_text",
+      "title": "Large text or 200% zoom",
+      "question": "Does anything clip, overlap or become unreachable?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-timezone_boundary",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "timezone_boundary",
+      "title": "Time zones and midnight",
+      "question": "Do dates, deadlines and 'today' hold up across time zones?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-read_job_card-huge_list",
+      "step": "read_job_card",
+      "step_name": "Reads daily Telegram match card",
+      "key": "huge_list",
+      "title": "Thousands of items",
+      "question": "Does it page, search and stay fast with 10,000 rows?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-read_job_card-loading_state",
+      "step": "read_job_card",
+      "step_name": "Reads daily Telegram match card",
+      "key": "loading_state",
+      "title": "Still loading",
+      "question": "What is shown while loading, and for how long before it looks broken?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-preview_pdf-rate_limited",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-acquire_shadowmux-rate_limited",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-autofill_ats_form-rate_limited",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-submit_and_stamp-rate_limited",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "rate_limited",
+      "title": "Too many attempts",
+      "question": "What happens on the 5th quick retry?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-max_length",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "max_length",
+      "title": "Very long value",
+      "question": "Is there a limit, is it shown, and what happens at and beyond it?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-special_chars",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "special_chars",
+      "title": "Emoji, accents, right-to-left text",
+      "question": "Are these stored and displayed correctly everywhere the value appears?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-paste_formatted",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "paste_formatted",
+      "title": "Pasted value with spaces or formatting",
+      "question": "Are leading/trailing spaces and pasted formatting cleaned up?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-hitl_escalation-autofill",
+      "step": "hitl_escalation",
+      "step_name": "Solves CAPTCHA or custom question via Telegram link",
+      "key": "autofill",
+      "title": "Browser or password-manager autofill",
+      "question": "Does autofill put the right value in the right field?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-next_step_unclear",
+      "step": "confirmed",
+      "step_name": "Application submitted with confirmation receipt",
+      "key": "next_step_unclear",
+      "title": "What now?",
+      "question": "Is the next useful action obvious from the success screen?",
+      "severity": "low",
+      "status": "open",
+      "source": "checklist"
+    },
+    {
+      "id": "E-preview_pdf-double_submit",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Proposal Section 6.4 specifies webhook idempotency keys (delivery_id + action) and Section 3.3 pre-compiles at 08:58 AM."
+    },
+    {
+      "id": "E-acquire_shadowmux-timeout",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Proposal Section 6.4 specifies atomic lease queuing and exponential backoff retry up to 300s."
+    },
+    {
+      "id": "E-acquire_shadowmux-double_submit",
+      "step": "acquire_shadowmux",
+      "step_name": "Acquires ShadowMux desktop lease & cookies",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Proposal Section 6.4 uses idempotency keys (delivery_id + action) plus ShadowMux atomic SQLite domain leases."
+    },
+    {
+      "id": "E-autofill_ats_form-timeout",
+      "step": "autofill_ats_form",
+      "step_name": "Off-screen browser fills ATS form & uploads PDF",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist",
+      "verdict": "handled",
+      "note": "Proposal Section 6.3 defines an 8.0s selector timeout that falls back to screenshot + Telegram HITL alert."
+    },
+    {
+      "id": "E-preview_pdf-timeout",
+      "step": "preview_pdf",
+      "step_name": "Previews single-page LaTeX PDF in Telegram",
+      "key": "timeout",
+      "title": "No answer in time",
+      "question": "After how long does it give up, and what can the user do then?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-submit_and_stamp-double_submit",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "double_submit",
+      "title": "Button pressed twice",
+      "question": "Can a double press create two records, charges or messages?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-confirmed-no_confirmation",
+      "step": "confirmed",
+      "step_name": "Application submitted with confirmation receipt",
+      "key": "no_confirmation",
+      "title": "No proof it worked",
+      "question": "Does the user get clear confirmation and a record they can find later?",
+      "severity": "high",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-flow-returning_user",
+      "step": null,
+      "step_name": "Whole flow",
+      "key": "returning_user",
+      "title": "Second and tenth use",
+      "question": "Is the repeat experience shorter than the first, and are earlier choices remembered?",
+      "severity": "med",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-read_job_card-long_text",
+      "step": "read_job_card",
+      "step_name": "Reads daily Telegram match card",
+      "key": "long_text",
+      "title": "Very long names or translated text",
+      "question": "Does long or translated text wrap without breaking the layout?",
+      "severity": "low",
+      "status": "handled",
+      "source": "checklist"
+    },
+    {
+      "id": "E-submit_and_stamp-stale_data",
+      "step": "submit_and_stamp",
+      "step_name": "Submits form, captures screenshot & stamps SQLite audit",
+      "key": "stale_data",
+      "title": "Data changed since the screen loaded",
+      "question": "If price, stock, permissions or status changed meanwhile, who wins?",
+      "severity": "high",
+      "status": "not_applicable",
+      "source": "checklist",
+      "verdict": "not_applicable",
+      "note": "Only confirmation scraping and local SQLite stamping happen after the form is validated and submitted."
+    }
+  ],
+  "combinations": [
+    {
+      "id": "C-01",
+      "combo": {
+        "device": "mobile",
+        "network": "flaky",
+        "ats_portal": "greenhouse",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "human active on same domain",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.04392,
+      "title": "device: mobile + network: flaky + ats_portal: greenhouse + vault_state: verified >=15 bullets + desktop_runner: human active on same domain + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-02",
+      "combo": {
+        "device": "desktop",
+        "network": "offline",
+        "ats_portal": "lever",
+        "vault_state": "tectonic binary missing",
+        "desktop_runner": "human active on same domain",
+        "form_shape": "custom essay question"
+      },
+      "share": 0.0010375,
+      "title": "device: desktop + network: offline + ats_portal: lever + vault_state: tectonic binary missing + desktop_runner: human active on same domain + form_shape: custom essay question",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-03",
+      "combo": {
+        "device": "mobile",
+        "network": "offline",
+        "ats_portal": "workday",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "Cloudflare Turnstile CAPTCHA"
+      },
+      "share": 0.0024525000000000003,
+      "title": "device: mobile + network: offline + ats_portal: workday + vault_state: unverified or empty + desktop_runner: laptop asleep/offline + form_shape: Cloudflare Turnstile CAPTCHA",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-04",
+      "combo": {
+        "device": "desktop",
+        "network": "good",
+        "ats_portal": "ashby",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "ShadowMux online",
+        "form_shape": "custom essay question"
+      },
+      "share": 0.04414500000000001,
+      "title": "device: desktop + network: good + ats_portal: ashby + vault_state: verified >=15 bullets + desktop_runner: ShadowMux online + form_shape: custom essay question",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-05",
+      "combo": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse",
+        "vault_state": "tectonic binary missing",
+        "desktop_runner": "ShadowMux online",
+        "form_shape": "Cloudflare Turnstile CAPTCHA"
+      },
+      "share": 0.26019000000000003,
+      "title": "device: mobile + network: good + ats_portal: greenhouse + vault_state: tectonic binary missing + desktop_runner: ShadowMux online + form_shape: Cloudflare Turnstile CAPTCHA",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-06",
+      "combo": {
+        "device": "desktop",
+        "network": "flaky",
+        "ats_portal": "lever",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.007762500000000001,
+      "title": "device: desktop + network: flaky + ats_portal: lever + vault_state: unverified or empty + desktop_runner: laptop asleep/offline + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-07",
+      "combo": {
+        "device": "mobile",
+        "network": "flaky",
+        "ats_portal": "ashby",
+        "vault_state": "tectonic binary missing",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "custom essay question"
+      },
+      "share": 0.017925,
+      "title": "device: mobile + network: flaky + ats_portal: ashby + vault_state: tectonic binary missing + desktop_runner: laptop asleep/offline + form_shape: custom essay question",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-08",
+      "combo": {
+        "device": "desktop",
+        "network": "good",
+        "ats_portal": "workday",
+        "vault_state": "tectonic binary missing",
+        "desktop_runner": "human active on same domain",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.034095,
+      "title": "device: desktop + network: good + ats_portal: workday + vault_state: tectonic binary missing + desktop_runner: human active on same domain + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-09",
+      "combo": {
+        "device": "desktop",
+        "network": "offline",
+        "ats_portal": "lever",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "ShadowMux online",
+        "form_shape": "Cloudflare Turnstile CAPTCHA"
+      },
+      "share": 0.0010375,
+      "title": "device: desktop + network: offline + ats_portal: lever + vault_state: verified >=15 bullets + desktop_runner: ShadowMux online + form_shape: Cloudflare Turnstile CAPTCHA",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-10",
+      "combo": {
+        "device": "desktop",
+        "network": "offline",
+        "ats_portal": "greenhouse",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "ShadowMux online",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.00176,
+      "title": "device: desktop + network: offline + ats_portal: greenhouse + vault_state: unverified or empty + desktop_runner: ShadowMux online + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-11",
+      "combo": {
+        "device": "desktop",
+        "network": "offline",
+        "ats_portal": "ashby",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "human active on same domain",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.00078,
+      "title": "device: desktop + network: offline + ats_portal: ashby + vault_state: unverified or empty + desktop_runner: human active on same domain + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-12",
+      "combo": {
+        "device": "desktop",
+        "network": "flaky",
+        "ats_portal": "workday",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "ShadowMux online",
+        "form_shape": "custom essay question"
+      },
+      "share": 0.0054075,
+      "title": "device: desktop + network: flaky + ats_portal: workday + vault_state: verified >=15 bullets + desktop_runner: ShadowMux online + form_shape: custom essay question",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-13",
+      "combo": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "lever",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.1498,
+      "title": "device: mobile + network: good + ats_portal: lever + vault_state: unverified or empty + desktop_runner: laptop asleep/offline + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-14",
+      "combo": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse",
+        "vault_state": "unverified or empty",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "custom essay question"
+      },
+      "share": 0.26019000000000003,
+      "title": "device: mobile + network: good + ats_portal: greenhouse + vault_state: unverified or empty + desktop_runner: laptop asleep/offline + form_shape: custom essay question",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-15",
+      "combo": {
+        "device": "desktop",
+        "network": "flaky",
+        "ats_portal": "ashby",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "human active on same domain",
+        "form_shape": "Cloudflare Turnstile CAPTCHA"
+      },
+      "share": 0.0060750000000000005,
+      "title": "device: desktop + network: flaky + ats_portal: ashby + vault_state: verified >=15 bullets + desktop_runner: human active on same domain + form_shape: Cloudflare Turnstile CAPTCHA",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    },
+    {
+      "id": "C-16",
+      "combo": {
+        "device": "desktop",
+        "network": "flaky",
+        "ats_portal": "lever",
+        "vault_state": "verified >=15 bullets",
+        "desktop_runner": "laptop asleep/offline",
+        "form_shape": "standard fields only"
+      },
+      "share": 0.007762500000000001,
+      "title": "device: desktop + network: flaky + ats_portal: lever + vault_state: verified >=15 bullets + desktop_runner: laptop asleep/offline + form_shape: standard fields only",
+      "question": "What exactly should happen in this situation, and does the spec say so?",
+      "status": "open",
+      "source": "combination"
+    }
+  ],
+  "qualitative": {
+    "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/01_JOBPILOT_PRODUCT_PROPOSAL.md and apps/jobpilot/. Qualitative evidence only.",
+    "sessions": [
+      {
+        "persona": "Rohan, Senior Backend Engineer actively interviewing (User 0)",
+        "segment": "active_seeker",
+        "context": "mobile, good network, lever, verified_vault, shadowmux_online, clean_ats_fields",
+        "goal": "Review the 09:00 AM match on the bus and submit if the resume looks accurate",
+        "outcome": "success",
+        "at": "confirmed",
+        "moments": [
+          {
+            "step": "read_job_card",
+            "kind": "delight",
+            "thought": "One card at 9am with salary and matched skills is way calmer than LinkedIn alerts.",
+            "severity": 1
+          },
+          {
+            "step": "preview_pdf",
+            "kind": "hesitation",
+            "thought": "Had to download the PDF to see which bullets it picked. Took a moment to open in mobile viewer.",
+            "severity": 2
+          },
+          {
+            "step": "confirmed",
+            "kind": "delight",
+            "thought": "Got the confirmation screenshot in Telegram. Didn't touch a single Lever box.",
+            "severity": 1
+          }
+        ],
+        "quote": "Once it worked, it felt like magic—though I only trusted it after opening the PDF.",
+        "would_use_again": "yes",
+        "unmet_need": "Show the 6 selected bullets right in the Telegram message so I don't always have to open a PDF."
+      },
+      {
+        "persona": "Elena, Staff Systems Engineer not actively looking (User 1)",
+        "segment": "passive_staff",
+        "context": "mobile, good network, greenhouse, verified_vault, shadowmux_online, missing clean_ats_fields",
+        "goal": "Glance at a high-match role without risking her reputation on sloppy AI answers",
+        "outcome": "abandoned",
+        "at": "confirm_1tap_apply",
+        "moments": [
+          {
+            "step": "read_job_card",
+            "kind": "question",
+            "thought": "93% match, great company. What will it actually type into Greenhouse's custom questions?",
+            "severity": 2
+          },
+          {
+            "step": "confirm_1tap_apply",
+            "kind": "frustration",
+            "thought": "There is only '1-Tap Apply' or 'Skip'. I can't tweak one bullet or review the form answers before it fires.",
+            "severity": 3
+          }
+        ],
+        "quote": "I'm not letting a bot submit under my real name when I can't even inspect what goes in the text boxes.",
+        "would_use_again": "no",
+        "unmet_need": "A pre-submit review or inline bullet/answer check before sending."
+      },
+      {
+        "persona": "Tarun, installed JobPilot yesterday evening (User 23)",
+        "segment": "unprepared_newcomer",
+        "context": "desktop, good network, greenhouse, lacks verified_vault and shadowmux_online",
+        "goal": "Check out the first morning job notification",
+        "outcome": "blocked",
+        "at": "read_job_card",
+        "moments": [
+          {
+            "step": "read_job_card",
+            "kind": "confusion",
+            "thought": "I ran /start last night and uploaded my PDF, didn't approve all 28 bullets yet. Now there's no card—or an error saying profile/vault missing.",
+            "severity": 3
+          }
+        ],
+        "quote": "I didn't realise approving every bullet was a hard gate before seeing any jobs.",
+        "would_use_again": "no",
+        "unmet_need": "Let me preview the match card first, then finish verifying bullets inline."
+      },
+      {
+        "persona": "Maya, Backend engineer pivoting into AI systems (User 59)",
+        "segment": "career_pivoter",
+        "context": "mobile, good network, greenhouse, verified_vault, shadowmux_online, lacks clean_ats_fields",
+        "goal": "Apply to an AI platform role before morning standup",
+        "outcome": "abandoned",
+        "at": "hitl_escalation",
+        "moments": [
+          {
+            "step": "choose_card_action",
+            "kind": "question",
+            "thought": "It says 'missing gap tokens: Triton'. Does my resume explain my transferable CUDA work?",
+            "severity": 2
+          },
+          {
+            "step": "hitl_escalation",
+            "kind": "frustration",
+            "thought": "It sent me a mobile webview link for two long-form Greenhouse questions with a 180-second timer. I can't write thoughtful pivot answers on my phone in 3 minutes.",
+            "severity": 3
+          }
+        ],
+        "quote": "One-tap apply turned into writing essays on my phone against a countdown clock.",
+        "would_use_again": "maybe",
+        "unmet_need": "Draft grounded answers from my vault or let me pause and finish on desktop."
+      },
+      {
+        "persona": "Vikram, active seeker commuting on the train (User 50)",
+        "segment": "active_seeker",
+        "context": "desktop/mobile commute, good network, workday, verified_vault, lacks shadowmux_online",
+        "goal": "Confirm today's 9am match while away from his desk",
+        "outcome": "blocked",
+        "at": "acquire_shadowmux",
+        "moments": [
+          {
+            "step": "read_job_card",
+            "kind": "delight",
+            "thought": "Great Workday role, 89% match.",
+            "severity": 1
+          },
+          {
+            "step": "acquire_shadowmux",
+            "kind": "confusion",
+            "thought": "I tapped 1-Tap Apply and it stalled trying to talk to ShadowMux. My laptop is in my backpack asleep.",
+            "severity": 3
+          }
+        ],
+        "quote": "It pushes to my phone at 9am, then requires my laptop to be awake on my desk to actually apply.",
+        "would_use_again": "maybe",
+        "unmet_need": "Queue my 1-tap apply and execute automatically as soon as my laptop wakes up."
+      },
+      {
+        "persona": "Neha, active seeker on flaky subway Wi-Fi (User 55)",
+        "segment": "active_seeker",
+        "context": "mobile, flaky network, greenhouse, verified_vault, shadowmux_online, clean_ats_fields",
+        "goal": "Quickly apply before losing signal underground",
+        "outcome": "error_exit",
+        "at": "submit_and_stamp",
+        "moments": [
+          {
+            "step": "autofill_ats_form",
+            "kind": "hesitation",
+            "thought": "Taking a long time on 'Submitting...'—nearly a minute already.",
+            "severity": 2
+          },
+          {
+            "step": "submit_and_stamp",
+            "kind": "error",
+            "thought": "Connection dropped right after submit. Did Greenhouse receive my application or not? I'm scared to retry and submit twice.",
+            "severity": 3
+          }
+        ],
+        "quote": "No receipt, no error recovery—I don't know if I applied or broke it.",
+        "would_use_again": "maybe",
+        "unmet_need": "Clear submission state recovery: check whether Greenhouse recorded it before offering retry."
+      },
+      {
+        "persona": "Daniel, Principal Engineer evaluating a high-bar Ashby role (User 63)",
+        "segment": "passive_staff",
+        "context": "desktop, good network, ashby, verified_vault, shadowmux_online, clean_ats_fields",
+        "goal": "Inspect the tailored PDF and decide if it's worth applying",
+        "outcome": "abandoned",
+        "at": "confirm_1tap_apply",
+        "moments": [
+          {
+            "step": "preview_pdf",
+            "kind": "question",
+            "thought": "The 1-page PDF looks crisp, though it dropped a key distributed-systems bullet I wanted included.",
+            "severity": 2
+          },
+          {
+            "step": "confirm_1tap_apply",
+            "kind": "hesitation",
+            "thought": "No way to swap that bullet before applying, so I'll just apply manually later.",
+            "severity": 3
+          }
+        ],
+        "quote": "Almost great, but without a quick bullet swap I'd rather submit it myself.",
+        "would_use_again": "maybe",
+        "unmet_need": "Inline button to swap/pin a master bullet before tapping 1-Tap Apply."
+      }
+    ],
+    "themes": [
+      {
+        "title": "09:00 AM mobile Telegram delivery collides with desktop-only ShadowMux execution",
+        "evidence": "Vikram tapped 1-Tap Apply on the move while his laptop was asleep and hit a dead end at acquire_shadowmux (41% of users lack shadowmux_online at 09:00 AM).",
+        "steps": [
+          "acquire_shadowmux"
+        ],
+        "recommendation": "Queue 1-Tap Apply requests locally/via relay and run automatically when desktop ShadowMux comes online, instead of failing or blocking."
+      },
+      {
+        "title": "Unverified newcomers and missing-vault users hit a hard wall on day one",
+        "evidence": "Tarun was blocked at read_job_card because JobPilot requires an approved master bullet vault with no onboarding fallback in the daily dispatch loop.",
+        "steps": [
+          "read_job_card"
+        ],
+        "recommendation": "Route users with incomplete vaults to a fast inline onboarding prompt before expecting 09:00 AM daily cards."
+      },
+      {
+        "title": "High-bar engineers want light control before an irreversible submission",
+        "evidence": "Elena and Daniel both abandoned at confirm_1tap_apply because they could not inspect custom ATS field answers or swap a bullet.",
+        "steps": [
+          "confirm_1tap_apply",
+          "preview_pdf"
+        ],
+        "recommendation": "Show the 6 chosen bullets and pre-filled EEO/custom answers in Telegram with a quick swap option before 1-Tap Apply."
+      },
+      {
+        "title": "HITL escalation turns '30-second autopilot' into a timed mobile essay",
+        "evidence": "Maya hit a custom Greenhouse essay prompt via hitl_escalation and quit under the 180s timeout pressure.",
+        "steps": [
+          "hitl_escalation",
+          "autofill_ats_form"
+        ],
+        "recommendation": "Pre-draft grounded answers from the verified vault and allow 'Save draft & finish on desktop' instead of a hard 180s timeout."
+      }
+    ],
+    "spec_gaps": [
+      {
+        "title": "Desktop ShadowMux offline when user taps 1-Tap Apply on mobile",
+        "detail": "The proposal pushes Telegram cards at 09:00 AM (mobile commute time) but assumes desktop Chrome/ShadowMux is awake and reachable.",
+        "severity": "high",
+        "step": "acquire_shadowmux"
+      },
+      {
+        "title": "What happens after the 180-second HITL CAPTCHA/question timeout",
+        "detail": "User Story 8 specifies waiting up to 180s for human resolution, but never defines whether state is saved, retried, or discarded after timeout.",
+        "severity": "high",
+        "step": "hitl_escalation"
+      },
+      {
+        "title": "Ambiguous outcome if confirmation-page scraping fails after clicking Submit",
+        "detail": "If network drops or ATS DOM changes after clicking Submit, the spec does not say how JobPilot verifies whether the application went through without double-submitting.",
+        "severity": "high",
+        "step": "submit_and_stamp"
+      },
+      {
+        "title": "Compiler fallback returns .tex source when tectonic/pdflatex is absent",
+        "detail": "In apps/jobpilot/compiler.py, missing TeX binaries assign out_tex_path to result.pdf_path, which would fail or send raw LaTeX on Preview PDF.",
+        "severity": "med",
+        "step": "preview_pdf"
+      }
+    ]
+  },
+  "triangulation": [
+    {
+      "step": "read_job_card",
+      "name": "Reads daily Telegram match card",
+      "loss_share": 0.319634703196347,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "confirm_1tap_apply",
+      "name": "Taps 1-Tap Apply Now",
+      "loss_share": 0.19006849315068494,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Both agree: fix this first."
+    },
+    {
+      "step": "acquire_shadowmux",
+      "name": "Acquires ShadowMux desktop lease & cookies",
+      "loss_share": 0.18949771689497716,
+      "mentions": 1,
+      "sessions": 7,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    },
+    {
+      "step": "preview_pdf",
+      "name": "Previews single-page LaTeX PDF in Telegram",
+      "loss_share": 0.033105022831050226,
+      "mentions": 2,
+      "sessions": 7,
+      "read": "Voices only: the model may be underrating this step."
+    },
+    {
+      "step": "hitl_escalation",
+      "name": "Solves CAPTCHA or custom question via Telegram link",
+      "loss_share": 0.06963470319634703,
+      "mentions": 1,
+      "sessions": 7,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    },
+    {
+      "step": "choose_card_action",
+      "name": "Picks Preview PDF or direct 1-Tap Apply",
+      "loss_share": 0.05251141552511415,
+      "mentions": 1,
+      "sessions": 7,
+      "read": "Numbers only: check this step's effort and clarity scores."
+    }
+  ],
+  "sessions": [
+    {
+      "user": 1,
+      "segment": "passive_staff",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.22,
+        "skill": 0.78,
+        "patience": 0.52,
+        "trust": 0.06
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "abandoned",
+      "at": "confirm_1tap_apply",
+      "why": "trust",
+      "seconds": 18,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 5,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 14,
+          "note": null
+        },
+        {
+          "step": "confirm_1tap_apply",
+          "t": 18,
+          "note": "abandoned: trust"
+        }
+      ]
+    },
+    {
+      "user": 23,
+      "segment": "unprepared_newcomer",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.47,
+        "skill": 0.34,
+        "patience": 0.07,
+        "trust": 0.36
+      },
+      "context": {
+        "device": "desktop",
+        "network": "good",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields"
+      ],
+      "outcome": "blocked",
+      "at": "read_job_card",
+      "why": "lacks verified_vault",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 0,
+          "note": "blocked: lacks verified_vault"
+        }
+      ]
+    },
+    {
+      "user": 55,
+      "segment": "active_seeker",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.83,
+        "skill": 0.59,
+        "patience": 0.48,
+        "trust": 0.43
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "error_exit",
+      "at": "submit_and_stamp",
+      "why": "error, no way to recover",
+      "seconds": 100,
+      "errors": 1,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 6,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 15,
+          "note": null
+        },
+        {
+          "step": "confirm_1tap_apply",
+          "t": 23,
+          "note": null
+        },
+        {
+          "step": "acquire_shadowmux",
+          "t": 40,
+          "note": null
+        },
+        {
+          "step": "autofill_ats_form",
+          "t": 82,
+          "note": null
+        },
+        {
+          "step": "submit_and_stamp",
+          "t": 100,
+          "note": "error_exit: error, no way to recover"
+        }
+      ]
+    },
+    {
+      "user": 0,
+      "segment": "active_seeker",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.86,
+        "skill": 0.8,
+        "patience": 0.59,
+        "trust": 0.57
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "lever"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "success",
+      "at": "confirmed",
+      "why": null,
+      "seconds": 75,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 6,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 16,
+          "note": null
+        },
+        {
+          "step": "preview_pdf",
+          "t": 21,
+          "note": null
+        },
+        {
+          "step": "confirm_1tap_apply",
+          "t": 27,
+          "note": null
+        },
+        {
+          "step": "acquire_shadowmux",
+          "t": 32,
+          "note": null
+        },
+        {
+          "step": "autofill_ats_form",
+          "t": 58,
+          "note": null
+        },
+        {
+          "step": "submit_and_stamp",
+          "t": 61,
+          "note": null
+        },
+        {
+          "step": "confirmed",
+          "t": 75,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 2,
+      "segment": "career_pivoter",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.77,
+        "skill": 0.42,
+        "patience": 0.49,
+        "trust": 0.51
+      },
+      "context": {
+        "device": "desktop",
+        "network": "flaky",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "never_saw",
+      "at": null,
+      "why": null,
+      "seconds": 0,
+      "errors": 0,
+      "path": []
+    },
+    {
+      "user": 4,
+      "segment": "career_pivoter",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.74,
+        "skill": 0.38,
+        "patience": 0.55,
+        "trust": 0.49
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "abandoned",
+      "at": "choose_card_action",
+      "why": "confusion",
+      "seconds": 37,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 29,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 37,
+          "note": "abandoned: confusion"
+        }
+      ]
+    },
+    {
+      "user": 25,
+      "segment": "passive_staff",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.26,
+        "skill": 0.96,
+        "patience": 0.34,
+        "trust": 0.36
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online"
+      ],
+      "outcome": "blocked",
+      "at": "read_job_card",
+      "why": "lacks verified_vault",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 0,
+          "note": "blocked: lacks verified_vault"
+        }
+      ]
+    },
+    {
+      "user": 180,
+      "segment": "passive_staff",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.41,
+        "skill": 0.81,
+        "patience": 0.32,
+        "trust": 0.36
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "ashby"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "error_exit",
+      "at": "acquire_shadowmux",
+      "why": "gave up after errors",
+      "seconds": 57,
+      "errors": 1,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 18,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 37,
+          "note": null
+        },
+        {
+          "step": "preview_pdf",
+          "t": 43,
+          "note": null
+        },
+        {
+          "step": "confirm_1tap_apply",
+          "t": 53,
+          "note": null
+        },
+        {
+          "step": "acquire_shadowmux",
+          "t": 57,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    },
+    {
+      "user": 16,
+      "segment": "active_seeker",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.81,
+        "skill": 0.7,
+        "patience": 0.53,
+        "trust": 0.53
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "ashby"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "success",
+      "at": "confirmed",
+      "why": null,
+      "seconds": 55,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 7,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 14,
+          "note": null
+        },
+        {
+          "step": "preview_pdf",
+          "t": 16,
+          "note": null
+        },
+        {
+          "step": "confirm_1tap_apply",
+          "t": 21,
+          "note": null
+        },
+        {
+          "step": "acquire_shadowmux",
+          "t": 26,
+          "note": null
+        },
+        {
+          "step": "autofill_ats_form",
+          "t": 41,
+          "note": null
+        },
+        {
+          "step": "submit_and_stamp",
+          "t": 45,
+          "note": null
+        },
+        {
+          "step": "confirmed",
+          "t": 55,
+          "note": "success"
+        }
+      ]
+    },
+    {
+      "user": 6,
+      "segment": "active_seeker",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.4,
+        "skill": 0.59,
+        "patience": 0.58,
+        "trust": 0.35
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "abandoned",
+      "at": "choose_card_action",
+      "why": "confusion",
+      "seconds": 14,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 8,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 14,
+          "note": "abandoned: confusion"
+        }
+      ]
+    },
+    {
+      "user": 32,
+      "segment": "unprepared_newcomer",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.42,
+        "skill": 0.17,
+        "patience": 0.31,
+        "trust": 0.16
+      },
+      "context": {
+        "device": "mobile",
+        "network": "good",
+        "ats_portal": "ashby"
+      },
+      "capabilities": [],
+      "outcome": "blocked",
+      "at": "read_job_card",
+      "why": "lacks verified_vault",
+      "seconds": 0,
+      "errors": 0,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 0,
+          "note": "blocked: lacks verified_vault"
+        }
+      ]
+    },
+    {
+      "user": 187,
+      "segment": "unprepared_newcomer",
+      "entry": "telegram_0900_card",
+      "traits": {
+        "motivation": 0.59,
+        "skill": 0.33,
+        "patience": 0.29,
+        "trust": 0.17
+      },
+      "context": {
+        "device": "mobile",
+        "network": "flaky",
+        "ats_portal": "greenhouse"
+      },
+      "capabilities": [
+        "clean_ats_fields",
+        "shadowmux_online",
+        "verified_vault"
+      ],
+      "outcome": "error_exit",
+      "at": "preview_pdf",
+      "why": "gave up after errors",
+      "seconds": 62,
+      "errors": 1,
+      "path": [
+        {
+          "step": "read_job_card",
+          "t": 26,
+          "note": null
+        },
+        {
+          "step": "choose_card_action",
+          "t": 43,
+          "note": null
+        },
+        {
+          "step": "preview_pdf",
+          "t": 62,
+          "note": "error_exit: gave up after errors"
+        }
+      ]
+    }
+  ]
+}

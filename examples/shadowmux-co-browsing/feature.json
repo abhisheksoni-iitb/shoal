@@ -1,0 +1,221 @@
+{
+  "shoal_version": "0.1",
+  "feature": {
+    "id": "shadowmux-co-browsing",
+    "name": "ShadowMux: Off-Screen Lease & Conflict Sentinel",
+    "summary": "An autonomous agent acquires an atomic SQLite domain lease, mirrors Chrome cookies into an off-screen viewport at (-3200,-3200), pauses cleanly if the human touches the same domain, and stamps an audit receipt.",
+    "session_budget_s": 180,
+    "handles": ["returning_user"]
+  },
+  "segments": [
+    {
+      "id": "power_developer",
+      "name": "Power developer running local AI agents",
+      "share": 0.45,
+      "traits": {"motivation": 0.80, "skill": 0.85, "patience": 0.65, "trust": 0.65},
+      "context": {
+        "device": {"desktop": 1.0},
+        "network": {"good": 0.92, "flaky": 0.07, "offline": 0.01},
+        "human_overlap": {"no_conflict": 0.65, "same_domain_active": 0.35},
+        "os": {"macos": 0.70, "linux": 0.30}
+      },
+      "capabilities": {"keychain_cookie_access": 0.85, "chrome_extension_installed": 0.88},
+      "exposure": 0.95,
+      "entry": {"agent_lease_request": 1.0}
+    },
+    {
+      "id": "busy_knowledge_worker",
+      "name": "Knowledge worker multitasking in Gmail / LinkedIn",
+      "share": 0.35,
+      "traits": {"motivation": 0.65, "skill": 0.55, "patience": 0.40, "trust": 0.45},
+      "context": {
+        "device": {"desktop": 1.0},
+        "network": {"good": 0.88, "flaky": 0.10, "offline": 0.02},
+        "human_overlap": {"no_conflict": 0.45, "same_domain_active": 0.55},
+        "os": {"macos": 0.80, "linux": 0.20}
+      },
+      "capabilities": {"keychain_cookie_access": 0.65, "chrome_extension_installed": 0.70},
+      "exposure": 0.90,
+      "entry": {"agent_lease_request": 1.0}
+    },
+    {
+      "id": "first_time_installer",
+      "name": "First-time user without OS Keychain / extension setup",
+      "share": 0.20,
+      "traits": {"motivation": 0.55, "skill": 0.40, "patience": 0.32, "trust": 0.30},
+      "context": {
+        "device": {"desktop": 1.0},
+        "network": {"good": 0.85, "flaky": 0.13, "offline": 0.02},
+        "human_overlap": {"no_conflict": 0.70, "same_domain_active": 0.30},
+        "os": {"macos": 0.75, "linux": 0.25}
+      },
+      "capabilities": {"keychain_cookie_access": 0.25, "chrome_extension_installed": 0.30},
+      "exposure": 0.85,
+      "entry": {"agent_lease_request": 1.0}
+    }
+  ],
+  "entry_points": [
+    {"id": "agent_lease_request", "name": "Agent invokes ShadowMux lease API", "to": "acquire_lease", "discovery": 0.95}
+  ],
+  "steps": [
+    {
+      "id": "acquire_lease",
+      "name": "Acquires atomic SQLite domain lease",
+      "type": "external",
+      "effort": 0.05,
+      "clarity": 0.80,
+      "value": 0.40,
+      "time_s": 2,
+      "error_rate": 0.03,
+      "on_error": {"recoverable": true},
+      "next": ["sync_cookies"],
+      "events": ["lease_acquired"],
+      "handles": ["double_submit"]
+    },
+    {
+      "id": "sync_cookies",
+      "name": "Mirrors Chrome profile cookies & storage (OS Keychain)",
+      "type": "external",
+      "effort": 0.20,
+      "clarity": 0.45,
+      "value": 0.40,
+      "time_s": 5,
+      "error_rate": 0.07,
+      "on_error": {"recoverable": true},
+      "requires": ["keychain_cookie_access"],
+      "sensitive": true,
+      "next": ["run_detached_task"],
+      "events": [],
+      "handles": []
+    },
+    {
+      "id": "run_detached_task",
+      "name": "Spawns Chrome at (-3200,-3200) & runs agent workflow",
+      "type": "wait",
+      "effort": 0.05,
+      "clarity": 0.75,
+      "value": 0.60,
+      "time_s": 22,
+      "error_rate": 0.06,
+      "on_error": {"recoverable": true},
+      "next": [
+        {"to": "release_lease", "weight": 1.0, "when": {"human_overlap": "no_conflict"}},
+        {"to": "conflict_sentinel_pause", "weight": 1.0, "when": {"human_overlap": "same_domain_active"}}
+      ],
+      "events": ["viewport_spawned"],
+      "handles": ["user_leaves"]
+    },
+    {
+      "id": "conflict_sentinel_pause",
+      "name": "Conflict Sentinel freezes agent & shows pause pill",
+      "type": "view",
+      "effort": 0.15,
+      "clarity": 0.60,
+      "value": 0.55,
+      "time_s": 8,
+      "requires": ["chrome_extension_installed"],
+      "next": ["arbitrate_handoff"],
+      "events": ["conflict_detected"],
+      "handles": []
+    },
+    {
+      "id": "arbitrate_handoff",
+      "name": "Human finishes active tab & clicks Resume on pill",
+      "type": "decision",
+      "effort": 0.45,
+      "clarity": 0.55,
+      "value": 0.60,
+      "time_s": 25,
+      "next": ["release_lease"],
+      "events": [],
+      "handles": []
+    },
+    {
+      "id": "release_lease",
+      "name": "Releases SQLite lease & writes SHA-256 audit log",
+      "type": "external",
+      "effort": 0.05,
+      "clarity": 0.85,
+      "value": 0.80,
+      "time_s": 2,
+      "error_rate": 0.02,
+      "next": ["task_completed"],
+      "events": ["lease_released"],
+      "handles": []
+    },
+    {
+      "id": "task_completed",
+      "name": "Background browser task finished with zero clobbering",
+      "type": "success",
+      "events": ["shadowmux_task_done"],
+      "handles": ["no_confirmation"]
+    }
+  ],
+  "dimensions": {
+    "human_overlap": ["no_conflict", "same_domain_active"],
+    "os": ["macos", "linux"],
+    "network": ["good", "flaky", "offline"],
+    "chrome_state": ["single monitor normal", "extended monitor at negative coords", "Chrome profile locked/updating"],
+    "cookie_state": ["Keychain approved", "Keychain denied", "2FA/SSO expired mid-lease"]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "At least 85% of invoked ShadowMux sessions complete without blocking or error.",
+      "metric": "completion_rate",
+      "op": ">=",
+      "value": 0.85
+    },
+    {
+      "id": "H2",
+      "text": "When human conflict occurs, at least 80% of sessions resume cleanly through arbitration.",
+      "metric": "step_continue:arbitrate_handoff",
+      "op": ">=",
+      "value": 0.80
+    },
+    {
+      "id": "H3",
+      "text": "Median session time stays under 60 seconds.",
+      "metric": "median_time_s",
+      "op": "<=",
+      "value": 60
+    }
+  ],
+  "variants": [
+    {
+      "id": "guided-keychain-and-ephemeral",
+      "name": "Guided Keychain grant + unauthenticated fallback",
+      "note": "If OS Keychain cookie decryption is denied or unavailable, explain why once and allow ephemeral login instead of hard-blocking.",
+      "patch": {
+        "steps": {
+          "sync_cookies": {"fallback": "ephemeral_profile_prompt"}
+        },
+        "add_steps": [
+          {
+            "id": "ephemeral_profile_prompt",
+            "name": "Offers guided Keychain grant or fresh shadow login",
+            "type": "decision",
+            "effort": 0.35,
+            "clarity": 0.78,
+            "value": 0.55,
+            "time_s": 18,
+            "grants": ["keychain_cookie_access"],
+            "next": ["sync_cookies"],
+            "events": ["keychain_fallback_shown"],
+            "handles": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "auto-resume-on-tab-blur",
+      "name": "Auto-resume agent when human closes or leaves conflicted domain",
+      "note": "Instead of requiring the human to click Resume on the notification pill, auto-resume 5s after the human switches away from the conflicted tab.",
+      "patch": {
+        "steps": {
+          "arbitrate_handoff": {"effort": 0.15, "clarity": 0.80, "time_s": 8}
+        }
+      }
+    }
+  ]
+}

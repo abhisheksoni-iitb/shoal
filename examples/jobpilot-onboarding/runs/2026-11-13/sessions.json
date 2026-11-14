@@ -1,0 +1,147 @@
+{
+  "note": "Think-aloud walkthroughs drawn from events.sample.jsonl against proposals/01_JOBPILOT_PRODUCT_PROPOSAL.md Section 4.1.",
+  "sessions": [
+    {
+      "persona": "Ananya, Senior Backend Engineer installing from GitHub at her desk (User 0)",
+      "segment": "desktop_cli_installer",
+      "context": "desktop, good network, clean_single_col, resume_file_ready",
+      "goal": "Import her resume PDF and get daily 09:00 AM matches turned on",
+      "outcome": "success",
+      "at": "vault_armed",
+      "moments": [
+        {"step": "upload_resume", "kind": "delight", "thought": "Dragging my LaTeX PDF into Telegram Desktop worked cleanly.", "severity": 1},
+        {"step": "verify_bullets", "kind": "hesitation", "thought": "28 bullets in one Telegram message is a lot to eyeball on screen, though the metrics looked right.", "severity": 2},
+        {"step": "vault_armed", "kind": "delight", "thought": "Locked and ready for 9am tomorrow.", "severity": 1}
+      ],
+      "quote": "Worked well on desktop once I squinted through all 28 bullets.",
+      "would_use_again": "yes",
+      "unmet_need": "Group bullets under each past role when reviewing."
+    },
+    {
+      "persona": "Rishabh, mid-level engineer discovering JobPilot on his phone (User 13)",
+      "segment": "mobile_telegram_seeker",
+      "context": "mobile, flaky network, clean_single_col, lacks resume_file_ready",
+      "goal": "Try out JobPilot right after seeing a hackathon demo link",
+      "outcome": "blocked",
+      "at": "upload_resume",
+      "moments": [
+        {"step": "upload_resume", "kind": "confusion", "thought": "It asks me to drop my PDF/DOCX resume in chat, but my latest resume is on Google Drive / my work laptop, not on my phone.", "severity": 3}
+      ],
+      "quote": "I tapped /start on my phone and hit a wall immediately because it only takes a PDF file.",
+      "would_use_again": "no",
+      "unmet_need": "Let me paste my LinkedIn URL or a few paragraphs of text now and upload the PDF later."
+    },
+    {
+      "persona": "Karan, frontend lead with a 2-column Canva resume (User 4)",
+      "segment": "desktop_cli_installer",
+      "context": "desktop, good network, two_col_canva, resume_file_ready",
+      "goal": "Set up his vault before bed",
+      "outcome": "abandoned",
+      "at": "verify_bullets",
+      "moments": [
+        {"step": "parse_bullets", "kind": "question", "thought": "It took 19 seconds and trimmed my Canva bullets to 110–118 chars, merging two side-bar skills into a role line.", "severity": 2},
+        {"step": "verify_bullets", "kind": "frustration", "thought": "The only button is 'Approve All Verified Facts'. Three of the 28 bullets got garbled by the 2-column parse and there is no way to fix just those three.", "severity": 3}
+      ],
+      "quote": "I can't tap 'Approve All' when three bullets have mangled dates, and there's no edit button.",
+      "would_use_again": "no",
+      "unmet_need": "Per-bullet edit or reject before approving the vault."
+    },
+    {
+      "persona": "Priya, mobile seeker who happened to have her PDF in WhatsApp Files (User 7)",
+      "segment": "mobile_telegram_seeker",
+      "context": "mobile, good network, clean_single_col, resume_file_ready",
+      "goal": "Finish onboarding on her phone",
+      "outcome": "abandoned",
+      "at": "verify_bullets",
+      "moments": [
+        {"step": "verify_bullets", "kind": "frustration", "thought": "Reading 28 dense technical lines inside a narrow Telegram chat bubble on a 6-inch screen gave me a headache.", "severity": 3}
+      ],
+      "quote": "Reviewing 28 resume lines in one chat message is impossible on a phone.",
+      "would_use_again": "maybe",
+      "unmet_need": "Review 3–5 bullets at a time, or send a clean mini-app checklist."
+    },
+    {
+      "persona": "Samir, Staff Engineer cautious about personal data (User 9)",
+      "segment": "skeptical_senior",
+      "context": "desktop, good network, clean_single_col, resume_file_ready",
+      "goal": "Test whether JobPilot really keeps data local",
+      "outcome": "abandoned",
+      "at": "upload_resume",
+      "moments": [
+        {"step": "upload_resume", "kind": "hesitation", "thought": "Even if SQLite is local, I'm uploading my unencrypted PDF through Telegram's cloud servers right here in step 1.", "severity": 3}
+      ],
+      "quote": "Why am I sending my full contact info and resume over Telegram just to seed a local SQLite database?",
+      "would_use_again": "no",
+      "unmet_need": "Allow local CLI ingestion (`jobpilot ingest resume.pdf`) without ever sending the raw PDF through Telegram."
+    },
+    {
+      "persona": "Devika, desktop installer hitting an upload error (User 40)",
+      "segment": "desktop_cli_installer",
+      "context": "desktop, good network, clean_single_col, resume_file_ready",
+      "goal": "Upload her 3-page academic/engineering CV",
+      "outcome": "error_exit",
+      "at": "upload_resume",
+      "moments": [
+        {"step": "upload_resume", "kind": "error", "thought": "The upload failed or timed out without saying whether it was file size, format, or Telegram bot state.", "severity": 3}
+      ],
+      "quote": "It just errored out on upload with no guidance on format or size limits.",
+      "would_use_again": "maybe",
+      "unmet_need": "Show supported formats, max size, and a specific parse error message."
+    },
+    {
+      "persona": "Nikhil, desktop developer quitting at passphrase & prefs (User 18)",
+      "segment": "desktop_cli_installer",
+      "context": "desktop, good network, clean_single_col, resume_file_ready",
+      "goal": "Complete vault encryption and target role setup",
+      "outcome": "abandoned",
+      "at": "set_vault_and_prefs",
+      "moments": [
+        {"step": "parse_bullets", "kind": "error", "thought": "Parser retried once and got through.", "severity": 1},
+        {"step": "set_vault_and_prefs", "kind": "frustration", "thought": "Now it asks me to type an AES-256 passphrase into Telegram chat, plus target titles, locations, and min comp, and doesn't say what happens if I forget the passphrase.", "severity": 3}
+      ],
+      "quote": "Typing an encryption passphrase into a Telegram chat message feels wrong—and what if I forget it?",
+      "would_use_again": "maybe",
+      "unmet_need": "Use OS Keychain / local CLI for encryption keys instead of typing passphrases into chat."
+    }
+  ],
+  "themes": [
+    {
+      "title": "Requiring a local PDF file in Telegram blocks mobile users on step 1",
+      "evidence": "Rishabh lacked his resume PDF on his phone at upload_resume (37% of starters blocked there).",
+      "steps": ["upload_resume"],
+      "recommendation": "Add a fallback to paste LinkedIn URL or raw resume text on mobile, or import via local CLI."
+    },
+    {
+      "title": "'Approve All 28 Bullets' breaks on messy PDFs and tiny phone screens",
+      "evidence": "Karan (2-column Canva parse error) and Priya (wall of 28 lines on mobile) both quit at verify_bullets.",
+      "steps": ["verify_bullets", "parse_bullets"],
+      "recommendation": "Group extracted bullets by role and allow tapping individual bullets to edit or exclude before locking."
+    },
+    {
+      "title": "Privacy narrative clashes with sending raw PDFs and passphrases through Telegram",
+      "evidence": "Samir distrusted uploading his resume to Telegram, and Nikhil balked at typing his AES-256 passphrase into chat.",
+      "steps": ["upload_resume", "set_vault_and_prefs"],
+      "recommendation": "Support local CLI ingestion and OS Keychain key generation so sensitive files and passphrases never traverse Telegram."
+    }
+  ],
+  "spec_gaps": [
+    {
+      "title": "No partial/per-bullet edit path before 'Approve All Verified Facts'",
+      "detail": "Flow 1 shows a single '[Approve All Verified Facts]' button; if 2 of 28 bullets are mis-parsed, the spec gives no fix path.",
+      "severity": "high",
+      "step": "verify_bullets"
+    },
+    {
+      "title": "AES-256-GCM passphrase reset / loss behavior undefined",
+      "detail": "Proposal Section 7.3 derives keys from a local passphrase, but does not state how keys are entered or recovered if forgotten.",
+      "severity": "high",
+      "step": "set_vault_and_prefs"
+    },
+    {
+      "title": "Desktop ShadowMux pairing is absent from onboarding",
+      "detail": "Onboarding arms the 09:00 AM Telegram loop without checking whether desktop ShadowMux / Chrome cookie parity is set up.",
+      "severity": "high",
+      "step": "vault_armed"
+    }
+  ]
+}

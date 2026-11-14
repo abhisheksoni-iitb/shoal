@@ -1,0 +1,42 @@
+[
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "sync_cookies",
+    "message": "'Mirrors Chrome profile cookies & storage (OS Keychain)' needs keychain_cookie_access. About 34% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "sync_cookies",
+    "message": "'Mirrors Chrome profile cookies & storage (OS Keychain)' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "conflict_sentinel_pause",
+    "message": "'Conflict Sentinel freezes agent & shows pause pill' needs chrome_extension_installed. About 30% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "arbitrate_handoff",
+    "message": "'Human finishes active tab & clicks Resume on pill' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "warn",
+    "code": "error-without-recovery",
+    "kind": "design",
+    "step": "release_lease",
+    "message": "'Releases SQLite lease & writes SHA-256 audit log' can fail (2%) but the model says nothing about what happens next.",
+    "fix": "Define on_error: can the user retry, or where do they land?"
+  }
+]
