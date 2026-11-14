@@ -1,6 +1,6 @@
 # Shoal rehearsal: One-tap reorder
 
-5,000 synthetic users, seed 7, 24 replications, 2026-11-14 20:32.
+5,000 synthetic users, seed 7, 24 replications, 2026-11-14 20:47.
 
 ## What it says
 

@@ -8,7 +8,7 @@ A feature model is one JSON file. `shoal init <folder>` writes a working starter
   "segments":     [ { "id", "name", "share", "traits", "context", "capabilities", "exposure", "entry" } ],
   "entry_points": [ { "id", "name", "to", "discovery" } ],
   "steps":        [ { "id", "name", "type", "effort", "clarity", "value", "time_s", "error_rate", "on_error",
-                      "requires", "fallback", "grants", "sensitive", "optional", "next", "events", "handles",
+                      "requires", "fallback", "grants", "sensitive", "optional", "background", "next", "events", "handles",
                       "observed_continue" } ],
   "dimensions":   { "name": ["value", "value"] },
   "hypotheses":   [ { "id", "text", "metric", "op", "value", "segment", "on" } ],
@@ -85,6 +85,7 @@ Discovery base rates when there is no data (be conservative; this number dominat
 | `grants` | Capabilities gained by completing this step. |
 | `sensitive` | `true` for money, personal data, permissions or irreversible actions: low-trust users drop here. |
 | `optional` | `true` if the user can skip it (a "skip" instead of an exit). |
+| `background` | For `wait` and `external` steps. `true` if the user does not have to watch: a code arrives by email, a person reviews, a job runs while they do something else. Leave it out when they sit in front of a spinner or a progress list. A watched wait of 15 seconds or more loses many users and lint flags it. |
 | `next` | Where to go: `["step"]`, or weighted and conditional: `[{"to": "a", "weight": 0.3}, {"to": "b", "weight": 0.7, "when": {"device": "mobile"}}]`. `when` can test any context key, `segment`, `has` or `lacks` (capabilities). |
 | `events` | Analytics events fired at this step. Missing events are reported as blind spots. |
 | `handles` | Edge-case keys the spec explicitly covers at this step. |
@@ -183,6 +184,6 @@ For each user at each step, in order: lacks a requirement → fallback or blocke
 
 `sigmoid(6 × (pull − 0.75 × (effort cost + confusion cost + trust cost) − fatigue) + 1.2)`
 
-where pull = 0.55·motivation + 0.25·value + 0.20·trust − 0.05 per error met; effort cost = effort × (1 − 0.6·skill); confusion cost = (1 − clarity) × (0.9 − 0.5·skill); trust cost = (1 − trust) × 0.5 on sensitive steps; waiting cost (inside the same bracket, `wait` and `external` steps only) = 0.25 × (seconds ÷ 10 − patience), never below 0 or above 0.6, so a wait under a few seconds is free and one of 20 seconds loses many; fatigue = 0.04 per step taken, repeats included, plus a penalty past 60% of the time budget. A user who quits is tagged with the largest of those costs. The code is `shoal/sim.py`.
+where pull = 0.55·motivation + 0.25·value + 0.20·trust − 0.05 per error met; effort cost = effort × (1 − 0.6·skill); confusion cost = (1 − clarity) × (0.9 − 0.5·skill); trust cost = (1 − trust) × 0.5 on sensitive steps; waiting cost (inside the same bracket, `wait` and `external` steps only) = 0.25 × (seconds ÷ 10 − patience), never below 0 or above 0.6, and zero for a step marked `background`, so a watched wait under a few seconds is free and one of 20 seconds loses many; fatigue = 0.04 per step taken, repeats included, plus a penalty past 60% of the time budget. A user who quits is tagged with the largest of those costs. The code is `shoal/sim.py`.
 
 The reported ranges come from 24 replications; in each, effort, clarity and value move by up to ±0.1 and error and discovery rates by up to ±20%, to show how much the answer depends on the guesses.

@@ -249,6 +249,26 @@ class OutcomeTests(unittest.TestCase):
         self.assertLess(quick["reasons"].get("waiting", 0), 0.05 * quick["abandoned"])  # only the least patient, on a slow day
         self.assertEqual(max(slow["reasons"], key=slow["reasons"].get), "waiting")
 
+    def test_background_wait_costs_nothing_and_watched_wait_is_flagged(self):
+        def flow(background):
+            return model.normalise({"feature": {"id": "wait"}, "segments": [{"id": "all"}],
+                                    "steps": [{"id": "ask", "type": "input", "next": ["code"]},
+                                              {"id": "code", "type": "external", "time_s": 40, "effort": 0.05, "background": background,
+                                               "error_rate": 0.02, "on_error": {"recoverable": True}, "next": ["done"]},
+                                              {"id": "done", "type": "success"}]})
+        watched = simulate(flow(False), users=4000, seed=2, keep_sessions=0)["steps"]["code"]
+        away = simulate(flow(True), users=4000, seed=2, keep_sessions=0)["steps"]["code"]
+        self.assertGreater(away["continued"] / away["entered"], watched["continued"] / watched["entered"] + 0.15)
+        self.assertNotIn("waiting", away["reasons"])
+        self.assertIn("long-wait", {f["code"] for f in model.lint(flow(False))})
+        self.assertNotIn("long-wait", {f["code"] for f in model.lint(flow(True))})
+
+    def test_examples_and_template_all_lint_clean(self):
+        paths = sorted((ROOT / "examples").glob("*/feature.json")) + [ROOT / "shoal" / "template.json"]
+        self.assertGreaterEqual(len(paths), 5)
+        for p in paths:
+            self.assertFalse([f for f in model.lint(model.load(p)) if f["level"] == "error"], p)
+
     def test_measured_drop_is_not_given_an_invented_cause(self):
         m = copy.deepcopy(self.m)
         next(s for s in m["steps"] if s["id"] == "ask")["observed_continue"] = 0.5

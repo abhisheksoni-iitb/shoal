@@ -1,6 +1,6 @@
 {
-  "shoal": "0.2.0",
-  "generated": "2026-11-14 20:32",
+  "shoal": "0.2.1",
+  "generated": "2026-11-14 20:47",
   "feature": {
     "id": "one-tap-reorder",
     "name": "One-tap reorder",

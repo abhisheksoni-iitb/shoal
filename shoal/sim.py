@@ -75,8 +75,10 @@ def _when_ok(when, agent) -> bool:
 
 def wait_cost(step, agent, seconds):
     """People tolerate a wait of a few seconds; past about ten they start to leave (Nielsen's response-time limits).
-    Zero up to 10 s × patience, then rising with every further ten seconds, capped."""
-    if step["type"] not in ("wait", "external") or seconds is None:
+    Zero up to 10 s × patience, then rising with every further ten seconds, capped.
+    Only for waits the user has to sit through: a step marked background (an emailed code,
+    a review, a job that runs while they do something else) costs nothing here."""
+    if step["type"] not in ("wait", "external") or seconds is None or step.get("background"):
         return 0.0
     return min(0.6, 0.25 * max(0.0, seconds / 10.0 - agent["patience"]))
 

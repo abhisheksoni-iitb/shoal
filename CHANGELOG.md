@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 (14 Nov 2026)
+
+- New step field `background` for `wait` and `external` steps the user does not have to watch (an emailed code, a review, a job that runs meanwhile). The waiting cost added in 0.2.0 applied to every wait, which was wrong for these: re-running an earlier real rehearsal halved its predicted adoption because an emailed code and an approval were treated like a spinner. Found by re-running old models on the new engine before closing.
+- Lint flags a watched wait of 15 seconds or more (`long-wait`).
+- The JobPilot daily-apply and ShadowMux examples mark their off-screen steps as background. Their run folders dated 13 Nov were produced with 0.1.0 and are kept as they were.
+- 30 tests.
+
 ## 0.2.0 (14 Nov 2026)
 
 Driven by the first rehearsal that pinned an existing flow to measured numbers and compared new designs against it.
@@ -17,7 +24,7 @@ New in the model
 
 Changed behaviour (numbers from 0.1.0 runs will differ slightly)
 
-- Waits now cost something. On `wait` and `external` steps, time beyond about ten seconds times the user's patience makes people leave, and the report names the cause ("the wait was too long"). Before, a 3-second and a 40-second wait kept the same share of users unless the session ran out of time.
+- Waits now cost something. On `wait` and `external` steps, time beyond about ten seconds times the user's patience makes people leave, and the report names the cause ("the wait was too long"). Before, a 3-second and a 40-second wait kept the same share of users unless the session ran out of time. (0.2.1 limits this to waits the user has to watch.)
 - Going round a loop tires users: fatigue counts every step taken, repeats included. Before, only distinct steps counted, so a retry loop could run until the step limit.
 - A drop at a step pinned to a real rate is labelled "measured, cause not modelled" instead of being given a cause from scores the step does not use.
 

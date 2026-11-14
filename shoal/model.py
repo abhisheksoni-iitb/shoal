@@ -30,6 +30,7 @@ STEP_DEFAULTS = {
     "observed_continue": None,
     "sensitive": False,
     "grants": [],
+    "background": False,
 }
 METRICS = (
     "discovery_rate",
@@ -304,6 +305,9 @@ def lint(m: dict) -> list:
             out.append(_finding("warn", "no-path-to-success", f"From '{name}' there is no route to a success step.", sid, fix="Connect this branch back to the main flow."))
         if s["error_rate"] > 0 and not s.get("on_error"):
             out.append(_finding("warn", "error-without-recovery", f"'{name}' can fail ({s['error_rate']:.0%}) but the model says nothing about what happens next.", sid, fix="Define on_error: can the user retry, or where do they land?"))
+        if s["type"] in ("external", "wait") and s["time_s"] >= 15 and not s.get("background"):
+            out.append(_finding("warn", "long-wait", f"'{name}' keeps the user waiting about {s['time_s']:.0f} seconds. Past ten seconds people start to leave.", sid,
+                                fix="Make it faster or show the result in steps. If the user can go away and come back (an emailed code, a review), mark the step background: true."))
         if s["type"] in ("external", "wait") and s["error_rate"] == 0:
             out.append(_finding("info", "never-fails", f"'{name}' depends on something outside the screen but is modelled as never failing.", sid, fix="Set a realistic error_rate and an on_error path."))
         if s["requires"] and not s.get("fallback"):
