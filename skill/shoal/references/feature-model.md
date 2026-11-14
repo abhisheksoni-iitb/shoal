@@ -8,7 +8,7 @@ A feature model is one JSON file. `shoal init <folder>` writes a working starter
   "segments":     [ { "id", "name", "share", "traits", "context", "capabilities", "exposure", "entry" } ],
   "entry_points": [ { "id", "name", "to", "discovery" } ],
   "steps":        [ { "id", "name", "type", "effort", "clarity", "value", "time_s", "error_rate", "on_error",
-                      "requires", "fallback", "grants", "sensitive", "optional", "background", "next", "events", "handles",
+                      "requires", "fallback", "otherwise", "grants", "sensitive", "optional", "background", "next", "events", "handles",
                       "observed_continue" } ],
   "dimensions":   { "name": ["value", "value"] },
   "hypotheses":   [ { "id", "text", "metric", "op", "value", "segment", "on" } ],
@@ -82,6 +82,7 @@ Discovery base rates when there is no data (be conservative; this number dominat
 | `on_error` | `{"recoverable": true}` lets the user retry (up to 3 times, depending on patience); `{"to": "step_id"}` sends them elsewhere. Leave it out if the spec does not say: lint reports it and the simulation treats the error as a dead stop. |
 | `requires` | Capabilities needed. Users without them go to `fallback`, or are **blocked** if there is none. |
 | `fallback` | Step for users lacking a requirement. Give that step `grants` so they can return. |
+| `otherwise` | Step for users who do not act here, when the flow has a second route for them: a reminder a week later, another channel. They are not counted as lost at this step; they are lost if they also drop on that route. Without it, a user who does not carry on leaves. |
 | `grants` | Capabilities gained by completing this step. |
 | `sensitive` | `true` for money, personal data, permissions or irreversible actions: low-trust users drop here. |
 | `optional` | `true` if the user can skip it (a "skip" instead of an exit). |

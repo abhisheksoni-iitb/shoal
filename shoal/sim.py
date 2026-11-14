@@ -147,7 +147,7 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
     seg_z = {g["id"]: _z(g["traits"]["motivation"], g["traits"]["skill"]) for g in m["segments"]}
     mean_z = sum(g["share"] * seg_z[g["id"]] for g in m["segments"])
 
-    steps = {sid: {"entered": 0, "continued": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "skipped": 0,
+    steps = {sid: {"entered": 0, "continued": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "skipped": 0, "diverted": 0,
                    "errors": 0, "retries": 0, "fallbacks": 0, "reasons": {}, "times": []} for sid in idx}
     segs = {g["id"]: {"n": 0, "entered": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0,
                       "users_with_error": 0, "times": [], "repeat": {k: 0 for k in repeat},
@@ -280,6 +280,13 @@ def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200
                 if s["optional"]:
                     st["skipped"] += 1
                     note = "skipped"
+                elif s.get("otherwise"):
+                    # not lost yet: the flow has a second route for people who do not act here (a reminder, another channel)
+                    st["diverted"] += 1
+                    if trace is not None:
+                        trace.append({"step": sid, "t": round(elapsed), "note": f"did not act → {s['otherwise']}"})
+                    sid = s["otherwise"]
+                    continue
                 else:
                     # a step pinned to a real rate reproduces the drop without knowing its cause
                     why = "observed" if s.get("observed_continue") is not None else _reason(parts)

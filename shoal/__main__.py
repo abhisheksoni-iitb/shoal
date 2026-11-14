@@ -69,7 +69,7 @@ def cmd_run(a):
     out = Path(a.out) if a.out else Path(a.model).resolve().parent / "runs" / (time.strftime("%Y%m%d-%H%M%S") + (f"-{a.variant}" if a.variant else ""))
     t0 = time.time()
     try:
-        s = pipeline.run(m, out, users=a.users, seed=a.seed, reps=a.reps, jitter=a.jitter, variant=a.variant, quick=a.quick)
+        s = pipeline.run(m, out, users=a.users, seed=a.seed, reps=a.reps, jitter=a.jitter, variant=a.variant, quick=a.quick, rep_users=a.rep_users)
     except pipeline.LintFailed as exc:
         print("The model has errors; fix these first:")
         _print_findings([f for f in exc.findings if f["level"] == "error"])
@@ -151,6 +151,7 @@ def main(argv=None):
     s.add_argument("--seed", type=int, default=7)
     s.add_argument("--reps", type=int, default=24)
     s.add_argument("--jitter", type=float, default=0.1)
+    s.add_argument("--rep-users", type=int, default=1500, dest="rep_users", help="users per replication; raise it (with --users) when the outcome is rare")
     s.add_argument("--variant", help="run this variant as the design under test")
     s.add_argument("--quick", action="store_true", help="smaller, faster run for iterating")
     s.set_defaults(fn=cmd_run)

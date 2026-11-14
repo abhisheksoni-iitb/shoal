@@ -126,7 +126,8 @@ def funnel(m: dict, res: dict) -> list:
             "entered": st["entered"], "share_of_starters": _div(st["entered"], entered_total),
             "continued": st["continued"], "continue_rate": 1.0 if s["type"] == "success" else _div(st["continued"], st["entered"]),
             "lost": lost, "abandoned": st["abandoned"], "blocked": st["blocked"], "error_exit": st["error_exit"],
-            "skipped": st["skipped"], "errors": st["errors"], "retries": st["retries"], "fallbacks": st["fallbacks"],
+            "skipped": st["skipped"], "diverted": st.get("diverted", 0), "otherwise": s.get("otherwise"),
+            "errors": st["errors"], "retries": st["retries"], "fallbacks": st["fallbacks"],
             "reasons": dict(sorted(st["reasons"].items(), key=lambda kv: -kv[1])), "top_reason": top,
             "median_time_s": statistics.median(st["times"]) if st["times"] else 0.0,
         })

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2 (14 Nov 2026)
+
+- New step field `otherwise`: where users go when they do not act at a step and the flow has a second route for them (a reminder email, another channel). Needed to model an ask followed by a reminder; before, not acting always meant leaving. The funnel shows the share sent on.
+- `--rep-users` sets the size of each replication (default 1,500). Raise it for rare outcomes, where a few percent of 1,500 users is mostly noise.
+- Shares under 10% are shown with one decimal in the headline, ranges and funnel.
+- 33 tests.
+
 ## 0.2.1 (14 Nov 2026)
 
 - New step field `background` for `wait` and `external` steps the user does not have to watch (an emailed code, a review, a job that runs meanwhile). The waiting cost added in 0.2.0 applied to every wait, which was wrong for these: re-running an earlier real rehearsal halved its predicted adoption because an emailed code and an approval were treated like a spinner. Found by re-running old models on the new engine before closing.

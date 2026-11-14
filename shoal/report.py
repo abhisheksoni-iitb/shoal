@@ -72,7 +72,8 @@ def pct(x, d=0) -> str:
 def rng_txt(iv, time=False) -> str:
     if time:
         return f"{iv['p5']:.0f}–{iv['p95']:.0f}s"
-    return f"{100 * iv['p5']:.0f}–{100 * iv['p95']:.0f}%"
+    d = 1 if iv["p95"] < 0.1 else 0   # small shares need a decimal or the range reads as one number
+    return f"{100 * iv['p5']:.{d}f}–{100 * iv['p95']:.{d}f}%"
 
 
 def _bar(v, title="") -> str:
@@ -135,7 +136,7 @@ def headline(summary: dict) -> list:
     ov = summary["replication"]["overall"]
     vol = summary.get("volume")
     who = vol["unit"] if vol else "eligible users"
-    out.append(f"Out of 100 {who}, about {100 * ov['adoption_rate']['p50']:.0f} are predicted to finish "
+    out.append(f"Out of 100 {who}, about {100 * ov['adoption_rate']['p50']:.{1 if ov['adoption_rate']['p50'] < 0.1 else 0}f} are predicted to finish "
                f"(range {rng_txt(ov['adoption_rate'])}).")
     if vol:
         out.append(f"At {vol['eligible']:,.0f} {vol['unit']} a {vol['per']}, that is {count_txt(vol, ov['adoption_rate']['p50'])} "
@@ -216,8 +217,11 @@ def write_html(summary: dict, path) -> None:
             reason = "Blocked"
         elif r["error_exit"] > r["abandoned"]:
             reason = "Error"
+        names = {x["step"]: x["name"] for x in summary["funnel"]}
+        onward = (f"<div class='muted'>{pct(r['diverted'] / r['entered'])} go on to “{e(names.get(r['otherwise'], r['otherwise']))}”</div>"
+                  if r.get("diverted") and r["entered"] else "")
         P.append(f"<tr><td>{e(r['name'])}<div class='muted'>{e(r['type'])}</div></td><td>{_bar(r['share_of_starters'], f'{r_entered(r)} users')}</td>"
-                 f"<td class='n'>{pct(r['share_of_starters'])}</td><td class='n'>{'—' if r['type'] == 'success' else pct(r['continue_rate'])}</td>"
+                 f"<td class='n'>{pct(r['share_of_starters'])}</td><td class='n'>{'—' if r['type'] == 'success' else pct(r['continue_rate'], 1 if r['continue_rate'] < 0.1 else 0)}{onward}</td>"
                  f"<td class='n'>{pct(r['lost'] / starters, 1) if r['lost'] else '—'}</td><td>{e(reason)}</td><td class='n'>{r['median_time_s']:.0f}s</td></tr>")
     P.append("</table></div>")
     split = summary.get("outcome_split") or []

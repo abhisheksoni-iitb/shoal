@@ -166,7 +166,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "review_items",
@@ -198,7 +199,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "fix_stock",
@@ -226,7 +228,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "pick_slot",
@@ -256,7 +259,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "confirm_pay",
@@ -284,7 +288,8 @@
       "handles": [],
       "observed_continue": null,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "place_order",
@@ -312,7 +317,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     },
     {
       "id": "confirmed",
@@ -337,7 +343,8 @@
       "observed_continue": null,
       "sensitive": false,
       "grants": [],
-      "background": false
+      "background": false,
+      "otherwise": null
     }
   ],
   "dimensions": {

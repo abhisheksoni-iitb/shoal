@@ -1,6 +1,6 @@
 # Shoal rehearsal: One-tap reorder
 
-5,000 synthetic users, seed 7, 24 replications, 2026-11-14 20:47.
+5,000 synthetic users, seed 7, 24 replications, 2026-11-14 21:17.
 
 ## What it says
 
@@ -72,7 +72,7 @@
 | Scenario | Adoption | Range | Change from base |
 |---|---:|---:|---:|
 | As modelled | 10.0% | 9–12% | — |
-| Fewer customers have a saved card than we think | 7.6% | 6–9% | -2.4 pts |
+| Fewer customers have a saved card than we think | 7.6% | 6.1–9.0% | -2.4 pts |
 | The home banner is noticed twice as often | 16.7% | 15–19% | +7.0 pts |
 
 ## Design gaps

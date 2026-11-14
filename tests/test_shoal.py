@@ -269,6 +269,47 @@ class OutcomeTests(unittest.TestCase):
         for p in paths:
             self.assertFalse([f for f in model.lint(model.load(p)) if f["level"] == "error"], p)
 
+    def test_otherwise_gives_non_actors_a_second_route(self):
+        def flow(reminder):
+            ask = {"id": "ask", "type": "view", "observed_continue": 0.10, "next": ["done"]}
+            steps = [ask, {"id": "done", "type": "success"}]
+            if reminder:
+                ask["otherwise"] = "reminder"
+                steps.insert(1, {"id": "reminder", "type": "view", "observed_continue": 0.05, "next": ["done"]})
+            return model.normalise({"feature": {"id": "ask"}, "segments": [{"id": "all"}], "steps": steps})
+        plain = simulate(flow(False), users=20000, seed=6, keep_sessions=0)
+        twice = simulate(flow(True), users=20000, seed=6, keep_sessions=0)
+        self.assertFalse([f for f in model.lint(flow(True)) if f["level"] == "error"])
+        ask = twice["steps"]["ask"]
+        self.assertEqual(ask["abandoned"], 0)
+        self.assertEqual(ask["entered"], ask["continued"] + ask["diverted"])
+        self.assertEqual(twice["steps"]["reminder"]["entered"], ask["diverted"])
+        self.assertAlmostEqual(analyze.metrics(plain)["adoption_rate"], 0.10, delta=0.01)
+        self.assertAlmostEqual(analyze.metrics(twice)["adoption_rate"], 0.10 + 0.90 * 0.05, delta=0.012)
+        self.assertEqual(sum(twice["outcomes"].values()), 20000)
+        row = analyze.funnel(flow(True), twice)[0]
+        self.assertEqual((row["otherwise"], row["diverted"], row["lost"]), ("reminder", ask["diverted"], 0))
+
+    def test_bigger_replications_narrow_the_range_of_a_rare_outcome(self):
+        rare = model.normalise({"feature": {"id": "rare"}, "segments": [{"id": "all"}],
+                                "steps": [{"id": "ask", "type": "view", "observed_continue": 0.05, "next": ["done"]}, {"id": "done", "type": "success"}]})
+        with tempfile.TemporaryDirectory() as d:
+            small = pipeline.run(rare, d, users=24000, seed=7, reps=24, jitter=0)["replication"]["overall"]["adoption_rate"]
+            big = pipeline.run(rare, d, users=24000, seed=7, reps=24, jitter=0, rep_users=24000)
+            wide, narrow = small["p95"] - small["p5"], big["replication"]["overall"]["adoption_rate"]
+            self.assertLess(narrow["p95"] - narrow["p5"], wide * 0.6)   # sixteen times the users: about a quarter of the spread
+            self.assertEqual(pipeline.rerun(d)["args"]["rep_users"], 24000)
+            self.assertIn("5.", (Path(d) / "report.md").read_text().split("## What it says")[1].split("\n")[2])
+
+    def test_otherwise_must_point_at_a_step_and_survives_removal(self):
+        raw = {"feature": {"id": "x"}, "segments": [{"id": "all"}],
+               "steps": [{"id": "ask", "next": ["done"], "otherwise": "nowhere"}, {"id": "done", "type": "success"}]}
+        self.assertTrue(any(f["code"] == "bad-ref" for f in model.lint(model.normalise(raw))))
+        raw["steps"] = [{"id": "ask", "next": ["done"], "otherwise": "nudge"}, {"id": "nudge", "next": ["last"]},
+                        {"id": "last", "next": ["done"]}, {"id": "done", "type": "success"}]
+        v = model.apply_variant(model.normalise(raw), {"id": "no-nudge", "patch": {"remove_steps": ["nudge"]}})
+        self.assertEqual(model.step_index(v)["ask"]["otherwise"], "last")
+
     def test_measured_drop_is_not_given_an_invented_cause(self):
         m = copy.deepcopy(self.m)
         next(s for s in m["steps"] if s["id"] == "ask")["observed_continue"] = 0.5

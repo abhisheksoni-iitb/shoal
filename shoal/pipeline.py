@@ -26,7 +26,9 @@ def _read_json(path: Path):
 
 
 def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitter: float = 0.1,
-        variant: str | None = None, quick: bool = False) -> dict:
+        variant: str | None = None, quick: bool = False, rep_users: int = 1500) -> dict:
+    """rep_users: synthetic users in each replication. Raise it when the outcome is rare
+    (a few percent), or the ranges mostly show sampling noise."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     findings = model_mod.lint(m)
@@ -42,17 +44,18 @@ def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitt
     scen = {**m, "scenarios": model_mod.scenarios_for(base, variant)}
     hyp = {**m, "hypotheses": model_mod.hypotheses_for(m, variant)}
     if quick:
-        users, reps = min(users, 1500), min(reps, 8)
+        users, reps, rep_users = min(users, 1500), min(reps, 8), min(rep_users, 1500)
+    rep_n = min(users, rep_users)
 
     res = simulate(m, users=users, seed=seed, keep_sessions=300)
-    rep = analyze.replicate(m, users=min(users, 1500), seed=seed, reps=reps, jitter=jitter)
+    rep = analyze.replicate(m, users=rep_n, seed=seed, reps=reps, jitter=jitter)
     fun = analyze.funnel(m, res)
     summary = {
         "shoal": __version__,
         "generated": time.strftime("%Y-%m-%d %H:%M"),
         "feature": {k: m["feature"].get(k) for k in ("id", "name", "summary")},
         "variant": variant,
-        "users": users, "seed": seed, "args": {"users": users, "seed": seed, "reps": reps, "jitter": jitter, "variant": variant, "quick": quick},
+        "users": users, "seed": seed, "args": {"users": users, "seed": seed, "reps": reps, "jitter": jitter, "variant": variant, "quick": quick, "rep_users": rep_users},
         "metrics": analyze.metrics(res),
         "outcomes": res["outcomes"],
         "funnel": fun,
@@ -62,8 +65,8 @@ def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitt
         "events": dict(sorted(res["events"].items(), key=lambda kv: -kv[1])),
         "hypotheses": analyze.test_hypotheses(hyp, rep),
         "levers": analyze.sensitivity(m, users=1500 if quick else 4000, seed=seed, seeds=1 if quick else 2),
-        "variants": analyze.compare_variants(base, users=min(users, 1500), seed=seed, reps=reps, jitter=jitter) if not variant and base["variants"] else [],
-        "scenarios": analyze.compare_variants(scen, users=min(users, 1500), seed=seed, reps=reps, jitter=jitter, key="scenarios") if scen["scenarios"] else [],
+        "variants": analyze.compare_variants(base, users=rep_n, seed=seed, reps=reps, jitter=jitter) if not variant and base["variants"] else [],
+        "scenarios": analyze.compare_variants(scen, users=rep_n, seed=seed, reps=reps, jitter=jitter, key="scenarios") if scen["scenarios"] else [],
         "outcome_split": analyze.outcome_split(m, res, rep),
         "volume": analyze.volume(m),
         "watchlist": analyze.watchlist(m, rep, fun),
@@ -107,7 +110,8 @@ def rerun(run_dir) -> dict:
         raise FileNotFoundError(f"{d}/summary.json not found: not a Shoal run folder")
     m = model_mod.load(d / "model.json")
     a = prev["args"]
-    return run(m, d, users=a["users"], seed=a["seed"], reps=a["reps"], jitter=a["jitter"], variant=a.get("variant"), quick=a.get("quick", False))
+    return run(m, d, users=a["users"], seed=a["seed"], reps=a["reps"], jitter=a["jitter"], variant=a.get("variant"), quick=a.get("quick", False),
+               rep_users=a.get("rep_users", 1500))
 
 
 def _sample_sessions(sessions: list, n: int = 12) -> list:

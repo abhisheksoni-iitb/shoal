@@ -31,6 +31,7 @@ STEP_DEFAULTS = {
     "sensitive": False,
     "grants": [],
     "background": False,
+    "otherwise": None,
 }
 METRICS = (
     "discovery_rate",
@@ -152,6 +153,8 @@ def _edges(step: dict):
         yield e["to"]
     if step.get("fallback"):
         yield step["fallback"]
+    if step.get("otherwise"):
+        yield step["otherwise"]
     oe = step.get("on_error") or {}
     if oe.get("to"):
         yield oe["to"]
@@ -400,6 +403,8 @@ def apply_variant(m: dict, variant: dict) -> dict:
             s["next"] = new_next
             if s.get("fallback") == sid:
                 s["fallback"] = onward
+            if s.get("otherwise") == sid:
+                s["otherwise"] = onward if onward != s["id"] else None
             if (s.get("on_error") or {}).get("to") == sid:
                 s["on_error"]["to"] = onward
         for e in v["entry_points"]:
