@@ -138,205 +138,243 @@ def _new_agent(rng, seg, uid):
     return a
 
 
-def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200) -> dict:
-    rng = random.Random(seed)
+def new_tally(m: dict) -> dict:
+    """Everything one run counts, plus the lookups the walk needs. Shared by simulate() and the
+    word-of-mouth run in spread.py, so both send users through exactly the same flow."""
     idx = step_index(m)
     entries = {e["id"]: e for e in m["entry_points"]}
-    budget_base = float(m["feature"].get("session_budget_s", 300))
     repeat = m["feature"].get("repeat") or {}
     seg_z = {g["id"]: _z(g["traits"]["motivation"], g["traits"]["skill"]) for g in m["segments"]}
-    mean_z = sum(g["share"] * seg_z[g["id"]] for g in m["segments"])
+    return {
+        "idx": idx, "entries": entries, "repeat": repeat, "seg_z": seg_z,
+        "budget_base": float(m["feature"].get("session_budget_s", 300)),
+        "mean_z": sum(g["share"] * seg_z[g["id"]] for g in m["segments"]),
+        "seg_dist": {g["id"]: g["share"] for g in m["segments"]},
+        "seg_by_id": {g["id"]: g for g in m["segments"]},
+        "steps": {sid: {"entered": 0, "continued": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "skipped": 0, "diverted": 0,
+                        "errors": 0, "retries": 0, "fallbacks": 0, "reasons": {}, "times": []} for sid in idx},
+        "segs": {g["id"]: {"n": 0, "entered": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0,
+                           "users_with_error": 0, "times": [], "repeat": {k: 0 for k in repeat},
+                           "steps": {sid: [0, 0] for sid in idx}} for g in m["segments"]},
+        "ctx": {},
+        "ents": {eid: {"exposed": 0, "entered": 0, "success": 0} for eid in entries},
+        "outcomes": {"never_saw": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0},
+        "events": {}, "sessions": [],
+    }
 
-    steps = {sid: {"entered": 0, "continued": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "skipped": 0, "diverted": 0,
-                   "errors": 0, "retries": 0, "fallbacks": 0, "reasons": {}, "times": []} for sid in idx}
-    segs = {g["id"]: {"n": 0, "entered": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0,
-                      "users_with_error": 0, "times": [], "repeat": {k: 0 for k in repeat},
-                      "steps": {sid: [0, 0] for sid in idx}} for g in m["segments"]}
-    ctx = {}
-    ents = {eid: {"exposed": 0, "entered": 0, "success": 0} for eid in entries}
-    outcomes = {"never_saw": 0, "success": 0, "abandoned": 0, "blocked": 0, "error_exit": 0, "stuck": 0}
-    events, sessions = {}, []
-    seg_dist = {g["id"]: g["share"] for g in m["segments"]}
-    seg_by_id = {g["id"]: g for g in m["segments"]}
 
-    for uid in range(users):
-        seg = seg_by_id[_pick(rng, seg_dist)]
-        a = _new_agent(rng, seg, uid)
-        sg = segs[seg["id"]]
-        sg["n"] += 1
-        entry_dist = seg["entry"] or {eid: 1.0 for eid in entries}
-        eid = _pick(rng, entry_dist) or next(iter(entries))
-        ents[eid]["exposed"] += 1
-        trace = [] if uid < keep_sessions else None
-        saw = rng.random() < _clamp(entries[eid]["discovery"] * seg["exposure"])
-        for dim, val in a["context"].items():
-            c = ctx.setdefault(dim, {}).setdefault(str(val), {"n": 0, "entered": 0, "success": 0})
+def draw_user(T: dict, rng, uid: int):
+    """One synthetic user and the entry point they would meet the feature through."""
+    seg = T["seg_by_id"][_pick(rng, T["seg_dist"])]
+    a = _new_agent(rng, seg, uid)
+    T["segs"][seg["id"]]["n"] += 1
+    entry_dist = seg["entry"] or {eid: 1.0 for eid in T["entries"]}
+    eid = _pick(rng, entry_dist) or next(iter(T["entries"]))
+    T["ents"][eid]["exposed"] += 1
+    return seg, a, eid
+
+
+def count_context(T: dict, a: dict, entered: bool, new: bool = True) -> None:
+    for dim, val in a["context"].items():
+        c = T["ctx"].setdefault(dim, {}).setdefault(str(val), {"n": 0, "entered": 0, "success": 0})
+        if new:
             c["n"] += 1
-            if saw:
-                c["entered"] += 1
-        if not saw:
-            outcomes["never_saw"] += 1
-            if trace is not None:
-                sessions.append(_session(a, eid, "never_saw", None, None, 0, 0, []))
-            continue
+        if entered:
+            c["entered"] += 1
 
-        sg["entered"] += 1
-        ents[eid]["entered"] += 1
-        budget = budget_base * (0.4 + 1.2 * a["patience"]) * rng.lognormvariate(0, 0.25)
-        sid, visited, moved_on = entries[eid]["to"], set(), set()
-        elapsed, errors, hops, friction_sum, taken = 0.0, 0, 0, 0.0, 0
-        outcome, where, why = None, None, None
-        network = a["context"].get("network")
-        device = a["context"].get("device")
 
-        while outcome is None:
-            hops += 1
-            s = idx[sid]
-            st = steps[sid]
-            first = sid not in visited
-            if first:
-                visited.add(sid)
-                st["entered"] += 1
-                sg["steps"][sid][0] += 1
-            if hops > MAX_STEPS:
-                outcome, where, why = "stuck", sid, "loop"
-                break
+def never_saw(T: dict, a: dict, eid: str, keep: bool) -> None:
+    T["outcomes"]["never_saw"] += 1
+    if keep:
+        T["sessions"].append(_session(a, eid, "never_saw", None, None, 0, 0, []))
 
-            missing = [c for c in s["requires"] if c not in a["caps"]]
-            if missing:
-                if s.get("fallback"):
-                    st["fallbacks"] += 1
-                    if trace is not None:
-                        trace.append({"step": sid, "t": round(elapsed), "note": f"lacks {', '.join(missing)} → sent to {s['fallback']}"})
-                    if sid not in moved_on:
-                        moved_on.add(sid)
-                        st["continued"] += 1
-                        sg["steps"][sid][1] += 1
-                    sid = s["fallback"]
-                    continue
-                st["blocked"] += 1
-                outcome, where, why = "blocked", sid, "lacks " + ", ".join(missing)
-                break
 
-            for ev in s["events"]:
-                events[ev] = events.get(ev, 0) + 1
-            t = s["time_s"] * rng.lognormvariate(0, 0.45) * (1.35 - 0.6 * a["skill"])
-            if network in ("flaky", "slow") and s["type"] in ("wait", "external"):
-                t *= 2.5
-            elapsed += t
-            st["times"].append(t)
+def walk(T: dict, rng, a: dict, eid: str, keep: bool, start: str | None = None, ent: str | None = None) -> dict:
+    """Send one user through the flow from an entry point and count what happens.
+    start overrides the first step; ent overrides the entry the visit is counted under
+    (word of mouth is counted as its own way in)."""
+    idx, entries, steps, events = T["idx"], T["entries"], T["steps"], T["events"]
+    mean_z, seg_z, repeat = T["mean_z"], T["seg_z"], T["repeat"]
+    sg = T["segs"][a["segment"]]
+    ent = ent or eid
+    trace = [] if keep else None
 
-            if s["type"] == "success":
-                outcome, where = "success", sid
-                break
+    sg["entered"] += 1
+    T["ents"][ent]["entered"] += 1
+    budget = T["budget_base"] * (0.4 + 1.2 * a["patience"]) * rng.lognormvariate(0, 0.25)
+    sid, visited, moved_on = start or entries[eid]["to"], set(), set()
+    elapsed, errors, hops, friction_sum, taken = 0.0, 0, 0, 0.0, 0
+    outcome, where, why = None, None, None
+    network = a["context"].get("network")
+    device = a["context"].get("device")
 
-            # Errors and recovery.
-            p_err = s["error_rate"]
-            if s["type"] in ("wait", "external"):
-                if network in ("flaky", "slow"):
-                    p_err *= 3
-                elif network == "offline" and "offline" not in s["handles"]:
-                    p_err = 0.97
-            elif s["type"] == "input":
-                p_err *= (1.5 - a["skill"]) * (1.3 if device == "mobile" else 1.0)
-            p_err = _clamp(p_err, 0, 0.97)
-            oe = s.get("on_error") or {}
-            retries, jump = 0, None
-            while rng.random() < p_err:
-                errors += 1
-                st["errors"] += 1
-                events[f"{sid}.error"] = events.get(f"{sid}.error", 0) + 1
-                can_retry = oe.get("recoverable", False) and retries < MAX_RETRIES
-                if can_retry and rng.random() < _clamp(0.35 + 0.6 * a["patience"] - 0.15 * retries):
-                    retries += 1
-                    st["retries"] += 1
-                    elapsed += t * 0.6
-                    continue
-                if oe.get("to"):
-                    jump = oe["to"]
-                else:
-                    st["error_exit"] += 1
-                    outcome, where, why = "error_exit", sid, "error, no way to recover" if not oe.get("recoverable") else "gave up after errors"
-                break
-            if outcome:
-                break
-            if trace is not None and (retries or jump):
-                trace.append({"step": sid, "t": round(elapsed), "note": f"error ×{retries + (1 if jump else 0)}" + (f" → {jump}" if jump else ", retried")})
-            if jump:
+    while outcome is None:
+        hops += 1
+        s = idx[sid]
+        st = steps[sid]
+        first = sid not in visited
+        if first:
+            visited.add(sid)
+            st["entered"] += 1
+            sg["steps"][sid][0] += 1
+        if hops > MAX_STEPS:
+            outcome, where, why = "stuck", sid, "loop"
+            break
+
+        missing = [c for c in s["requires"] if c not in a["caps"]]
+        if missing:
+            if s.get("fallback"):
+                st["fallbacks"] += 1
+                if trace is not None:
+                    trace.append({"step": sid, "t": round(elapsed), "note": f"lacks {', '.join(missing)} → sent to {s['fallback']}"})
                 if sid not in moved_on:
                     moved_on.add(sid)
                     st["continued"] += 1
                     sg["steps"][sid][1] += 1
-                sid = jump
+                sid = s["fallback"]
                 continue
+            st["blocked"] += 1
+            outcome, where, why = "blocked", sid, "lacks " + ", ".join(missing)
+            break
 
-            # Carry on, skip, or quit.
-            parts = continue_parts(s, a, taken, elapsed, budget, errors, t)
-            taken += 1
-            friction_sum += parts["effort"] + parts["confusion"]
-            stays = rng.random() < p_continue(s, a, parts, mean_z, seg_z)
-            note = None
-            if not stays:
-                if s["optional"]:
-                    st["skipped"] += 1
-                    note = "skipped"
-                elif s.get("otherwise"):
-                    # not lost yet: the flow has a second route for people who do not act here (a reminder, another channel)
-                    st["diverted"] += 1
-                    if trace is not None:
-                        trace.append({"step": sid, "t": round(elapsed), "note": f"did not act → {s['otherwise']}"})
-                    sid = s["otherwise"]
-                    continue
-                else:
-                    # a step pinned to a real rate reproduces the drop without knowing its cause
-                    why = "observed" if s.get("observed_continue") is not None else _reason(parts)
-                    st["abandoned"] += 1
-                    st["reasons"][why] = st["reasons"].get(why, 0) + 1
-                    outcome, where = "abandoned", sid
-                    break
-            if elapsed > budget * 1.6:
-                why = "out_of_time"
-                st["abandoned"] += 1
-                st["reasons"][why] = st["reasons"].get(why, 0) + 1
-                outcome, where = "abandoned", sid
-                break
+        for ev in s["events"]:
+            events[ev] = events.get(ev, 0) + 1
+        t = s["time_s"] * rng.lognormvariate(0, 0.45) * (1.35 - 0.6 * a["skill"])
+        if network in ("flaky", "slow") and s["type"] in ("wait", "external"):
+            t *= 2.5
+        elapsed += t
+        st["times"].append(t)
 
-            edges = {i: e["weight"] for i, e in enumerate(s["next"]) if _when_ok(e.get("when"), a)}
-            choice = _pick(rng, edges)
-            if choice is None:
-                outcome, where, why = "stuck", sid, "no way forward"
-                break
-            if trace is not None:
-                trace.append({"step": sid, "t": round(elapsed), "note": note})
+        if s["type"] == "success":
+            outcome, where = "success", sid
+            break
+
+        # Errors and recovery.
+        p_err = s["error_rate"]
+        if s["type"] in ("wait", "external"):
+            if network in ("flaky", "slow"):
+                p_err *= 3
+            elif network == "offline" and "offline" not in s["handles"]:
+                p_err = 0.97
+        elif s["type"] == "input":
+            p_err *= (1.5 - a["skill"]) * (1.3 if device == "mobile" else 1.0)
+        p_err = _clamp(p_err, 0, 0.97)
+        oe = s.get("on_error") or {}
+        retries, jump = 0, None
+        while rng.random() < p_err:
+            errors += 1
+            st["errors"] += 1
+            events[f"{sid}.error"] = events.get(f"{sid}.error", 0) + 1
+            can_retry = oe.get("recoverable", False) and retries < MAX_RETRIES
+            if can_retry and rng.random() < _clamp(0.35 + 0.6 * a["patience"] - 0.15 * retries):
+                retries += 1
+                st["retries"] += 1
+                elapsed += t * 0.6
+                continue
+            if oe.get("to"):
+                jump = oe["to"]
+            else:
+                st["error_exit"] += 1
+                outcome, where, why = "error_exit", sid, "error, no way to recover" if not oe.get("recoverable") else "gave up after errors"
+            break
+        if outcome:
+            break
+        if trace is not None and (retries or jump):
+            trace.append({"step": sid, "t": round(elapsed), "note": f"error ×{retries + (1 if jump else 0)}" + (f" → {jump}" if jump else ", retried")})
+        if jump:
             if sid not in moved_on:
                 moved_on.add(sid)
                 st["continued"] += 1
                 sg["steps"][sid][1] += 1
-            for cap in s.get("grants", []):
-                a["caps"].add(cap)
-            sid = s["next"][choice]["to"]
+            sid = jump
+            continue
 
-        outcomes[outcome] += 1
-        if outcome != "success":
-            sg[outcome] += 1
-        if errors:
-            sg["users_with_error"] += 1
-        if outcome == "success":
-            sg["success"] += 1
-            sg["times"].append(elapsed)
-            ents[eid]["success"] += 1
-            for dim, val in a["context"].items():
-                ctx[dim][str(val)]["success"] += 1
-            factor = (0.55 + 0.9 * a["motivation"]) * (1 - 0.15 * min(errors, 3)) * (1 - 0.2 * _clamp(friction_sum / max(1, len(visited))))
-            for k, base in repeat.items():
-                if rng.random() < _clamp(float(base) * factor):
-                    sg["repeat"][k] += 1
+        # Carry on, skip, or quit.
+        parts = continue_parts(s, a, taken, elapsed, budget, errors, t)
+        taken += 1
+        friction_sum += parts["effort"] + parts["confusion"]
+        stays = rng.random() < p_continue(s, a, parts, mean_z, seg_z)
+        note = None
+        if not stays:
+            if s["optional"]:
+                st["skipped"] += 1
+                note = "skipped"
+            elif s.get("otherwise"):
+                # not lost yet: the flow has a second route for people who do not act here (a reminder, another channel)
+                st["diverted"] += 1
+                if trace is not None:
+                    trace.append({"step": sid, "t": round(elapsed), "note": f"did not act → {s['otherwise']}"})
+                sid = s["otherwise"]
+                continue
+            else:
+                # a step pinned to a real rate reproduces the drop without knowing its cause
+                why = "observed" if s.get("observed_continue") is not None else _reason(parts)
+                st["abandoned"] += 1
+                st["reasons"][why] = st["reasons"].get(why, 0) + 1
+                outcome, where = "abandoned", sid
+                break
+        if elapsed > budget * 1.6:
+            why = "out_of_time"
+            st["abandoned"] += 1
+            st["reasons"][why] = st["reasons"].get(why, 0) + 1
+            outcome, where = "abandoned", sid
+            break
+
+        edges = {i: e["weight"] for i, e in enumerate(s["next"]) if _when_ok(e.get("when"), a)}
+        choice = _pick(rng, edges)
+        if choice is None:
+            outcome, where, why = "stuck", sid, "no way forward"
+            break
         if trace is not None:
-            trace.append({"step": where, "t": round(elapsed), "note": outcome if outcome == "success" else f"{outcome}: {why}"})
-            sessions.append(_session(a, eid, outcome, where, why, elapsed, errors, trace))
+            trace.append({"step": sid, "t": round(elapsed), "note": note})
+        if sid not in moved_on:
+            moved_on.add(sid)
+            st["continued"] += 1
+            sg["steps"][sid][1] += 1
+        for cap in s.get("grants", []):
+            a["caps"].add(cap)
+        sid = s["next"][choice]["to"]
 
-    return {"users": users, "seed": seed, "outcomes": outcomes, "steps": steps, "segments": segs,
-            "contexts": ctx, "entries": ents, "events": events, "sessions": sessions}
+    T["outcomes"][outcome] += 1
+    if outcome != "success":
+        sg[outcome] += 1
+    if errors:
+        sg["users_with_error"] += 1
+    if outcome == "success":
+        sg["success"] += 1
+        sg["times"].append(elapsed)
+        T["ents"][ent]["success"] += 1
+        for dim, val in a["context"].items():
+            T["ctx"][dim][str(val)]["success"] += 1
+        factor = (0.55 + 0.9 * a["motivation"]) * (1 - 0.15 * min(errors, 3)) * (1 - 0.2 * _clamp(friction_sum / max(1, len(visited))))
+        for k, base in repeat.items():
+            if rng.random() < _clamp(float(base) * factor):
+                sg["repeat"][k] += 1
+    if trace is not None:
+        trace.append({"step": where, "t": round(elapsed), "note": outcome if outcome == "success" else f"{outcome}: {why}"})
+        T["sessions"].append(_session(a, ent, outcome, where, why, elapsed, errors, trace))
+    return {"outcome": outcome, "at": where, "why": why, "errors": errors, "seconds": elapsed,
+            "friction": friction_sum / max(1, taken)}
+
+
+def result(T: dict, users: int, seed: int) -> dict:
+    return {"users": users, "seed": seed, "outcomes": T["outcomes"], "steps": T["steps"], "segments": T["segs"],
+            "contexts": T["ctx"], "entries": T["ents"], "events": T["events"], "sessions": T["sessions"]}
+
+
+def simulate(m: dict, users: int = 5000, seed: int = 7, keep_sessions: int = 200) -> dict:
+    rng = random.Random(seed)
+    T = new_tally(m)
+    for uid in range(users):
+        seg, a, eid = draw_user(T, rng, uid)
+        keep = uid < keep_sessions
+        saw = rng.random() < _clamp(T["entries"][eid]["discovery"] * seg["exposure"])
+        count_context(T, a, saw)
+        if not saw:
+            never_saw(T, a, eid, keep)
+            continue
+        walk(T, rng, a, eid, keep)
+    return result(T, users, seed)
 
 
 def _session(a, eid, outcome, where, why, elapsed, errors, trace):

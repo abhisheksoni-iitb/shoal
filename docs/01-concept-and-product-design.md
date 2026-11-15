@@ -142,6 +142,20 @@ predict (run) → launch with the tracking plan → export real funnel → score
 
 `score` reports the mean error per step, a fidelity figure, and coverage: the share of real numbers that fell inside the predicted range. Low coverage means the ranges were too narrow, and says so. Over many features this becomes a library of base rates for *your* product and users (how discoverable a home banner really is, what a five-field form really costs), which is the part a competitor cannot copy.
 
+### 5.7 Word of mouth
+
+The rehearsal above treats every user as alone and the launch as one moment. Add a `spread` block and the launch is followed over several periods, with users joined in a network of contacts.
+
+1. The feature's own entry points reach people over the first few periods (`rollout_periods`), not all at once.
+2. Everyone who uses the feature forms an opinion from what happened to them. Finishing smoothly gives a high opinion; giving up, being blocked or hitting an error gives a low one.
+3. Each period, some of them tell a few contacts. The chance depends on what happened (people stopped by an error talk more than people who drifted away) and fades with time.
+4. A listener's opinion moves toward what they hear, but only if it is not too far from their own. This is the bounded-confidence rule (Deffuant and Weisbuch) that the MiroFish proposal used to stop its agents all agreeing. Here it has a practical meaning: someone who heard two bad reports stops listening to the enthusiast.
+5. Opinion feeds the flow model's two existing inputs. A good opinion can make someone try the feature on a recommendation; a bad one lowers the chance they tap the entry point when it reaches them; either way it shifts how much they trust the feature once inside.
+
+The report shows adoption with and without talk and the range of the difference, the period-by-period table, which kinds of user it changes, how each design does once talk is counted, and which talk assumption the answer depends on. `shoal spread <model>` gives the same result on its own.
+
+What it does not do: there is no language model in this step, so nobody writes posts or argues. It models how much is said and which way it pushes, not what is said. The talk rates and the network are hand-set defaults. With no talk and a one-period rollout the run reproduces the launch-day numbers exactly, which is tested.
+
 ## 6. Fidelity ladder
 
 | Level | What the users act on | Needs | Status |
@@ -151,9 +165,9 @@ predict (run) → launch with the tracking plan → export real funnel → score
 | 2. Persona walkthroughs | The spec, step by step, in character | A language model | **Built** as the skill's steps 4 and 5 |
 | 3. Calibrated rehearsal | The model, pinned to real rates | Analytics for similar steps | **Built** (`calibrate`, `score`); connectors not built |
 | 4. Prototype driving | A real prototype or staging URL, through a browser | A build; browser agents | Not built. UXAgent and AgentA/B show the approach works on live sites |
-| 5. Social spread | Opinion and word of mouth feeding discovery | MiroFish-style network | Not built. This is where the original MiroFish engine plugs in |
+| 5. Social spread | Opinion and word of mouth feeding discovery and trust | A `spread` block in the model | **Built** in 0.3.0 (`spread`), with hand-set talk rates. See 5.7 |
 
-Levels 0 to 3 need no build of the feature, which is the point: they run at spec time, when changes are cheap.
+Levels 0 to 3 and level 5 need no build of the feature, which is the point: they run at spec time, when changes are cheap.
 
 ## 7. Skill, tool or platform?
 
@@ -221,7 +235,7 @@ Sources for this section were a short web search on 12 Nov 2026; company details
 5. **MCP server** so any agent can call lint, run and report as tools.
 6. **CI check**: lint specs in pull requests.
 7. **Prototype driving** (level 4): browser agents on a staging URL, writing real events into the same report.
-8. **Social spread** (level 5): reuse the MiroFish opinion engine to model word of mouth and its effect on discovery.
+8. **Social spread** (level 5): done in 0.3.0 as the `spread` block, with bounded-confidence opinion and hand-set talk rates. Still open: fit the talk rates to a real launch, and let a language model write what is said.
 9. **Headless language-model mode** (API key) so the qualitative steps run without an agent session.
 
 ## 12. How it fits next to MiroFish

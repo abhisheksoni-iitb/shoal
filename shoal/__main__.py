@@ -9,7 +9,7 @@ import sys
 import time
 from pathlib import Path
 
-from . import __version__, analyze, edges, model as model_mod, pipeline, report
+from . import __version__, analyze, edges, model as model_mod, pipeline, report, spread
 
 HERE = Path(__file__).resolve().parent
 ICON = {"error": "✗", "warn": "!", "info": "·"}
@@ -59,6 +59,8 @@ def _summary_lines(s):
         lines.append(f"Variant {v['name']}: {v['verdict']} ({100 * v['diff']['adoption_rate']['p50']:+.1f} pts adoption, beats base in {100 * v['wins_share']:.0f}% of runs)")
     for v in s.get("scenarios") or []:
         lines.append(f"Scenario {v['name']}: {100 * v['value']['adoption_rate']['p50']:.1f}% adoption ({100 * v['diff']['adoption_rate']['p50']:+.1f} pts, {v['verdict']})")
+    if s.get("spread"):
+        lines += spread.lines(s["spread"])
     ec = s["edge_cases"]
     lines.append(f"Edge cases: {sum(c['status'] == 'gap' for c in ec)} gaps, {sum(c['status'] == 'open' for c in ec)} open, {sum(c['status'] in ('handled', 'not_applicable') for c in ec)} handled")
     return lines
@@ -77,6 +79,31 @@ def cmd_run(a):
     s["_dir"] = str(out)
     print("\n".join(_summary_lines(s)))
     print(f"\nDone in {time.time() - t0:.1f}s. Files: report.html, report.md, summary.json, edge_cases.json, events.sample.jsonl, model.json")
+
+
+def cmd_spread(a):
+    m = model_mod.load(a.model)
+    if not m.get("spread"):
+        raw = json.loads(Path(a.model).read_text(encoding="utf-8"))
+        raw["spread"] = True
+        m = model_mod.normalise(raw)
+        print("The model has no 'spread' block: using the default word-of-mouth settings.\n")
+    errors = [f for f in model_mod.lint(m) if f["level"] == "error"]
+    if errors:
+        print("The model has errors; fix these first:")
+        _print_findings(errors)
+        sys.exit(2)
+    sp = spread.analyse(m, users=a.users, seed=a.seed, reps=a.reps, jitter=a.jitter, rep_users=min(a.users, a.rep_users))
+    print("\n".join(f"- {x}" for x in spread.lines(sp)))
+    per = sp["period"]
+    print(f"\n{per:>6}  own entry  recommended  finished  adoption  without talk  said good/bad")
+    for r, q in zip(sp["timeline"], sp["timeline_without"]):
+        print(f"{r['period']:>6}  {r['started_official']:>9,}  {r['started_wom']:>11,}  {r['finished']:>8,}  {100 * r['adoption']:>7.1f}%  {100 * q['adoption']:>11.1f}%  {r['good']:>6,} / {r['bad']:,}")
+    print("\nIf instead:")
+    for d in sp["depends"]:
+        print(f"  {100 * d['delta']:+5.1f} pts  {d['change']}" + ("  (within noise)" if d["within_noise"] else ""))
+    if a.json:
+        report.write_json(sp, a.json)
 
 
 def cmd_report(a):
@@ -155,6 +182,16 @@ def main(argv=None):
     s.add_argument("--variant", help="run this variant as the design under test")
     s.add_argument("--quick", action="store_true", help="smaller, faster run for iterating")
     s.set_defaults(fn=cmd_run)
+
+    s = sub.add_parser("spread", help="word of mouth only: follow the launch over several periods with users talking")
+    s.add_argument("model")
+    s.add_argument("--users", type=int, default=5000)
+    s.add_argument("--seed", type=int, default=7)
+    s.add_argument("--reps", type=int, default=24)
+    s.add_argument("--jitter", type=float, default=0.1)
+    s.add_argument("--rep-users", type=int, default=1500, dest="rep_users")
+    s.add_argument("--json", help="also write the result to this file")
+    s.set_defaults(fn=cmd_spread)
 
     s = sub.add_parser("report", help="rebuild a run's report after adding sessions.json or edge_review.json")
     s.add_argument("run_dir")

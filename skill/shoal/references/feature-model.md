@@ -13,7 +13,9 @@ A feature model is one JSON file. `shoal init <folder>` writes a working starter
   "dimensions":   { "name": ["value", "value"] },
   "hypotheses":   [ { "id", "text", "metric", "op", "value", "segment", "on" } ],
   "variants":     [ { "id", "name", "note", "patch" } ],
-  "scenarios":    [ { "id", "name", "note", "patch", "on" } ]
+  "scenarios":    [ { "id", "name", "note", "patch", "on" } ],
+  "spread":       { "periods", "period", "rollout_periods", "contacts", "within_segment", "talk", "tell", "decay",
+                    "opinion", "openness", "pull", "convert", "trust_gain", "relay", "to" }
 }
 ```
 
@@ -153,6 +155,38 @@ Other assumptions about users and the world, with the design unchanged. Same pat
 ```
 
 A scenario with no `on` applies to the base design. `"on": "<variant id>"` ties it to a variant: it runs when that variant is the design under test, and its patch may name steps the variant adds. Rule of thumb: a design choice is a variant; something you do not control is a scenario.
+
+## spread (word of mouth)
+
+Optional. With it, the run also follows the launch over several periods with users telling their contacts what happened to them, and the report gets a "Word of mouth" section. `"spread": true` uses every default. Leave it out when talk between users is not a plausible route for this feature (an internal tool, a one-off settings change).
+
+```json
+"spread": {
+  "periods": 8, "period": "week", "rollout_periods": 4,
+  "contacts": 6, "within_segment": 0.7,
+  "talk": {"success": 0.20, "abandoned": 0.06, "blocked": 0.15, "error_exit": 0.25},
+  "tell": 2, "decay": 0.5
+}
+```
+
+| Field | Default | Meaning |
+|---|---|---|
+| `periods`, `period` | 8, "week" | How long the launch is watched, and what one period is called |
+| `rollout_periods` | 4 | Periods the feature's own entry points take to reach everyone. With 1, bad talk cannot arrive before the feature does, so talk can only add users; lint notes this |
+| `contacts` | 6 | People each user is in touch with, on average |
+| `within_segment` | 0.7 | Share of those contacts who are the same kind of user |
+| `talk` | see above | Chance per period that someone with this outcome tells contacts. Keys: `success`, `abandoned`, `blocked`, `error_exit`, `stuck` |
+| `tell` | 2 | Contacts told each time someone talks. This, not `contacts`, sets how much is said |
+| `decay` | 0.5 | The chance of talking is multiplied by this each later period |
+| `opinion` | abandoned 0.35, blocked 0.25, error_exit 0.15, stuck 0.15 | Opinion (0 bad to 1 good) after each bad outcome. A finisher's opinion is 0.62 to 0.95, higher when it went smoothly |
+| `openness` | 0.45 | A listener ignores an opinion further than this from their own |
+| `pull` | 0.5 | How far a listener moves toward an opinion they accept |
+| `convert` | 0.5 | How readily a good opinion turns into trying the feature |
+| `trust_gain` | 0.15 | How much opinion shifts trust when the person does try it |
+| `relay` | 0 | Chance someone passes on what they heard without having tried it |
+| `to` | first entry point's step | Step a recommended user lands on |
+
+Every default is a guess. Set `talk` from data when there is any (share rate, referral rate, the share of support tickets that mention telling others). The section's table "What this depends on" shows which guess carries the answer. A variant or scenario patch can change the block: `"patch": {"spread": {"talk": {"success": 0.4}}}`.
 
 ## Edge-case keys (for `handles`)
 

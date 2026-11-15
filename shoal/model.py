@@ -137,6 +137,13 @@ def normalise(raw: dict) -> dict:
     m.setdefault("hypotheses", [])
     m.setdefault("variants", [])
     m.setdefault("scenarios", [])
+    if m.get("spread"):
+        if m["spread"] is not True and not isinstance(m["spread"], dict):
+            raise ModelError("'spread' must be true or an object of word-of-mouth settings")
+        from . import spread   # imported here: spread builds on analyze, which builds on this module
+        m["spread"] = spread.fill(m["spread"])
+    else:
+        m.pop("spread", None)
     vol = feat.get("volume")
     if vol is not None:
         if not isinstance(vol, dict) or not isinstance(vol.get("eligible"), (int, float)) or vol["eligible"] <= 0:
@@ -244,6 +251,10 @@ def lint(m: dict) -> list:
             out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': unknown segment '{h.get('segment')}'.", kind="model"))
         if h.get("op") not in (">=", "<=", ">", "<"):
             out.append(_finding("error", "bad-hypothesis", f"Hypothesis '{h.get('id')}': op must be one of >= <= > <.", kind="model"))
+    if m.get("spread"):
+        from . import spread
+        for level, msg in spread.problems(m):
+            out.append(_finding(level, "spread", msg, kind="model"))
     var_ids = {v.get("id") for v in m.get("variants", [])}
     for kind in ("variants", "scenarios"):
         for var in m.get(kind, []):
@@ -440,6 +451,18 @@ def apply_variant(m: dict, variant: dict) -> dict:
             v["feature"][k].update(copy.deepcopy(val))
         else:
             v["feature"][k] = copy.deepcopy(val)
+    if "spread" in patch:
+        sp = patch["spread"]
+        if not sp:
+            v.pop("spread", None)
+        elif isinstance(sp, dict) and isinstance(v.get("spread"), dict):
+            for k, val in sp.items():
+                if isinstance(val, dict) and isinstance(v["spread"].get(k), dict):
+                    v["spread"][k].update(val)
+                else:
+                    v["spread"][k] = val
+        else:
+            v["spread"] = copy.deepcopy(sp)
     v.pop("_share_total", None)
     v["variants"] = []
     v["scenarios"] = []

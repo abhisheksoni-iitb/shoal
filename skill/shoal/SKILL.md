@@ -53,6 +53,7 @@ Rules that matter most:
 - **If the user is choosing between designs**, add them as `variants` in the same model so they run on the same synthetic users.
 - **Use real numbers where they exist**: set `observed_continue` on steps and `discovery` on entry points, or run `calibrate` with a CSV. If the feature changes an existing flow, model today's flow first, pin it to the measured numbers, check that the simulation reproduces them, and add the new design as a variant: a predicted change from a measured base is worth far more than a level.
 - **Do not let unmeasured steps flatter the new design.** A new step with a measured relative borrows that rate; your belief that it will do better goes in a scenario. See "New steps next to measured ones" in the reference.
+- **If people could plausibly tell each other about this feature** (consumer products, anything shared, anything that can fail in public), add `"spread": true` or a `spread` block: the run then follows the launch for some weeks with users talking, and reports what word of mouth adds or costs. Leave it out for internal tools and one-off settings. The talk rates are guesses; say so, and report which one the answer depends on.
 - **Every guessed input that could change the answer gets a scenario** (`scenarios`, same patch format as variants), and a measured `feature.volume` turns shares into counts.
 
 Then run `lint`. Fix every error. Do **not** "fix" design findings (blocked users, no recovery, not tracked) by editing the model: those are results to report.
@@ -62,6 +63,7 @@ Then run `lint`. Fix every error. Do **not** "fix" design findings (blocked user
 ```bash
 "$SHOAL" run <feature.json> --out <project>/shoal/<feature-id>/runs/<YYYY-MM-DD-label>
 "$SHOAL" run <feature.json> --variant <id> --out <...>   # a variant as the design under test: its own funnel, edge cases, scenarios and hypotheses
+"$SHOAL" spread <feature.json>                          # word of mouth only; uses default talk settings if the model has no spread block
 ```
 
 Read the printed summary. Sanity-check before going further: do the step scores you gave explain the biggest drop? If a number looks absurd, the cause is nearly always a mis-scored step or a wrong share; correct the model and say what you changed.

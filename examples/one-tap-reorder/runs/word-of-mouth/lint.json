@@ -1,0 +1,34 @@
+[
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "open_sheet",
+    "message": "'Opens the reorder sheet' needs past_order. About 21% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "warn",
+    "code": "blocked-without-fallback",
+    "kind": "design",
+    "step": "confirm_pay",
+    "message": "'Confirms payment with the saved card' needs saved_card. About 40% of users lack it and have nowhere to go.",
+    "fix": "Add a fallback step (set it up, request it, or explain why not)."
+  },
+  {
+    "level": "info",
+    "code": "not-instrumented",
+    "kind": "design",
+    "step": "confirm_pay",
+    "message": "'Confirms payment with the saved card' fires no analytics event: a drop here would be invisible after launch.",
+    "fix": "Add an event for this step."
+  },
+  {
+    "level": "warn",
+    "code": "error-without-recovery",
+    "kind": "design",
+    "step": "place_order",
+    "message": "'Order is placed' can fail (4%) but the model says nothing about what happens next.",
+    "fix": "Define on_error: can the user retry, or where do they land?"
+  }
+]

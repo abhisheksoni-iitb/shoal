@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 
 from . import __version__
-from . import analyze, edges, model as model_mod, report
+from . import analyze, edges, model as model_mod, report, spread
 from .sim import simulate
 
 TROUBLE = ("confusion", "hesitation", "error", "question", "workaround", "frustration")
@@ -75,6 +75,9 @@ def run(m: dict, out_dir, users: int = 5000, seed: int = 7, reps: int = 24, jitt
     }
     rep.pop("_raw", None)
     summary["replication"] = rep
+    if m.get("spread"):
+        summary["spread"] = spread.analyse(m, users=users, seed=seed, reps=reps, jitter=jitter, rep_users=rep_n,
+                                           base=None if variant else base)
 
     cases = edges.edge_cases(m)
     review = _read_json(out / "edge_review.json")

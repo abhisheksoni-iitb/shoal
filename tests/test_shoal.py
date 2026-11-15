@@ -9,7 +9,11 @@ from http.server import ThreadingHTTPServer
 import threading
 import urllib.request
 
-from shoal import analyze, edges, model, pipeline, server
+import contextlib
+import io
+
+from shoal import analyze, edges, model, pipeline, server, spread
+from shoal.__main__ import main as cli
 from shoal.sim import simulate
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -421,6 +425,138 @@ class PipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaises(pipeline.LintFailed):
                 pipeline.run(model.normalise(raw), d, quick=True)
+
+
+class SpreadTests(unittest.TestCase):
+    """Word of mouth: the launch over several periods with users talking."""
+
+    def model(self, **sp):
+        raw = json.loads(EX.read_text())
+        raw["spread"] = sp or True
+        return model.normalise(raw)
+
+    def test_defaults_are_filled_and_checked(self):
+        m = self.model()
+        self.assertEqual(m["spread"]["periods"], 8)
+        self.assertEqual(m["spread"]["talk"]["success"], 0.2)
+        self.assertFalse([f for f in model.lint(m) if f["level"] == "error"])
+        self.assertNotIn("spread", model.load(EX))
+        m = self.model(talk={"success": 0.5})
+        self.assertEqual(m["spread"]["talk"]["error_exit"], 0.25, "a partial talk table keeps the other defaults")
+
+    def test_lint_rejects_bad_settings(self):
+        for bad in ({"convert": 1.5}, {"periods": 0}, {"talk": {"delighted": 0.2}}, {"to": "nowhere"}, {"gossip": 1}):
+            errs = [f for f in model.lint(self.model(**bad)) if f["code"] == "spread" and f["level"] == "error"]
+            self.assertTrue(errs, bad)
+        notes = [f for f in model.lint(self.model(rollout_periods=1)) if f["code"] == "spread"]
+        self.assertEqual([f["level"] for f in notes], ["info"])
+        raw = json.loads(EX.read_text())
+        raw["spread"] = True
+        raw["entry_points"][0]["id"] = spread.WOM
+        with self.assertRaises(Exception):
+            m = model.normalise(raw)
+            if [f for f in model.lint(m) if f["level"] == "error"]:
+                raise ValueError("refused")
+
+    def test_no_talk_and_one_period_is_the_launch_day_run(self):
+        m = self.model(rollout_periods=1)
+        a = spread.simulate_spread(spread.silent(m), users=2500, seed=11, keep_sessions=40)
+        b = simulate(model.load(EX), users=2500, seed=11, keep_sessions=40)
+        self.assertEqual(a["spread"]["recommended"]["entered"], 0)
+        a.pop("spread")
+        self.assertEqual(a["entries"].pop(spread.WOM), {"exposed": 0, "entered": 0, "success": 0})
+        for r in (a, b):
+            r["sessions"].sort(key=lambda s: s["user"])
+        self.assertEqual(json.dumps(a, sort_keys=True, default=str), json.dumps(b, sort_keys=True, default=str))
+
+    def test_same_seed_same_result(self):
+        m = self.model()
+        a, b = spread.simulate_spread(m, 2000, 5), spread.simulate_spread(m, 2000, 5)
+        self.assertEqual(json.dumps(a, sort_keys=True, default=str), json.dumps(b, sort_keys=True, default=str))
+        self.assertNotEqual(a["spread"]["timeline"], spread.simulate_spread(m, 2000, 6)["spread"]["timeline"])
+
+    def test_counts_add_up(self):
+        m = self.model()
+        r = spread.simulate_spread(m, 3000, 7)
+        tl, rec = r["spread"]["timeline"], r["spread"]["recommended"]
+        self.assertEqual(len(tl), 8)
+        self.assertEqual(tl[-1]["adopted"], r["outcomes"]["success"])
+        self.assertEqual(tl[-1]["tried"], 3000 - r["outcomes"]["never_saw"])
+        self.assertEqual(sum(t["started_wom"] for t in tl), rec["entered"])
+        self.assertEqual(sum(t["finished"] for t in tl), r["outcomes"]["success"])
+        self.assertEqual(sum(t["started_official"] for t in tl[4:]), 0, "official entry points stop after the rollout")
+        self.assertEqual(sum(r["outcomes"].values()), 3000)
+        self.assertGreaterEqual(rec["exposed"], rec["entered"])
+        self.assertEqual(sum(g["n"] for g in r["segments"].values()), 3000)
+        self.assertEqual(sum(g["entered"] for g in r["segments"].values()), tl[-1]["tried"])
+
+    def test_good_talk_brings_users(self):
+        an = spread.analyse(self.model(talk={"success": 0.6}, tell=4, convert=0.9), users=3000, seed=7, reps=6, rep_users=1200)
+        self.assertEqual(an["verdict"], "adds")
+        self.assertGreater(an["with"], an["without"] + 0.02)
+        self.assertGreater(an["recommended"]["finished"], 0)
+        self.assertEqual(an["adds_in"], 1.0)
+        self.assertTrue(spread.lines(an)[0].startswith("Word of mouth adds"))
+
+    def test_bad_talk_costs_users(self):
+        toxic = {"talk": {"success": 0.0, "abandoned": 0.6, "blocked": 0.8, "error_exit": 0.9}, "tell": 4, "rollout_periods": 6}
+        an = spread.analyse(self.model(**toxic), users=4000, seed=7, reps=8, jitter=0, rep_users=2000)
+        self.assertEqual(an["messages"]["good"], 0)
+        self.assertEqual(an["recommended"]["tried"], 0)
+        self.assertGreater(an["put_off"], 0)
+        self.assertLess(an["range"]["lift"]["p50"], 0)
+        self.assertLess(an["with"], an["without"])
+        self.assertNotEqual(an["verdict"], "adds")
+
+    def test_closed_minds_hear_nothing(self):
+        r = spread.simulate_spread(self.model(openness=0.0, talk={"success": 0.9}, tell=4), 3000, 7)
+        self.assertGreater(r["spread"]["messages"]["good"], 0)
+        self.assertEqual(r["spread"]["recommended"]["entered"], 0)
+        self.assertEqual(r["spread"]["put_off"], 0)
+
+    def test_everyone_on_day_one_means_talk_cannot_cost(self):
+        toxic = {"talk": {"success": 0.0, "abandoned": 0.6, "blocked": 0.8, "error_exit": 0.9}, "tell": 4, "rollout_periods": 1}
+        m = self.model(**toxic)
+        a, b = spread.simulate_spread(m, 3000, 7), spread.simulate_spread(spread.silent(m), 3000, 7)
+        self.assertEqual(a["outcomes"], b["outcomes"])
+
+    def test_variant_patch_can_change_talk(self):
+        m = self.model()
+        v = model.apply_variant(m, {"id": "loud", "patch": {"spread": {"talk": {"success": 0.5}, "tell": 3}}})
+        self.assertEqual((v["spread"]["talk"]["success"], v["spread"]["talk"]["blocked"], v["spread"]["tell"]), (0.5, 0.15, 3))
+        self.assertNotIn("spread", model.apply_variant(m, {"id": "off", "patch": {"spread": False}}))
+        on = model.apply_variant(model.load(EX), {"id": "on", "patch": {"spread": {"periods": 3}}})
+        self.assertEqual(on["spread"]["periods"], 3)
+
+    def test_run_reports_word_of_mouth(self):
+        m = model.load(ROOT / "examples" / "one-tap-reorder" / "feature.word-of-mouth.json")
+        with tempfile.TemporaryDirectory() as d:
+            s = pipeline.run(m, d, users=1500, seed=7, reps=6, quick=True)
+            sp = s["spread"]
+            self.assertEqual(len(sp["timeline"]), len(sp["timeline_without"]))
+            self.assertEqual(len(sp["designs"]), 1 + len(m["variants"]))
+            self.assertEqual(len(sp["segments"]), len(m["segments"]))
+            self.assertTrue(all("within_noise" in k for k in sp["depends"]))
+            self.assertIn("## Word of mouth", (Path(d) / "report.md").read_text())
+            self.assertIn("<h2>Word of mouth</h2>", (Path(d) / "report.html").read_text())
+            self.assertIn("spread", json.loads((Path(d) / "model.json").read_text()))
+            again = pipeline.rerun(d)
+            self.assertEqual(again["spread"]["timeline"], sp["timeline"])
+            var = pipeline.run(m, d + "/v", users=1500, seed=7, reps=4, quick=True, variant=m["variants"][0]["id"])
+            self.assertEqual(var["spread"]["designs"], [])
+        with tempfile.TemporaryDirectory() as d:
+            plain = pipeline.run(model.load(EX), d, users=1200, seed=7, reps=4, quick=True)
+            self.assertNotIn("spread", plain)
+            self.assertNotIn("Word of mouth", (Path(d) / "report.md").read_text())
+
+    def test_command_line(self):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            cli(["spread", str(EX), "--users", "1500", "--reps", "4"])
+        text = out.getvalue()
+        self.assertIn("using the default word-of-mouth settings", text)
+        self.assertIn("Word of mouth", text)
+        self.assertIn("If instead:", text)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 (15 Nov 2026)
+
+Word of mouth: level 5 of the fidelity ladder, the part of MiroFish that Shoal had left out.
+
+- New model block `spread`. The launch is followed over several periods instead of one moment. People who used the feature form an opinion from what happened to them and tell some of their contacts; a listener's opinion moves toward what they hear only when it is not too far from their own (bounded confidence, after Deffuant and Weisbuch). Opinion then feeds the two inputs the flow already had: whether someone finds the feature, and how much they trust it when they do. `"spread": true` uses the defaults.
+- The report gets a section "Word of mouth": adoption with and without talk and the range of the difference, a period-by-period table, who it changes by segment, how each design does once talk is included, and a table of which talk assumption the answer depends on.
+- New command `shoal spread <model>` for the word-of-mouth result alone. It works on a model with no `spread` block by using the defaults.
+- Variant and scenario patches can change `spread`.
+- Lint checks the block and notes when the rollout is one period long, because then bad word of mouth cannot reach anyone before the feature does.
+- The simulation's walk through the flow is now a function (`sim.walk`) that both the launch-day run and the word-of-mouth run call. Launch-day numbers are unchanged: every example model gives byte-identical results to 0.2.2 on two seeds, and with no talk and a one-period rollout the word-of-mouth run reproduces the launch-day run exactly (a test holds this).
+- The talk rates and the network are hand-set defaults, not measurements. The first sample run (`examples/one-tap-reorder/runs/word-of-mouth/`) says word of mouth has no clear effect on that feature and that the answer depends mostly on how much happy users talk.
+- 45 tests.
+
 ## 0.2.2 (14 Nov 2026)
 
 - New step field `otherwise`: where users go when they do not act at a step and the flow has a second route for them (a reminder email, another channel). Needed to model an ask followed by a reminder; before, not acting always meant leaving. The funnel shows the share sent on.

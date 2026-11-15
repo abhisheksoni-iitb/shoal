@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import json
 
+from . import spread as spread_mod
 from .analyze import METRIC_LABELS
 
 REASON_LABEL = {"effort": "Too much effort", "confusion": "Confusing", "trust": "Did not trust it", "waiting": "The wait was too long",
@@ -22,6 +23,8 @@ LIMITS = [
     "Language models asked to play users tend to be more agreeable, more goal-directed and less varied than real people. Qualitative sessions find problems; they do not prove their absence.",
     "Rank order (which step is worst, which fix helps most) is more reliable than absolute levels. Calibrate with real data when you have any, and score the run after launch.",
 ]
+SPREAD_LIMIT = ("The word-of-mouth section rests on guessed talk rates and a random network of contacts. It shows which way talk pushes and which assumption matters, "
+                "not how many people will hear about the feature.")
 
 CSS = """
 :root{--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;
@@ -163,6 +166,8 @@ def headline(summary: dict) -> list:
     levers = [l for l in summary["levers"] if not l["within_noise"] and l["adoption_delta"] > 0]
     if levers:
         out.append(f"Best single fix: {levers[0]['lever']} (+{100 * levers[0]['adoption_delta']:.1f} points of adoption).")
+    if summary.get("spread"):
+        out.append(spread_mod.lines(summary["spread"])[0])
     gaps = [c for c in summary["edge_cases"] if c["status"] in ("gap", "open") and c.get("severity") == "high"]
     if gaps:
         confirmed = sum(1 for c in gaps if c["status"] == "gap")
@@ -321,6 +326,48 @@ def write_html(summary: dict, path) -> None:
             P += _ends_table(summary["scenarios"], ends, names, vol)
         P.append("</section>")
 
+    sp = summary.get("spread")
+    if sp:
+        per, tl, quiet = e(sp["period"]), sp["timeline"], sp["timeline_without"]
+        P.append(f"<section><h2>Word of mouth</h2><p class='sub'>The same launch followed for {sp['periods']} {per}s, with users telling their contacts what happened to them. "
+                 f"The feature's own entry points reach everyone over the first {sp['rollout_periods']}.</p><ul>"
+                 + "".join(f"<li>{e(x)}</li>" for x in spread_mod.lines(sp)) + "</ul>")
+        top = max([r["adoption"] for r in tl + quiet] + [0.01])
+        P.append(f"<div class='scroll'><table><tr><th>{per.capitalize()}</th><th class='n'>Started on their own</th><th class='n'>Started on a recommendation</th>"
+                 f"<th class='n'>Finished</th><th style='width:24%'>Adoption so far, 0 to {pct(top, 1)}</th><th class='n'>With talk</th><th class='n'>Without talk</th>"
+                 "<th class='n'>Said: good / bad</th></tr>")
+        for r, q in zip(tl, quiet):
+            P.append(f"<tr><td>{r['period']}</td><td class='n'>{r['started_official']:,}</td><td class='n'>{r['started_wom']:,}</td><td class='n'>{r['finished']:,}</td>"
+                     f"<td>{_bar(r['adoption'] / top, pct(r['adoption'], 1))}</td><td class='n'>{pct(r['adoption'], 1)}</td><td class='n'>{pct(q['adoption'], 1)}</td>"
+                     f"<td class='n'>{r['good']:,} / {r['bad']:,}</td></tr>")
+        P.append("</table></div>")
+        un = sp["untried"]
+        P.append(f"<p class='muted'>Of the {un['n']:,} users who never tried it, {pct(un['for'])} ended up thinking well of it, {pct(un['against'])} badly, and the rest had no strong view. "
+                 f"{sp['bad_first']:,} users heard something bad before anything else.</p>")
+        P.append("<h3>By kind of user</h3><div class='scroll'><table><tr><th>Segment</th><th class='n'>Without talk</th><th class='n'>With talk</th><th class='n'>Change</th></tr>")
+        for g in sp["segments"]:
+            P.append(f"<tr><td>{e(g['name'])}</td><td class='n'>{pct(g['without'], 1)}</td><td class='n'>{pct(g['with'], 1)}</td><td class='n'>{100 * (g['with'] - g['without']):+.1f} pts</td></tr>")
+        P.append("</table></div>")
+        if sp["depends"]:
+            scale = max(abs(d["delta"]) for d in sp["depends"]) or 1
+            P.append("<h3>What this depends on</h3><p class='sub'>The talk settings are guesses. One changed at a time: how far adoption moves.</p>"
+                     "<div class='scroll'><table><tr><th style='width:46%'>If instead</th><th style='width:26%'></th><th class='n'>Adoption</th><th class='n'>Change</th></tr>")
+            for d in sp["depends"]:
+                P.append(f"<tr><td>{e(d['change'])}</td><td>{_diverge(d['delta'], scale)}</td><td class='n'>{pct(d['adoption'], 1)}</td>"
+                         f"<td class='n'>{100 * d['delta']:+.1f} pts{' <span class=muted>(within noise)</span>' if d['within_noise'] else ''}</td></tr>")
+            P.append("</table></div>")
+        if sp["designs"]:
+            P.append(f"<h3>Designs after {sp['periods']} {per}s</h3><p class='sub'>Whether talk widens or narrows the gap between designs. Differences under about half a point are noise.</p>"
+                     "<div class='scroll'><table><tr><th>Design</th><th class='n'>Without talk</th><th class='n'>With talk</th><th class='n'>Talk adds</th></tr>")
+            for d in sp["designs"]:
+                P.append(f"<tr><td>{e(d['name'])}</td><td class='n'>{pct(d['without'], 1)}</td><td class='n'>{pct(d['with'], 1)}</td><td class='n'>{100 * d['lift']:+.1f} pts</td></tr>")
+            P.append("</table></div>")
+        st = sp["settings"]
+        P.append(f"<p class='muted'>Settings: {st['contacts']:g} contacts each, {pct(st['within_segment'])} of them the same kind of user; chance of talking per {per} "
+                 + ", ".join(f"{OUTCOME_LABEL.get(k, k).lower()} {pct(v)}" for k, v in st["talk"].items() if v)
+                 + f", fading by {pct(1 - st['decay'])} each {per}; each talker tells {st['tell']}. These are hand-set defaults unless the model changes them, "
+                 "not measurements. Formulas are in <code>shoal/spread.py</code>.</p></section>")
+
     # Qualitative
     q = summary.get("qualitative")
     if q:
@@ -399,7 +446,8 @@ def write_html(summary: dict, path) -> None:
                      f"<p class='muted'>{e(tr)} · {e(cx)}</p><p>{trail or 'Never saw the feature.'}</p></details>")
         P.append("</section>")
 
-    P.append("<section><h2>How to read this, and its limits</h2><ul>" + "".join(f"<li>{e(x)}</li>" for x in LIMITS) + "</ul>"
+    limits = LIMITS + ([SPREAD_LIMIT] if summary.get("spread") else [])
+    P.append("<section><h2>How to read this, and its limits</h2><ul>" + "".join(f"<li>{e(x)}</li>" for x in limits) + "</ul>"
              "<p class='muted'>Method: each synthetic user gets traits (motivation, skill, patience, trust), a situation and capabilities drawn from their segment, "
              "then walks the flow. At each step the chance of carrying on rises with motivation, visible value and trust and falls with effort, unclear screens, errors and fatigue. "
              "All formulas are in <code>shoal/sim.py</code>; the model used is saved next to this report as <code>model.json</code>.</p></section>")
@@ -455,13 +503,26 @@ def write_md(summary: dict, path) -> None:
               f"| As modelled | {pct(ov['adoption_rate']['p50'], 1)} | {rng_txt(ov['adoption_rate'])} | — |"]
         L += [f"| {v['name']} | {pct(v['value']['adoption_rate']['p50'], 1)} | {rng_txt(v['value']['adoption_rate'])} | {100 * v['diff']['adoption_rate']['p50']:+.1f} pts |"
               for v in summary["scenarios"]]
+    sp = summary.get("spread")
+    if sp:
+        L += ["", f"## Word of mouth ({sp['periods']} {sp['period']}s)", ""] + [f"- {x}" for x in spread_mod.lines(sp)]
+        L += ["", f"| {sp['period'].capitalize()} | Started on their own | Started on a recommendation | Finished | Adoption with talk | Without talk | Said: good / bad |",
+              "|---:|---:|---:|---:|---:|---:|---:|"]
+        L += [f"| {r['period']} | {r['started_official']:,} | {r['started_wom']:,} | {r['finished']:,} | {pct(r['adoption'], 1)} | {pct(q['adoption'], 1)} | {r['good']:,} / {r['bad']:,} |"
+              for r, q in zip(sp["timeline"], sp["timeline_without"])]
+        if sp["depends"]:
+            L += ["", "| If instead | Adoption | Change |", "|---|---:|---:|"]
+            L += [f"| {d['change']} | {pct(d['adoption'], 1)} | {100 * d['delta']:+.1f} pts{' (within noise)' if d['within_noise'] else ''} |" for d in sp["depends"]]
+        if sp["designs"]:
+            L += ["", "| Design | Without talk | With talk | Talk adds |", "|---|---:|---:|---:|"]
+            L += [f"| {d['name']} | {pct(d['without'], 1)} | {pct(d['with'], 1)} | {100 * d['lift']:+.1f} pts |" for d in sp["designs"]]
     design = [x for x in summary["lint"] if x["kind"] == "design" and x["level"] == "warn"]
     if design:
         L += ["", "## Design gaps", ""] + [f"- {x['message']}" + (f" Fix: {x['fix']}" if x.get("fix") else "") for x in design]
     hi = [c for c in summary["edge_cases"] if c["status"] in ("gap", "open") and c.get("severity") == "high"]
     if hi:
         L += ["", f"## High-severity edge cases not covered ({len(hi)})", ""] + [f"- [{c['status']}] {c['step_name']}: {c['title']}. {c['question']}" for c in hi[:25]]
-    L += ["", "## Limits", ""] + [f"- {x}" for x in LIMITS] + [""]
+    L += ["", "## Limits", ""] + [f"- {x}" for x in LIMITS + ([SPREAD_LIMIT] if summary.get("spread") else [])] + [""]
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(L))
 
